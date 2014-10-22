@@ -5,7 +5,7 @@
 import matplotlib.pyplot as plt
 import math
 import numpy as np
-import SFS
+import sfs
 
 
 # parameters
@@ -29,14 +29,14 @@ y = np.arange(0, 5, 0.02)
 # --------------------------------------------------------------------------------
 
 # generate tapering window
-twin = SFS.tapering.weight(N)
+twin = sfs.tapering.weight(N)
 
 # compute synthesized sound field
 z = 0
 for n in range(0,N-1):
     pos = (n - N/2 + 1/2) * dx, 0
     #pos = ((-N//2+n)*dx,0)
-    z = z + SFS.drivingfunction.pw_delay(k, pos, pw_angle) * twin[n] * SFS.source.point(k, pos, x, y)
+    z = z + sfs.drivingfunction.pw_delay(k, pos, pw_angle) * twin[n] * sfs.source.point(k, pos, x, y)
 
 # plot synthesized sound field
 plt.figure(figsize = (15, 15))
