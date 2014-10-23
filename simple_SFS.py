@@ -1,6 +1,7 @@
-# example thats illustrates the application of python to the numeric simulation of SFS systems
+# example thats illustrates the application of python to the numeric simulation 
+# of SFS
 #
-# S.Spors, 21.10.14
+# Sascha Spors, Sascha.Spors@uni-rostock.de
 
 import matplotlib.pyplot as plt
 import math
@@ -9,39 +10,45 @@ import sfs
 
 
 # parameters
-dx = 0.1       			# secondary source distance
-N = 50         			# number of secondary sources
-pw_angle = math.pi/4    # incidence angle of plane wave
-f = 500        			# frequency
+dx = 0.1  # secondary source distance
+N = 50  # number of secondary sources
+pw_angle = math.pi/4  # traveling direction of plane wave
+f = 1000  # frequency
+
 
 
 # wavenumber
-k = 2*math.pi*f/343;
+k = 2 * math.pi * f / 343
+
+# normal vector of plane wave
+npw = np.array([np.cos(pw_angle), np.sin(pw_angle), 0])
 
 # spatial grid
 x = np.arange(-5, 5, 0.02)        
 y = np.arange(0, 5, 0.02)
 
 
-
 # --------------------------------------------------------------------------------
 # main
 # --------------------------------------------------------------------------------
 
-# generate tapering window
+# get secondary source positions
+x0 = sfs.array.linear(N, dx) 
+
+# get driving function
+d = sfs.drivingfunction.pw_delay(k, x0, npw)
+
+# get tapering window
 twin = sfs.tapering.weight(N)
 
 # compute synthesized sound field
-z = 0
-for n in range(0,N-1):
-    pos = (n - N/2 + 1/2) * dx, 0
-    #pos = ((-N//2+n)*dx,0)
-    z = z + sfs.drivingfunction.pw_delay(k, pos, pw_angle) * twin[n] * sfs.source.point(k, pos, x, y)
+p = sfs.synthesized.generic(x, y, x0, k, d, twin)
+
 
 # plot synthesized sound field
 plt.figure(figsize = (15, 15))
 
-plt.imshow(np.real(z), cmap=plt.cm.RdBu, origin='lower', extent=[-5,5,0,5], vmax=10, vmin=-10, aspect='equal')
+plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower', extent=[-5,5,0,5], vmax=10, vmin=-10, aspect='equal')
 plt.colorbar()
 
 plt.savefig('soundfield.png')
