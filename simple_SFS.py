@@ -1,4 +1,4 @@
-# example thats illustrates the application of python to the numeric simulation 
+# example thats illustrates the application of python to the numeric simulation
 # of SFS
 #
 # Sascha Spors, Sascha.Spors@uni-rostock.de
@@ -24,7 +24,7 @@ k = 2 * math.pi * f / 343
 npw = np.array([np.cos(pw_angle), np.sin(pw_angle), 0])
 
 # spatial grid
-x = np.arange(-5, 5, 0.02)        
+x = np.arange(-5, 5, 0.02)
 y = np.arange(0, 5, 0.02)
 
 
@@ -33,7 +33,7 @@ y = np.arange(0, 5, 0.02)
 # --------------------------------------------------------------------------------
 
 # get secondary source positions
-x0 = sfs.array.linear(N, dx) 
+x0 = sfs.array.linear(N, dx)
 
 # get driving function
 d = sfs.drivingfunction.pw_delay(k, x0, npw)
