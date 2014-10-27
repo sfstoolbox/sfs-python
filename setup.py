@@ -1,9 +1,10 @@
 from setuptools import setup
-import sfs
+
+exec(open('sfs/_version.py').read())
 
 setup(
     name="SoundFieldSynthesis",
-    version=sfs.__version__,
+    version=__version__,
     packages=['sfs'],
 
     author="SFS Toolbox Developers",
