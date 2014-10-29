@@ -1,11 +1,9 @@
 """Weights (tapering) for the driving function"""
 
-from scipy import signal
+# from scipy import signal
+import numpy as np
 
 
-def weight(N): 
-    """Weights for the driving function"""
-    
-    twin = signal.kaiser(N, 2)
-
-    return twin
+def none(active): 
+    """No tapering window."""
+    return np.asarray(active, dtype=np.float64)
