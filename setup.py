@@ -29,6 +29,10 @@ setup(
     name="SoundFieldSynthesis",
     version=__version__,
     packages=['sfs'],
+    install_requires=[
+        'numpy',
+        'scipy',
+    ],
 
     author="SFS Toolbox Developers",
     author_email="sfstoolbox@gmail.com",
@@ -46,6 +50,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Topic :: Scientific/Engineering",
     ],
+
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
 )
