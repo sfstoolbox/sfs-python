@@ -23,7 +23,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-exec(open('sfs/_version.py').read())
+exec(open('sfs/_version.py').read())  # "import" __version__
 
 setup(
     name="SoundFieldSynthesis",
