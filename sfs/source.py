@@ -3,12 +3,8 @@
 import numpy as np
 
 
-def point(k, x0, x, y):
+def point(k, x0, x, y, z):
     """Acoustic point source"""
-    
-    xx, yy = np.meshgrid(x-x0[0], y-x0[1], sparse=True)
-    r = np.sqrt((xx)**2 + (yy)**2)
-    z = np.exp(-1j*k*r)/r
-
-    return z
-
+    xx, yy, zz = np.meshgrid(x-x0[0], y-x0[1], z-x0[2], sparse=True)
+    r = np.sqrt((xx)**2 + (yy)**2 + (zz)**2)
+    return np.squeeze(np.exp(-1j*k*r)/r)

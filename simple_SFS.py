@@ -41,10 +41,11 @@ d = sfs.drivingfunction.pw_3D_WFS(k, x0, n0, npw)
 a = sfs.drivingfunction.source_selection_pw(n0, npw)
 
 # get tapering window
-twin = sfs.tapering.none(a)
+#twin = sfs.tapering.none(a)
+twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
-p = sfs.synthesized.generic(x, y, x0, k, d, twin)
+p = sfs.synthesized.generic(x, y, 0, x0, k, d, twin)
 
 
 # plot synthesized sound field
