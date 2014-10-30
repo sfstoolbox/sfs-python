@@ -46,12 +46,11 @@ twin = sfs.tapering.kaiser(a)
 # compute synthesized sound field
 p = sfs.synthesized.generic(x, y, 0, x0, k, d, twin)
 
-
 # plot synthesized sound field
 plt.figure(figsize=(15, 15))
 
 plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
-           extent=[-2, 2, -2, 2], vmax=200, vmin=-200, aspect='equal')
+           extent=[-2, 2, -2, 2], vmax=2, vmin=-2, aspect='equal')
 plt.colorbar()
 
 plt.savefig('soundfield.png')
