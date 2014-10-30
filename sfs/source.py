@@ -5,13 +5,27 @@ import numpy as np
 
 def point(k, x0, x, y, z):
     """Acoustic point source"""
+    #              1  e^(-j k |x-x0|)
+    # G(x-xs,w) = --- ---------------
+    #             4pi      |x-x0|
     xx, yy, zz = np.meshgrid(x - x0[0], y - x0[1], z - x0[2], sparse=True)
     r = np.sqrt((xx) ** 2 + (yy) ** 2 + (zz) ** 2)
     return np.squeeze(np.exp(-1j * k * r) / r)
 
 
-def plane_wave(k, npw, x, y, z):
+def line(k, x0, x, y, z):
+    """Acoustic line source"""
+    #              j   (2)
+    # G(x-xs,w) =  -  H0  ( k |x-x0| )
+    #              4
+    xx, yy, zz = np.meshgrid(x - x0[0], y - x0[1], z - x0[2], sparse=True)
+    r = np.sqrt((xx) ** 2 + (yy) ** 2 + (zz) ** 2)
+    return np.squeeze(1j * np.hankel2(0, k * r))
+
+
+def plane_wave(k, n, x, y, z):
     """Acoustic plane wave"""
+    # G(x,w) = e^(-i w/c n x)
     xx, yy, zz = np.meshgrid(x, y, z, sparse=True)
-    npw = np.asarray(npw)
-    return np.squeeze(np.exp(-1j * k * np.inner(np.array([xx, yy, zz]), npw)))
+    n = np.asarray(n)
+    return np.squeeze(np.exp(-1j * k * np.inner(np.array([xx, yy, zz]), n)))
