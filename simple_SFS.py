@@ -9,9 +9,8 @@ import sfs
 # parameters
 dx = 0.1  # secondary source distance
 N = 50  # number of secondary sources
-pw_angle = np.pi/4  # traveling direction of plane wave
+pw_angle = np.pi / 4  # traveling direction of plane wave
 f = 1000  # frequency
-
 
 
 # wavenumber
@@ -31,11 +30,11 @@ y = np.arange(-2, 2, 0.02)
 
 # get secondary source positions
 #x0,n0 = sfs.array.linear(N, dx)
-x0,n0 = sfs.array.circular(N,1)
+x0, n0 = sfs.array.circular(N, 1)
 
 # get driving function
-#d = sfs.drivingfunction.pw_delay(k, x0, n0, npw)
-d = sfs.drivingfunction.pw_3D_WFS(k, x0, n0, npw)
+#d = sfs.drivingfunction.delay_3d_pw(k, x0, n0, npw)
+d = sfs.drivingfunction.wfs_3d_pw(k, x0, n0, npw)
 
 # get active secondary sources
 a = sfs.drivingfunction.source_selection_pw(n0, npw)
@@ -49,9 +48,10 @@ p = sfs.synthesized.generic(x, y, 0, x0, k, d, twin)
 
 
 # plot synthesized sound field
-plt.figure(figsize = (15, 15))
+plt.figure(figsize=(15, 15))
 
-plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower', extent=[-2,2,-2,2], vmax=200, vmin=-200, aspect='equal')
+plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
+           extent=[-2, 2, -2, 2], vmax=200, vmin=-200, aspect='equal')
 plt.colorbar()
 
 plt.savefig('soundfield.png')

@@ -3,6 +3,7 @@
 import sfs
 import numpy as np
 
+
 def generic(x, y, z, x0, k, d, twin):
     """Compute sound field for a generic driving function"""
     d = np.squeeze(np.asarray(d))
