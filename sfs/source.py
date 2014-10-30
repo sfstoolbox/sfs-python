@@ -2,7 +2,6 @@
 
 import numpy as np
 from scipy import special
-import operator
 
 
 def point(k, x0, x, y, z=0):
@@ -29,4 +28,5 @@ def plane(k, n0, x, y, z=0):
     # G(x,w) = e^(-i w/c n x)
     xx, yy, zz = np.meshgrid(x, y, z, sparse=True)
     n0 = np.asarray(n0)
-    return np.squeeze(np.exp(-1j * k * np.inner(np.array([xx, yy, zz]), n0)))
+    return np.squeeze(
+        np.exp(-1j * k * np.inner(np.array([xx, yy, zz], dtype=object), n0)))
