@@ -2,9 +2,10 @@
 
 import numpy as np
 from scipy import special
+import operator
 
 
-def point(k, x0, x, y, z):
+def point(k, x0, x, y, z=0):
     """Point source"""
     #              1  e^(-j k |x-x0|)
     # G(x-xs,w) = --- ---------------
@@ -14,7 +15,7 @@ def point(k, x0, x, y, z):
     return np.squeeze(np.exp(-1j * k * r) / r)
 
 
-def line(k, x0, x, y, z):
+def line(k, x0, x, y, z=0):
     """Line source parallel to the z-axis"""
     #              j   (2)
     # G(x-xs,w) =  -  H0  ( k |x-x0| )
@@ -24,9 +25,9 @@ def line(k, x0, x, y, z):
     return np.squeeze(special.hankel2(0, k * r))
 
 
-def plane(k, n0, x, y, z):
+def plane(k, n0, x, y, z=0):
     """Plane wave"""
     # G(x,w) = e^(-i w/c n x)
-    xx, yy, zz = np.meshgrid(x, y, z, sparse=True)
-    n0 = np.asarray(n0)
-    return np.squeeze(np.exp(-1j * k * ( n0[0] * xx + n0[1] * yy + n0[2] * zz))) 
+    grid = np.meshgrid(x, y, z, sparse=True)
+    n0 = np.squeeze(np.asarray(n0))
+    return np.squeeze(np.exp(-1j * k * sum(map(operator.mul, n0, grid))))

@@ -46,6 +46,7 @@ twin = sfs.tapering.kaiser(a)
 # compute synthesized sound field
 p = sfs.synthesized.generic(x, y, 0, x0, k, d, twin)
 
+
 # plot synthesized sound field
 plt.figure(figsize=(15, 15))
 
