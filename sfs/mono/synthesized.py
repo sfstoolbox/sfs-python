@@ -13,5 +13,5 @@ def generic(x, y, z, x0, k, d, twin):
         raise ValueError("length mismatch")
     p = 0
     for weight, position in zip(weights, x0):
-        p += weight * sfs.source.point(k, position, x, y, z)
+        p += weight * sfs.mono.source.point(k, position, x, y, z)
     return p
