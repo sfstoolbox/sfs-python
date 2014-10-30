@@ -8,3 +8,10 @@ def point(k, x0, x, y, z):
     xx, yy, zz = np.meshgrid(x - x0[0], y - x0[1], z - x0[2], sparse=True)
     r = np.sqrt((xx) ** 2 + (yy) ** 2 + (zz) ** 2)
     return np.squeeze(np.exp(-1j * k * r) / r)
+
+
+def plane_wave(k, npw, x, y, z):
+    """Acoustic plane wave"""
+    xx, yy, zz = np.meshgrid(x, y, z, sparse=True)
+    npw = np.asarray(npw)
+    return np.squeeze(np.exp(-1j * k * np.inner(np.array([xx, yy, zz]), npw)))
