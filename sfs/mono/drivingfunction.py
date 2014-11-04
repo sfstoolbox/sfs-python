@@ -22,9 +22,7 @@ def _wfs_ps(k, x0, n0, xs):
     return 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(-1j * k * r)
 
 
-def wfs_2d_ps(k, x0, n0, xs):
-    """Point source by two-dimensional WFS."""
-    return _wfs_ps(k, x0, n0, xs)
+wfs_2d_ps = _wfs_ps
 
 
 def wfs_25d_ps(k, x0, n0, xs, xref=[0, 0, 0]):
@@ -47,9 +45,7 @@ def wfs_25d_ps(k, x0, n0, xs, xref=[0, 0, 0]):
         r ** (3 / 2) * np.exp(-1j * k * r)
 
 
-def wfs_3d_ps(k, x0, nx0, xs):
-    """Point source by three-dimensional WFS."""
-    return _wfs_ps(k, x0, nx0, xs)
+wfs_3d_ps = _wfs_ps
 
 
 def _wfs_pw(k, x0, n0, n=[0, 1, 0]):
@@ -66,9 +62,7 @@ def _wfs_pw(k, x0, n0, n=[0, 1, 0]):
     return 1j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
-def wfs_2d_pw(k, x0, n0, n=[0, 1, 0]):
-    """Plane wave by two-dimensional WFS."""
-    return _wfs_pw(k, x0, n0, n)
+wfs_2d_pw = _wfs_pw
 
 
 def wfs_25d_pw(k, x0, n0, n=[0, 1, 0], xref=[0, 0, 0]):
@@ -88,9 +82,7 @@ def wfs_25d_pw(k, x0, n0, n=[0, 1, 0], xref=[0, 0, 0]):
         np.exp(-1j * k * np.inner(n, x0))
 
 
-def wfs_3d_pw(k, x0, n0, n=[0, 1, 0]):
-    """Plane wave by three-dimensional WFS."""
-    return _wfs_pw(k, x0, n0, n)
+wfs_3d_pw = _wfs_pw
 
 
 def delay_3d_pw(k, x0, n0, n=[0, 1, 0]):
