@@ -1,4 +1,4 @@
-"""Computation of synthesized sound field"""
+"""Computation of synthesized sound fields."""
 
 import sfs
 import numpy as np

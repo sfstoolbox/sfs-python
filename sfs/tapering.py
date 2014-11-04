@@ -1,4 +1,4 @@
-"""Weights (tapering) for the driving function"""
+"""Weights (tapering) for the driving function."""
 
 # from scipy import signal
 import numpy as np

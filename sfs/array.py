@@ -1,4 +1,4 @@
-"""Compute positions of various secondary source distributions"""
+"""Compute positions of various secondary source distributions."""
 
 import numpy as np
 
