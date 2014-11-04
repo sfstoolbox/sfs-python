@@ -78,7 +78,7 @@ def wfs_25d_pw(k, x0, n0, n=[0, 1, 0], xref=[0, 0, 0]):
     n0 = np.asarray(n0)
     n = np.squeeze(np.asarray(n))
     xref = np.squeeze(np.asarray(xref))
-    return np.sqrt(1j * k * np.linalg.norm(xref-x0)) * np.inner(n, n0) * \
+    return np.sqrt(1j * k * np.linalg.norm(xref - x0)) * np.inner(n, n0) * \
         np.exp(-1j * k * np.inner(n, x0))
 
 
