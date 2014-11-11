@@ -34,29 +34,29 @@ y = np.arange(-2, 2, 0.01)
 x0, n0 = sfs.array.circular(N, 1)
 
 # get driving function
-#d = sfs.mono.drivingfunction.delay_3d_pw(omega, x0, n0, npw)
+#d = sfs.mono.drivingfunction.delay_3d_plane(omega, x0, n0, npw)
 
-d = sfs.mono.drivingfunction.wfs_2d_ls(omega, x0, n0, xs)
+d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
 
-#d = sfs.mono.drivingfunction.wfs_2d_pw(omega, x0, n0, npw)
-#d = sfs.mono.drivingfunction.wfs_25d_pw(omega, x0, n0, npw)
-#d = sfs.mono.drivingfunction.wfs_3d_pw(omega, x0, n0, npw)
+#d = sfs.mono.drivingfunction.wfs_2d_plane(omega, x0, n0, npw)
+#d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw)
+#d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
 
-#d = sfs.mono.drivingfunction.wfs_2d_ps(omega, x0, n0, xs)
-#d = sfs.mono.drivingfunction.wfs_25d_ps(omega, x0, n0, xs)
-#d = sfs.mono.drivingfunction.wfs_3d_ps(omega, x0, n0, xs)
+#d = sfs.mono.drivingfunction.wfs_2d_point(omega, x0, n0, xs)
+#d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs)
+#d = sfs.mono.drivingfunction.wfs_3d_point(omega, x0, n0, xs)
 
 
 # get active secondary sources
-#a = sfs.mono.drivingfunction.source_selection_pw(n0, npw)
-a = sfs.mono.drivingfunction.source_selection_ps(n0, x0, xs)
+#a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 
 # get tapering window
 #twin = sfs.tapering.none(a)
 twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0, source_type='line')
+p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0, source=sfs.mono.source.line)
 
 
 # plot synthesized sound field
