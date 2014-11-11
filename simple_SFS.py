@@ -21,8 +21,8 @@ omega = 2 * np.pi * f
 npw = np.array([np.cos(pw_angle), np.sin(pw_angle), 0])
 
 # spatial grid
-x = np.arange(-2, 2, 0.02)
-y = np.arange(-2, 2, 0.02)
+x = np.arange(-2, 2, 0.01)
+y = np.arange(-2, 2, 0.01)
 
 
 # --------------------------------------------------------------------------------
