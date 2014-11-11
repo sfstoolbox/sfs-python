@@ -2,7 +2,7 @@
 
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
-import sfs
+from .. import util
 
 def _wfs_ps(omega, x0, n0, xs, c=None):
     """Point source by two- or three-dimensional WFS.
@@ -17,8 +17,7 @@ def _wfs_ps(omega, x0, n0, xs, c=None):
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
     xs = np.squeeze(np.asarray(xs))
-    if c is None: c=sfs.c
-    k = omega / c
+    k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
     return 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(-1j * k * r)
@@ -41,8 +40,7 @@ def wfs_25d_ps(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     n0 = np.asarray(n0)
     xs = np.squeeze(np.asarray(xs))
     xref = np.squeeze(np.asarray(xref))
-    if c is None: c=sfs.c
-    k = omega / c
+    k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
     return np.sqrt(1j * k * np.linalg.norm(xref - x0)) * inner1d(ds, n0) / \
@@ -63,8 +61,7 @@ def _wfs_pw(omega, x0, n0, n=[0, 1, 0], c=None):
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
     n = np.squeeze(np.asarray(n))
-    if c is None: c=sfs.c
-    k = omega / c
+    k = util.wavenumber(omega, c)
     return 1j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
@@ -84,8 +81,7 @@ def wfs_25d_pw(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n0 = np.asarray(n0)
     n = np.squeeze(np.asarray(n))
     xref = np.squeeze(np.asarray(xref))
-    if c is None: c=sfs.c
-    k = omega / c
+    k = util.wavenumber(omega, c)
     return np.sqrt(1j * k * np.linalg.norm(xref - x0)) * np.inner(n, n0) * \
         np.exp(-1j * k * np.inner(n, x0))
 
@@ -97,8 +93,7 @@ def delay_3d_pw(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by simple delay of secondary sources."""
     x0 = np.asarray(x0)
     n = np.squeeze(np.asarray(n))
-    if c is None: c=sfs.c
-    k = omega / c
+    k = util.wavenumber(omega, c)
     return np.exp(-1j * k * np.inner(n, x0))
 
 

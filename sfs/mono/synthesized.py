@@ -1,8 +1,7 @@
 """Computation of synthesized sound fields."""
 
-import sfs
 import numpy as np
-
+from . import source
 
 def generic(omega, x0, d, x, y, z, c=None):
     """Compute sound field for a generic driving function"""
@@ -11,5 +10,5 @@ def generic(omega, x0, d, x, y, z, c=None):
         raise ValueError("length mismatch")
     p = 0
     for weight, position in zip(d, x0):
-        p += weight * sfs.mono.source.point(omega, position, x, y, z, c)
+        p += weight * source.point(omega, position, x, y, z, c)
     return p
