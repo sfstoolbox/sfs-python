@@ -9,13 +9,13 @@ import sfs
 # parameters
 dx = 0.1  # secondary source distance
 N = 50  # number of secondary sources
-pw_angle = np.pi / 4  # traveling direction of plane wave
+pw_angle = np.radians(90)  # traveling direction of plane wave
 xs = [0, 2, 0]  # position of virtual source
 f = 1000  # frequency
 
 
-# wavenumber
-k = 2 * np.pi * f / 343
+# angular frequency
+omega = 2 * np.pi * f
 
 # normal vector of plane wave
 npw = np.array([np.cos(pw_angle), np.sin(pw_angle), 0])
@@ -34,15 +34,15 @@ y = np.arange(-2, 2, 0.02)
 x0, n0 = sfs.array.circular(N, 1)
 
 # get driving function
-#d = sfs.drivingfunction.delay_3d_pw(k, x0, n0, npw)
+#d = sfs.mono.drivingfunction.delay_3d_pw(omega, x0, n0, npw)
 
-#d = sfs.mono.drivingfunction.wfs_2d_pw(k, x0, n0, npw)
-#d = sfs.mono.drivingfunction.wfs_25d_pw(k, x0, n0, npw)
-d = sfs.mono.drivingfunction.wfs_3d_pw(k, x0, n0, npw)
+#d = sfs.mono.drivingfunction.wfs_2d_pw(omega, x0, n0, npw)
+d = sfs.mono.drivingfunction.wfs_25d_pw(omega, x0, n0, npw)
+#d = sfs.mono.drivingfunction.wfs_3d_pw(omega, x0, n0, npw)
 
-#d = sfs.mono.drivingfunction.wfs_2d_ps(k, x0, n0, xs)
-#d = sfs.mono.drivingfunction.wfs_25d_ps(k, x0, n0, xs)
-#d = sfs.mono.drivingfunction.wfs_3d_ps(k, x0, n0, xs)
+#d = sfs.mono.drivingfunction.wfs_2d_ps(omega, x0, n0, xs)
+#d = sfs.mono.drivingfunction.wfs_25d_ps(omega, x0, n0, xs)
+#d = sfs.mono.drivingfunction.wfs_3d_ps(omega, x0, n0, xs)
 
 
 # get active secondary sources
@@ -54,7 +54,7 @@ a = sfs.mono.drivingfunction.source_selection_pw(n0, npw)
 twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(x, y, 0, x0, k, d, twin)
+p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0)
 
 
 # plot synthesized sound field

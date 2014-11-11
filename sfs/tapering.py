@@ -11,6 +11,7 @@ def none(active):
 
 def kaiser(active):
     """Kaiser tapering window."""
+    # TODO: window for closed arrays not working
     active = np.asarray(active, dtype=np.float64)
     idx = np.flatnonzero(active)
     window = np.zeros(active.shape)
