@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 import numpy as np
-import sfs
+from . import util
 
 
 def loudspeaker(x0, n0, w=0.08, h=0.08):
@@ -23,7 +23,7 @@ def loudspeaker(x0, n0, w=0.08, h=0.08):
 
     for x00, n00 in zip(x0, n0):
         # rotate and translate coordinates
-        R = sfs.util.rotation_matrix([1, 0, 0], n00)
+        R = util.rotation_matrix([1, 0, 0], n00)
         v1 = np.inner(v01, R) + x00
         v2 = np.inner(v02, R) + x00
 
