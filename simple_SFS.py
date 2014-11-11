@@ -36,8 +36,10 @@ x0, n0 = sfs.array.circular(N, 1)
 # get driving function
 #d = sfs.mono.drivingfunction.delay_3d_pw(omega, x0, n0, npw)
 
+d = sfs.mono.drivingfunction.wfs_2d_ls(omega, x0, n0, xs)
+
 #d = sfs.mono.drivingfunction.wfs_2d_pw(omega, x0, n0, npw)
-d = sfs.mono.drivingfunction.wfs_25d_pw(omega, x0, n0, npw)
+#d = sfs.mono.drivingfunction.wfs_25d_pw(omega, x0, n0, npw)
 #d = sfs.mono.drivingfunction.wfs_3d_pw(omega, x0, n0, npw)
 
 #d = sfs.mono.drivingfunction.wfs_2d_ps(omega, x0, n0, xs)
@@ -46,22 +48,22 @@ d = sfs.mono.drivingfunction.wfs_25d_pw(omega, x0, n0, npw)
 
 
 # get active secondary sources
-a = sfs.mono.drivingfunction.source_selection_pw(n0, npw)
-#a = sfs.mono.drivingfunction.source_selection_ps(n0, x0, xs)
+#a = sfs.mono.drivingfunction.source_selection_pw(n0, npw)
+a = sfs.mono.drivingfunction.source_selection_ps(n0, x0, xs)
 
 # get tapering window
 #twin = sfs.tapering.none(a)
 twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0)
+p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0, source_type='line')
 
 
 # plot synthesized sound field
 plt.figure(figsize=(15, 15))
 
 plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
-           extent=[-2, 2, -2, 2], vmax=100, vmin=-100, aspect='equal')
+           extent=[-2, 2, -2, 2], vmax=10, vmin=-10, aspect='equal')
 plt.colorbar()
 
 sfs.plot.loudspeaker(x0, n0)

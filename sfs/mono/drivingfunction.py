@@ -2,7 +2,28 @@
 
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
+from scipy.special import hankel2
 import sfs
+
+def wfs_2d_ls(omega, x0, n0, xs, c=None):
+    """Line source by 2-dimensional WFS.
+
+    ::
+
+                  
+      D(x0,k) = j k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
+                              
+
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    xs = np.squeeze(np.asarray(xs))
+    if c is None: c=sfs.c
+    k = omega / c
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+    return 1j * k * inner1d(ds, n0) / r * hankel2(1, k * r)
+
 
 def _wfs_ps(omega, x0, n0, xs, c=None):
     """Point source by two- or three-dimensional WFS.
