@@ -12,6 +12,3 @@ except ImportError:
     pass
 
 from . import mono
-
-# speed of sound
-c=343

@@ -1,10 +1,10 @@
 """Computation of synthesized sound fields."""
 
 import numpy as np
-from . import source
+from .source import point
 
 
-def generic(omega, x0, d, x, y, z, c=None, source=source.point):
+def generic(omega, x0, d, x, y, z, c=None, source=point):
     """Compute sound field for a generic driving function"""
     d = np.squeeze(np.asarray(d))
     if len(d) != len(x0):
