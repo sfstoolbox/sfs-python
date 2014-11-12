@@ -56,7 +56,8 @@ a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0, source=sfs.mono.source.line)
+p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0,
+                                 source=sfs.mono.source.line)
 
 
 # plot synthesized sound field

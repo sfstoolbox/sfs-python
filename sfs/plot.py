@@ -14,7 +14,7 @@ def loudspeaker(x0, n0, w=0.08, h=0.08):
     patches = []
 
     # coordinates of loudspeaker symbol
-    v01 = np.asarray([[-h, -h, -h / 2, -h /2, -h], [-w / 2, w / 2, w / 2, 
+    v01 = np.asarray([[-h, -h, -h / 2, -h / 2, -h], [-w / 2, w / 2, w / 2,
                       -w / 2, -w / 2], [0, 0, 0, 0, 0]])
     v02 = np.asarray(
         [[-h / 2, 0, 0, -h / 2], [-w / 6, -w / 2, w / 2, w / 6], [0, 0, 0, 0]])

@@ -5,14 +5,15 @@ from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import hankel2
 from .. import util
 
+
 def wfs_2d_line(omega, x0, n0, xs, c=None):
     """Line source by 2-dimensional WFS.
 
     ::
 
-                  
+
       D(x0,k) = j k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
-                              
+
 
     """
     x0 = np.asarray(x0)
