@@ -21,8 +21,8 @@ omega = 2 * np.pi * f
 npw = np.array([np.cos(pw_angle), np.sin(pw_angle), 0])
 
 # spatial grid
-x = np.arange(-2, 2, 0.01)
-y = np.arange(-2, 2, 0.01)
+x = np.arange(-2, 2, 0.02)
+y = np.arange(-2, 2, 0.02)
 
 
 # --------------------------------------------------------------------------------
@@ -67,6 +67,6 @@ plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
            extent=[-2, 2, -2, 2], vmax=10, vmin=-10, aspect='equal')
 plt.colorbar()
 
-sfs.plot.loudspeaker(x0, n0)
+sfs.plot.loudspeaker(x0, n0, twin)
 
 plt.savefig('soundfield.png')
