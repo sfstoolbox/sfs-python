@@ -8,12 +8,12 @@ def linear(N, dx, center=[0, 0, 0], n0=None):
     """Linear secondary source distribution."""
     center = np.squeeze(np.asarray(center, dtype=np.float64))
     positions = np.zeros((N, 3))
-    positions[:, 0] = (np.arange(N) - N / 2 + 1 / 2) * dx
+    positions[:, 1] = (np.arange(N) - N / 2 + 1 / 2) * dx
     if n0 is None:
-        n0 = np.array([0, 1, 0], dtype=np.float64)
+        n0 = np.array([1, 0, 0], dtype=np.float64)
     else:
         n0 = np.array(n0, dtype=np.float64)
-        R = util.rotation_matrix([0, 1, 0], n0)
+        R = util.rotation_matrix([1, 0, 0], n0)
         positions = np.inner(positions, R)
     positions += center
     directions = np.tile(n0, (N, 1))
@@ -36,11 +36,11 @@ def circular(N, R, center=[0, 0, 0]):
 def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0]):
     """Rectangular secondary source distribution."""
 
-    x00, n00 = linear(Nx, dx)
+    x00, n00 = linear(Nx, dx, n0=[0, 1, 0])
     positions = x00
     directions = n00
 
-    x00, n00 = linear(Ny, dy, center=[x00[-1, 0] + dx/2, Ny/2 * dy, 0],
+    x00, n00 = linear(Ny, dy, center=[x00[0, 0] + dx/2, Ny/2 * dy, 0],
                       n0=[-1, 0, 0])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
