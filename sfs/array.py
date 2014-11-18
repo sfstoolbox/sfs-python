@@ -31,3 +31,29 @@ def circular(N, R, center=[0, 0, 0]):
     directions[:, 0] = np.cos(alpha + np.pi)
     directions[:, 1] = np.sin(alpha + np.pi)
     return positions, directions
+
+
+def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0]):
+    """Rectangular secondary source distribution."""
+
+    x00, n00 = linear(Nx, dx)
+    positions = x00
+    directions = n00
+
+    x00, n00 = linear(Ny, dy, center=[x00[-1, 0] + dx/2, Ny/2 * dy, 0],
+                      n0=[-1, 0, 0])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+
+    x00, n00 = linear(Nx, dx, center=[0, x00[-1, 1] + dy/2, 0], n0=[0, -1, 0])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+
+    x00, n00 = linear(Ny, dy, center=[-x00[-1, 0] - dx/2, Ny/2 * dy, 0],
+                      n0=[1, 0, 0])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+
+    positions += np.asarray(center) - np.asarray([0, Ny/2 * dy, 0])
+
+    return positions, directions

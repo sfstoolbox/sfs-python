@@ -10,9 +10,9 @@ import sfs
 
 # parameters
 dx = 0.1  # secondary source distance
-N = 10  # number of secondary sources
+N = 15  # number of secondary sources
 pw_angle = np.radians(90)  # traveling direction of plane wave
-xs = [-1,1, 0]  # position of virtual source
+xs = [-1, -1, 0]  # position of virtual source
 f = 1000  # frequency
 
 
@@ -32,8 +32,9 @@ y = np.arange(-2, 2, 0.02)
 # --------------------------------------------------------------------------------
 
 # get secondary source positions
-x0,n0 = sfs.array.linear(N, dx, n0=sfs.util.normal(np.radians(0), np.pi/2))
+#x0,n0 = sfs.array.linear(N, dx, n0=[0,1,0])
 #x0, n0 = sfs.array.circular(N, 1)
+x0,n0 = sfs.array.rectangular(N, dx, N, dx)
 
 # get driving function
 #d = sfs.mono.drivingfunction.delay_3d_plane(omega, x0, n0, npw)
@@ -54,8 +55,8 @@ d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 
 # get tapering window
-#twin = sfs.tapering.none(a)
-twin = sfs.tapering.kaiser(a)
+twin = sfs.tapering.none(a)
+#twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
 p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0,
@@ -65,4 +66,5 @@ p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0,
 # plot synthesized sound field
 sfs.plot.soundfield(p, x, y, [0, 1, 0])
 sfs.plot.loudspeaker(x0, n0, twin)
+plt.grid()
 plt.show()

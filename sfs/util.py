@@ -8,11 +8,21 @@ def rotation_matrix(n1, n2):
     """Compute rotation matrix for rotation from n1 to n2"""
     n1 = np.asarray(n1)
     n2 = np.asarray(n2)
+    # no rotation required
     if all(n1 == n2):
         return np.eye(3)
 
     v = np.cross(n1, n2)
     s = np.linalg.norm(v)
+
+    # check for rotation of 180deg around one axis
+    if s == 0:
+        rot = np.identity(3)
+        for i in np.arange(3):
+            if np.abs(n1[i]) > 0 and np.abs(n1[i]) > 0 and n1[i] == -n2[i]:
+                rot[i, i] = -1
+        return rot
+
     c = np.inner(n1, n2)
     vx = [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]
 
@@ -28,8 +38,6 @@ def wavenumber(omega, c=None):
 
 def normal(alpha, beta):
     """Compute normal vector from azimuth, colatitude.
-
-       [Jens Ahrens, Analytic Methods of Sound Field Synthesis, Appendix A]
     """
     return [np.cos(alpha) * np.sin(beta), np.sin(alpha) * np.sin(beta),
             np.cos(beta)]
