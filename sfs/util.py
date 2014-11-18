@@ -8,6 +8,8 @@ def rotation_matrix(n1, n2):
     """Compute rotation matrix for rotation from n1 to n2"""
     n1 = np.asarray(n1)
     n2 = np.asarray(n2)
+    if all(n1 == n2):
+        return np.eye(3)
 
     v = np.cross(n1, n2)
     s = np.linalg.norm(v)
@@ -22,3 +24,12 @@ def wavenumber(omega, c=None):
     if c is None:
         c = defs.c
     return omega / c
+
+
+def normal(alpha, beta):
+    """Compute normal vector from azimuth, colatitude.
+
+       [Jens Ahrens, Analytic Methods of Sound Field Synthesis, Appendix A]
+    """
+    return [np.cos(alpha) * np.sin(beta), np.sin(alpha) * np.sin(beta),
+            np.cos(beta)]

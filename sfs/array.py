@@ -1,15 +1,22 @@
 """Compute positions of various secondary source distributions."""
 
 import numpy as np
+from . import util
 
 
-def linear(N, dx, center=[0, 0, 0]):
-    """Linear secondary source distribution parallel to the x-axis."""
-    xpos = (np.arange(N) - N / 2 + 1 / 2) * dx
+def linear(N, dx, center=[0, 0, 0], n0=None):
+    """Linear secondary source distribution."""
     center = np.squeeze(np.asarray(center, dtype=np.float64))
-    positions = np.tile(center, (N, 1))
-    positions[:, 0] += xpos
-    directions = np.tile(np.array([0, 1, 0], dtype=np.float64), (N, 1))
+    positions = np.zeros((N, 3))
+    positions[:, 0] = (np.arange(N) - N / 2 + 1 / 2) * dx
+    if n0 is None:
+        n0 = np.array([0, 1, 0], dtype=np.float64)
+    else:
+        n0 = np.array(n0, dtype=np.float64)
+        R = util.rotation_matrix([0, 1, 0], n0)
+        positions = np.inner(positions, R)
+    positions += center
+    directions = np.tile(n0, (N, 1))
     return positions, directions
 
 
