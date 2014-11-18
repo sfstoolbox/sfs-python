@@ -39,7 +39,7 @@ def loudspeaker(x0, n0, a0=None, w=0.08, h=0.08):
         polygon = Polygon(v2[:, :-1], True)
         patches.append(polygon)
 
-        # set facecolor
+        # set facecolor (two times due to split patches)
         fc.append((1-a00) * np.ones(3))
         fc.append((1-a00) * np.ones(3))
 
@@ -47,3 +47,20 @@ def loudspeaker(x0, n0, a0=None, w=0.08, h=0.08):
     p = PatchCollection(patches, edgecolor='0', facecolor=fc, alpha=1)
     ax = plt.gca()
     ax.add_collection(p)
+
+
+def soundfield(p, x, y, xnorm=[0, 0, 0]):
+    """Two-dimensional plot of sound field"""
+
+    # normalize sound field wrt xnorm
+    xx, yy = np.meshgrid(x - xnorm[0], y - xnorm[1], sparse=True)
+    r = np.sqrt((xx) ** 2 + (yy) ** 2)
+    idx = np.unravel_index(r.argmin(), r.shape)
+    p = p / abs(p[idx])
+
+    # plot sound field
+    plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
+               extent=[min(x), max(x), min(y), max(y)], vmax=2, vmin=-2,
+               aspect='equal')
+
+    plt.colorbar()
