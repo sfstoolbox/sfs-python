@@ -4,6 +4,7 @@
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import sfs
 
 
@@ -64,3 +65,4 @@ p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0,
 # plot synthesized sound field
 sfs.plot.soundfield(p, x, y, [0, 0, 0])
 sfs.plot.loudspeaker(x0, n0, twin)
+plt.show()
