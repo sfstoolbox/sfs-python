@@ -36,24 +36,26 @@ def circular(N, R, center=[0, 0, 0]):
 def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0]):
     """Rectangular secondary source distribution."""
 
-    x00, n00 = linear(Nx, dx, n0=[0, 1, 0])
+    # left array
+    x00, n00 = linear(Nx, dx)
     positions = x00
     directions = n00
-
-    x00, n00 = linear(Ny, dy, center=[x00[0, 0] + dx/2, Ny/2 * dy, 0],
-                      n0=[-1, 0, 0])
+    # upper array
+    x00, n00 = linear(Ny, dy, center=[Nx/2 * dx, x00[-1, 1] + dy/2, 0],
+                      n0=[0, -1, 0])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # right array
+    x00, n00 = linear(Nx, dx, center=[x00[-1, 0] + dx/2, 0, 0], n0=[-1, 0, 0])
+    x00 = np.flipud(x00)
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # lower array
+    x00, n00 = linear(Ny, dy, center=[Nx/2 * dx, x00[-1, 1] - dy/2, 0],
+                      n0=[0, 1, 0])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
 
-    x00, n00 = linear(Nx, dx, center=[0, x00[-1, 1] + dy/2, 0], n0=[0, -1, 0])
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-
-    x00, n00 = linear(Ny, dy, center=[-x00[-1, 0] - dx/2, Ny/2 * dy, 0],
-                      n0=[1, 0, 0])
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-
-    positions += np.asarray(center) - np.asarray([0, Ny/2 * dy, 0])
+    positions += np.asarray(center) - np.asarray([Nx/2 * dx, 0, 0])
 
     return positions, directions

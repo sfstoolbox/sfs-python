@@ -59,8 +59,6 @@ def soundfield(p, x, y, xnorm=[0, 0, 0]):
     p = p / abs(p[idx])
 
     # plot sound field
-    plt.figure(figsize=(15, 15))
-
     plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
                extent=[min(x), max(x), min(y), max(y)], vmax=2, vmin=-2,
                aspect='equal')
