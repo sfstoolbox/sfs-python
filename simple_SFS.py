@@ -12,7 +12,7 @@ import sfs
 dx = 0.1  # secondary source distance
 N = 10  # number of secondary sources
 pw_angle = np.radians(90)  # traveling direction of plane wave
-xs = [-2, 0, 0]  # position of virtual source
+xs = [-2, -2, 0]  # position of virtual source
 f = 1000  # frequency
 
 
@@ -32,7 +32,7 @@ y = np.arange(-2, 2, 0.02)
 # --------------------------------------------------------------------------------
 
 # get secondary source positions
-#x0,n0 = sfs.array.linear(N, dx, n0=[0,1,0])
+#x0,n0 = sfs.array.linear(N, dx, n0=[1,0,0])
 #x0, n0 = sfs.array.circular(N, 1)
 x0, n0 = sfs.array.rectangular(N, dx, N, dx)
 

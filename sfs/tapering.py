@@ -22,7 +22,7 @@ def _windowidx(active):
     """Returns list of connected indices for window function."""
     active = np.asarray(active, dtype=np.float64)
     # find index were active loudspeakers begin (works for connected contours)
-    if active[0] == 1 and active[-1] == 0:
+    if (active[0] == 1 and active[-1] == 0) or np.all(active):
         a0 = 0
     else:
         a0 = np.argmax(np.diff(active)) + 1
