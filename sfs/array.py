@@ -37,21 +37,21 @@ def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0]):
     """Rectangular secondary source distribution."""
 
     # left array
-    x00, n00 = linear(Nx, dx)
+    x00, n00 = linear(Ny, dy)
     positions = x00
     directions = n00
     # upper array
-    x00, n00 = linear(Ny, dy, center=[Nx/2 * dx, x00[-1, 1] + dy/2, 0],
+    x00, n00 = linear(Nx, dx, center=[Nx/2 * dx, x00[-1, 1] + dy/2, 0],
                       n0=[0, -1, 0])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     # right array
-    x00, n00 = linear(Nx, dx, center=[x00[-1, 0] + dx/2, 0, 0], n0=[-1, 0, 0])
+    x00, n00 = linear(Ny, dy, center=[x00[-1, 0] + dx/2, 0, 0], n0=[-1, 0, 0])
     x00 = np.flipud(x00)
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     # lower array
-    x00, n00 = linear(Ny, dy, center=[Nx/2 * dx, x00[-1, 1] - dy/2, 0],
+    x00, n00 = linear(Nx, dx, center=[Nx/2 * dx, x00[-1, 1] - dy/2, 0],
                       n0=[0, 1, 0])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
