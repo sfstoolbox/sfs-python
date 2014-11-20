@@ -57,7 +57,75 @@ def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0], n0=None):
     if n0 is not None:
         positions, directions = _rotate_array(positions, directions,
                                               [1, 0, 0], n0)
-    # shift array to desired positions
+    # shift array to desired position
+    positions += np.asarray(center)
+
+    return positions, directions
+
+
+def planar(Ny, dy, Nz, dz, center=[0, 0, 0], n0=None):
+    """Planar secondary source distribtion."""
+    center = np.squeeze(np.asarray(center, dtype=np.float64))
+    # initialize vectors for later np.concatenate
+    positions = np.zeros((1, 3))
+    directions = np.zeros((1, 3))
+    for z in (np.arange(Nz) - Nz / 2 + 1 / 2) * dz:
+        x00, n00 = linear(Ny, dy, center=[0, 0, z])
+        positions = np.concatenate((positions, x00), axis=0)
+        directions = np.concatenate((directions, n00), axis=0)
+    # remove first element from initialization
+    positions = np.delete(positions, 0, axis=0)
+    directions = np.delete(directions, 0, axis=0)
+    # rotate array
+    if n0 is not None:
+        positions, directions = _rotate_array(positions, directions,
+                                              [1, 0, 0], n0)
+    # shift array to desired position
+    positions += np.asarray(center)
+
+    return positions, directions
+
+
+def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], n0=None):
+    """Cube shaped secondary source distribtion."""
+    center = np.squeeze(np.asarray(center, dtype=np.float64))
+    # left array
+    x00, n00 = planar(Ny, dy, Nz, dz)
+    positions = x00
+    directions = n00
+    # upper array
+    x00, n00 = planar(Nx, dx, Nz, dz, center=[Nx/2 * dx, x00[-1, 1] + dy/2, 0],
+                      n0=[0, -1, 0])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # right array
+    x00, n00 = planar(Ny, dy, Nz, dz, center=[x00[-1, 0] + dx/2, 0, 0],
+                      n0=[-1, 0, 0])
+    x00 = np.flipud(x00)
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # lower array
+    x00, n00 = planar(Nx, dx, Nz, dz, center=[Nx/2 * dx, x00[-1, 1] - dy/2, 0],
+                      n0=[0, 1, 0])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # bottom array
+    x00, n00 = planar(Nx, dx, Ny, dy, center=[Nx/2 * dx, 0, -Nz/2 * dz],
+                      n0=[0, 0, 1])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # top array
+    x00, n00 = planar(Nx, dx, Ny, dy, center=[Nx/2 * dx, 0, Nz/2 * dz],
+                      n0=[0, 0, -1])
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    # shift array to center
+    positions -= np.asarray([Nx/2 * dx, 0, 0])
+    # rotate array
+    if n0 is not None:
+        positions, directions = _rotate_array(positions, directions,
+                                              [1, 0, 0], n0)
+    # shift array to desired position
     positions += np.asarray(center)
 
     return positions, directions

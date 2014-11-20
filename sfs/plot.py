@@ -3,11 +3,12 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from . import util
 
 
-def loudspeaker(x0, n0, a0=None, w=0.08, h=0.08):
+def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08):
     """Draw loudspeaker symbols at given locations, angles"""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
@@ -49,6 +50,19 @@ def loudspeaker(x0, n0, a0=None, w=0.08, h=0.08):
     ax.add_collection(p)
 
 
+def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
+    """Plot positions and normal vectors of a 3D secondary source
+    distribution."""
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.quiver(x0[:, 0], x0[:, 1], x0[:, 2], n0[:, 0],
+              n0[:, 1], n0[:, 2], length=0.1)
+    plt.xlabel('x (m)')
+    plt.ylabel('y (m)')
+    plt.title('Secondary Sources')
+    fig.show()
+
+
 def soundfield(p, x, y, xnorm=[0, 0, 0]):
     """Two-dimensional plot of sound field"""
 
@@ -63,4 +77,6 @@ def soundfield(p, x, y, xnorm=[0, 0, 0]):
                extent=[min(x), max(x), min(y), max(y)], vmax=2, vmin=-2,
                aspect='equal')
 
+    plt.xlabel('x (m)')
+    plt.ylabel('y (m)')
     plt.colorbar()
