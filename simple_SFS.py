@@ -69,6 +69,8 @@ p = sfs.mono.synthesized.generic(omega, x0, d * twin, x, y, 0,
 plt.figure(figsize=(15, 15))
 sfs.plot.soundfield(p, x, y, [0, 0, 0])
 sfs.plot.loudspeaker_2d(x0, n0, twin)
-sfs.plot.loudspeaker_3d(x0, n0, twin)
 plt.grid()
-plt.show()
+plt.savefig('soundfield.png')
+
+sfs.plot.loudspeaker_3d(x0, n0, twin)
+plt.savefig('loudspeakers.png')
