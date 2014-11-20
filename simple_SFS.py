@@ -10,9 +10,9 @@ import sfs
 
 # parameters
 dx = 0.1  # secondary source distance
-N = 60  # number of secondary sources
+N = 15  # number of secondary sources
 pw_angle = np.radians(90)  # traveling direction of plane wave
-xs = [0, 2, 0]  # position of virtual source
+xs = [-.5, 2, 0]  # position of virtual source
 f = 1000  # frequency
 
 
