@@ -72,5 +72,6 @@ sfs.plot.loudspeaker_2d(x0, n0, twin)
 plt.grid()
 plt.savefig('soundfield.png')
 
+
 sfs.plot.loudspeaker_3d(x0, n0, twin)
 plt.savefig('loudspeakers.png')
