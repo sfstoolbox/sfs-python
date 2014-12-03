@@ -79,4 +79,6 @@ def soundfield(p, x, y, xnorm=[0, 0, 0]):
 
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
+
+    # plot colorbar
     plt.colorbar()
