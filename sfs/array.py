@@ -9,8 +9,8 @@ def linear(N, dx, center=[0, 0, 0], n0=[1, 0, 0]):
     center = np.squeeze(np.asarray(center, dtype=np.float64))
     positions = np.zeros((N, 3))
     positions[:, 1] = (np.arange(N) - N / 2 + 1 / 2) * dx
-    directions = np.tile([1, 0, 0], (N, 1))
-    positions, directions = _rotate_array(positions, directions, [1, 0, 0], n0)
+    positions, directions = _rotate_array(positions, [1, 0, 0], [1, 0, 0], n0)
+    directions = np.tile(directions, (N, 1))
     positions += center
     weights = dx * np.ones(N)
     return positions, directions, weights
