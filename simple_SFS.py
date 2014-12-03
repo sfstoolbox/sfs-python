@@ -37,8 +37,8 @@ y = np.arange(-3, 3, 0.02)
 #x0, n0, a0 = sfs.array.rectangular(2*N, dx, N, dx, n0=sfs.util.normal(0*np.pi/4, np.pi/2))
 #x0, n0, a0 = sfs.array.planar(N, dx, N, dx, n0=sfs.util.normal(np.radians(0),np.radians(180)))
 #x0, n0, a0 = sfs.array.cube(N, dx, N, dx, N, dx, n0=sfs.util.normal(0, np.pi/2))
-#x0, n0, a0 = sfs.array.linear_nonuniform(N, dx, 2*dx)
-x0, n0, a0 = sfs.array.linear_random(N, 0.5*dx, 2*dx)
+x0, n0, a0 = sfs.array.linear_nested(N, dx, 2*dx)
+#x0, n0, a0 = sfs.array.linear_random(N, 0.2*dx, 5*dx)
 
 # get driving function
 #d = sfs.mono.drivingfunction.delay_3d_plane(omega, x0, n0, npw)
@@ -59,8 +59,8 @@ a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
 #a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 
 # get tapering window
-twin = sfs.tapering.none(a)
-#twin = sfs.tapering.kaiser(a)
+#twin = sfs.tapering.none(a)
+twin = sfs.tapering.kaiser(a)
 
 # compute synthesized sound field
 p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0 , x, y, 0,
