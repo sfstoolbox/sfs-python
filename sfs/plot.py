@@ -79,22 +79,23 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
     fig.show()
 
 
-def soundfield(p, x, y, xnorm=[0, 0, 0]):
+def soundfield(p, x, y, xnorm=None, colorbar=True, cmap=plt.cm.RdBu):
     """Two-dimensional plot of sound field"""
 
     # normalize sound field wrt xnorm
-    xx, yy = np.meshgrid(x - xnorm[0], y - xnorm[1], sparse=True)
-    r = np.sqrt((xx) ** 2 + (yy) ** 2)
-    idx = np.unravel_index(r.argmin(), r.shape)
-    p = p / abs(p[idx])
+    if xnorm is not None:
+        xx, yy = np.meshgrid(x - xnorm[0], y - xnorm[1], sparse=True)
+        r = np.sqrt((xx) ** 2 + (yy) ** 2)
+        idx = np.unravel_index(r.argmin(), r.shape)
+        p = p / abs(p[idx])
 
     # plot sound field
-    plt.imshow(np.real(p), cmap=plt.cm.RdBu, origin='lower',
+    plt.imshow(np.real(p), cmap=cmap, origin='lower',
                extent=[min(x), max(x), min(y), max(y)], vmax=2, vmin=-2,
                aspect='equal')
 
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
 
-    # plot colorbar
-    plt.colorbar()
+    if colorbar is True:
+        plt.colorbar()

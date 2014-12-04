@@ -14,3 +14,8 @@ def generic(omega, x0, d, x, y, z, c=None, source=point):
         if weight != 0:
             p += weight * source(omega, position, x, y, z, c)
     return p
+
+
+def shiftphase(p, phase):
+    """Shift pahse of a sound field."""
+    return p * np.exp(1j * phase)

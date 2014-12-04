@@ -121,7 +121,7 @@ def planar(Ny, dy, Nz, dz, center=[0, 0, 0], n0=None):
     positions = np.zeros((1, 3))
     directions = np.zeros((1, 3))
     for z in (np.arange(Nz) - Nz / 2 + 1 / 2) * dz:
-        x00, n00 = linear(Ny, dy, center=[0, 0, z])
+        x00, n00, a00 = linear(Ny, dy, center=[0, 0, z])
         positions = np.concatenate((positions, x00), axis=0)
         directions = np.concatenate((directions, n00), axis=0)
     # remove first element from initialization
@@ -195,7 +195,7 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
     """Spherical secondary source distribution loaded from datafile.
 
     ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 position, 1 weight)
-    per secondary source located on a unit circle.
+    per secondary source located on the unit circle.
     """
     x0 = np.loadtxt(fname)
     weights = x0[:, 3]
