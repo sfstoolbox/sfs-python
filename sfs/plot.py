@@ -8,8 +8,25 @@ import numpy as np
 from . import util
 
 
+def virtualsource_2d(xs, ns=None, type='point'):
+    """Draw position/orientation of virtual source."""
+    xs = np.asarray(xs)
+    ns = np.asarray(ns)
+
+    if type is 'point':
+        vps = plt.Circle(xs, .05, color='k')
+        fig = plt.gcf()
+        fig.gca().add_artist(vps)
+
+    if type is 'plane':
+        ns = 0.2 * ns
+        ax = plt.axes()
+        ax.arrow(xs[0], xs[1], ns[0], ns[1], head_width=0.05,
+                 head_length=0.1, fc='k', ec='k')
+
+
 def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08):
-    """Draw loudspeaker symbols at given locations, angles"""
+    """Draw loudspeaker symbols at given locations, angles."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
     patches = []
