@@ -13,12 +13,11 @@ def virtualsource_2d(xs, ns=None, type='point'):
     xs = np.asarray(xs)
     ns = np.asarray(ns)
 
-    if type is 'point':
+    if type == 'point':
         vps = plt.Circle(xs, .05, color='k')
         fig = plt.gcf()
         fig.gca().add_artist(vps)
-
-    if type is 'plane':
+    elif type == 'plane':
         ns = 0.2 * ns
         ax = plt.axes()
         ax.arrow(xs[0], xs[1], ns[0], ns[1], head_width=0.05,
