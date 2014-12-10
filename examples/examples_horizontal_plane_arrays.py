@@ -33,7 +33,7 @@ def compute_and_plot_soundfield(title):
     sfs.plot.soundfield(p, x, y, xnorm)
     sfs.plot.loudspeaker_2d(x0, n0, twin)
     sfs.plot.virtualsource_2d(xs)
-    sfs.plot.virtualsource_2d(xs, npw, type='plane')
+    sfs.plot.virtualsource_2d([0, 0], npw, type='plane')
     plt.title(title)
     plt.grid()
     plt.savefig(title + '.png')
