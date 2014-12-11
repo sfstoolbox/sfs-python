@@ -18,6 +18,30 @@ def kaiser(active):
     return window
 
 
+def tukey(active, alpha):
+    """Tukey tapering window."""
+    idx = _windowidx(active)
+    # alpha out of limits
+    if alpha <= 0 or alpha >= 1:
+        return none(active)
+    # design Tukey window
+    x = np.linspace(0, 1, len(idx)+2)
+    w = np.ones(x.shape)
+
+    first_condition = x < alpha/2
+    w[first_condition] = 0.5 * (1 + np.cos(2*np.pi/alpha *
+                                (x[first_condition] - alpha/2)))
+
+    third_condition = x >= (1 - alpha/2)
+    w[third_condition] = 0.5 * (1 + np.cos(2*np.pi/alpha *
+                                (x[third_condition] - 1 + alpha/2)))
+    # fit window into tapering function
+    window = np.zeros(active.shape)
+    window[idx] = w[1:-1]
+
+    return window
+
+
 def _windowidx(active):
     """Returns list of connected indices for window function."""
     active = np.asarray(active, dtype=np.float64)
