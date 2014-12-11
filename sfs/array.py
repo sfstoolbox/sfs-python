@@ -191,6 +191,20 @@ def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], n0=None):
     return positions, directions, weights
 
 
+def sphere_load(fname, radius, center=[0, 0, 0]):
+    """Spherical secondary source distribution loaded from datafile.
+
+    ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 position, 1 weight)
+    per secondary source located on a unit circle.
+    """
+    x0 = np.loadtxt(fname)
+    weights = x0[:, 3]
+    directions = - x0[:, 0:3]
+    positions = center + radius * x0[:, 0:3]
+
+    return positions, directions, weights
+
+
 def weights_linear(positions):
     """Calculate loudspeaker weights for a linear array."""
     N = len(positions)
