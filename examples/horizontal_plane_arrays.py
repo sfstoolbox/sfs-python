@@ -10,7 +10,7 @@ N = 30  # number of secondary sources
 f = 1000  # frequency
 pw_angle = 20  # traveling direction of plane wave
 xs = [-1.5, 0.2, 0]  # position of virtual monopole
-tapering = sfs.tapering.kaiser  # tapering window
+tapering = sfs.tapering.tukey  # tapering window
 xnorm = [1, 1, 0]  # normalization point for plots
 x = np.arange(-2.5, 2.5, 0.02)  # spatial grid
 y = np.arange(-1, 2.5, 0.02)  # spatial grid
@@ -25,7 +25,7 @@ npw = sfs.util.normal(np.radians(pw_angle), np.radians(90))
 
 def compute_and_plot_soundfield(title):
     """Compute and plot synthesized sound field."""
-    twin = tapering(a)
+    twin = tapering(a, .3)
     p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0, x, y, 0,
                                      source=sourcetype)
 
