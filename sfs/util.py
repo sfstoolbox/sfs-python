@@ -37,7 +37,24 @@ def wavenumber(omega, c=None):
 
 
 def normal(alpha, beta):
-    """Compute normal vector from azimuth, colatitude.
-    """
+    """Compute normal vector from azimuth, colatitude."""
     return [np.cos(alpha) * np.sin(beta), np.sin(alpha) * np.sin(beta),
             np.cos(beta)]
+
+
+def sph2cart(alpha, beta, r):
+    """Spherical to cartesian coordinates."""
+    x = r * np.cos(alpha) * np.sin(beta)
+    y = r * np.sin(alpha) * np.sin(beta)
+    z = r * np.cos(beta)
+
+    return x, y, z
+
+
+def cart2sph(x, y, z):
+    """Cartesian to spherical coordinates."""
+    alpha = np.arctan2(y, x)
+    beta = np.arccos(z / np.sqrt(x**2 + y**2))
+    r = np.sqrt(x**2 + y**2 + z**2)
+
+    return alpha, beta, r

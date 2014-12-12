@@ -3,6 +3,7 @@
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import hankel2
+from scipy.special import sph_jn, sph_yn
 from .. import util
 
 
@@ -140,3 +141,92 @@ def source_selection_point(n0, x0, xs):
     xs = np.squeeze(np.asarray(xs))
     ds = x0 - xs
     return inner1d(ds, n0) >= 0
+
+
+def source_selection_all(N):
+    """Select all secondary sources."""
+    return np.ones(N) >= 0
+
+
+def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
+    """Point source by 2.5-dimensional WFS."""
+    x0 = np.asarray(x0)
+    k = util.wavenumber(omega, c)
+    alpha, beta, r = util.cart2sph(n[0], n[1], n[2])
+    alpha0, beta0, tmp = util.cart2sph(x0[:, 0], x0[:, 1], x0[:, 2])
+    # determine max order of circular harmonics
+    M = _hoa_order_2d(len(x0))
+    # compute driving function
+    d = 0
+    for m in np.arange(-M, M):
+        d = d + 1j**(-m) / hankel2(m, k * r0) * \
+            np.exp(1j * m * (alpha0 - alpha))
+
+    return (4 / 1j) * d
+
+
+def nfchoa_25d_point(omega, x0, r0, xs, c=None):
+    """Point source by 2.5-dimensional WFS.
+
+    ::
+
+                              __      (2)
+                       1     \       h|m| (w/c r)
+         D(phi0,w) = -----   /__    ------------- e^(i m (phi0-phi))
+                      2pi r0 m=-N..N  (2)
+                                     h|m| (w/c r0)
+
+    """
+    x0 = np.asarray(x0)
+    k = util.wavenumber(omega, c)
+    alpha, beta, r = util.cart2sph(xs[0], xs[1], xs[2])
+    alpha0, beta0, tmp = util.cart2sph(x0[:, 0], x0[:, 1], x0[:, 2])
+    # determine max order of circular harmonics
+    M = _hoa_order_2d(len(x0))
+    # compute driving function
+    d = 0
+    a = _sph_hn2(M, k * r) / _sph_hn2(M, k * r0)
+    for m in np.arange(-M, M):
+        d += a[0, abs(m)] * np.exp(1j * m * (alpha0 - alpha))
+
+    return 1 / (2 * np.pi * r0) * d
+
+
+def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
+    """Plane wave by 2.5-dimensional WFS.
+
+    ::
+
+                             __
+                        2i  \            i^|m|
+        D_25D(phi0,w) = --  /__    ------------------ e^(i m (phi0-phi_pw) )
+                        r0 m=-N..N       (2)
+                                    w/c h|m| (w/c r0)
+    """
+    x0 = np.asarray(x0)
+    k = util.wavenumber(omega, c)
+    alpha, beta, r = util.cart2sph(n[0], n[1], n[2])
+    alpha0, beta0, tmp = util.cart2sph(x0[:, 0], x0[:, 1], x0[:, 2])
+    # determine max order of circular harmonics
+    M = _hoa_order_2d(len(x0))
+    # compute driving function
+    d = 0
+    a = 1 / _sph_hn2(M, k * r0)
+    for m in np.arange(-M, M):
+        d += (-1j)**abs(m) * a[0, abs(m)] * \
+            np.exp(1j * m * (alpha0 - alpha))
+
+    return (2j / r0) * d
+
+
+def _sph_hn2(n, z):
+    """Spherical Hankel function of 2nd kind."""
+    return np.asarray(sph_jn(n, z)) - 1j * np.asarray(sph_yn(n, z))
+
+
+def _hoa_order_2d(N):
+    """Computes order of HOA."""
+    if N % 2 == 0:
+        return N//2
+    else:
+        return (N-1)//2
