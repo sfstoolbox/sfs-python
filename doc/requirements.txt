@@ -1,0 +1,8 @@
+jinja2
+pygments
+sphinx
+sphinxcontrib-napoleon
+
+numpy
+scipy
+matplotlib
