@@ -27,6 +27,7 @@ npw = sfs.util.normal(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
 # spatial grid
 x = np.arange(-3, 3, 0.02)
 y = np.arange(-3, 3, 0.02)
+grid = np.meshgrid(x, y, 0, sparse=True)
 
 
 # --------------------------------------------------------------------------------
@@ -42,12 +43,12 @@ figure = np.rot90(figure)  # turn 0deg to the top
 d = sfs.mono.soundfigure.wfs_3d_pw(omega, x0, n0, figure, npw=npw)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(omega, x0, d * a0, x, y, 0,
+p = sfs.mono.synthesized.generic(omega, x0, d * a0, grid,
                                  source=sfs.mono.source.point)
 
 # plot and save synthesized sound field
 plt.figure(figsize=(10, 10))
-sfs.plot.soundfield(2.5e-9 * p, x, y, colorbar=False, cmap=plt.cm.BrBG)
+sfs.plot.soundfield(2.5e-9 * p, grid, colorbar=False, cmap=plt.cm.BrBG)
 plt.title('Synthesized Sound Field')
 plt.savefig('soundfigure.png')
 

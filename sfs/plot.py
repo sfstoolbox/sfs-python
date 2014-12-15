@@ -79,19 +79,24 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
     fig.show()
 
 
-def soundfield(p, x, y, xnorm=None, colorbar=True, cmap=plt.cm.RdBu):
-    """Two-dimensional plot of sound field"""
+def soundfield(p, grid, xnorm=None, colorbar=True, cmap=plt.cm.RdBu):
+    """Two-dimensional plot of sound field."""
+    grid = util.asarray_of_arrays(grid)
 
     # normalize sound field wrt xnorm
     if xnorm is not None:
-        xx, yy = np.meshgrid(x - xnorm[0], y - xnorm[1], sparse=True)
-        r = np.sqrt((xx) ** 2 + (yy) ** 2)
+        xnorm = util.asarray_1d(xnorm)
+        r = np.linalg.norm(grid - xnorm)
         idx = np.unravel_index(r.argmin(), r.shape)
+        # p is normally squeezed, therefore we need only 2 dimensions:
+        idx = idx[:p.ndim]
         p = p / abs(p[idx])
+
+    x, y = grid[:2]  # ignore z-component
 
     # plot sound field
     plt.imshow(np.real(p), cmap=cmap, origin='lower',
-               extent=[min(x), max(x), min(y), max(y)], vmax=2, vmin=-2,
+               extent=[x.min(), x.max(), y.min(), y.max()], vmax=2, vmin=-2,
                aspect='equal')
 
     plt.xlabel('x (m)')

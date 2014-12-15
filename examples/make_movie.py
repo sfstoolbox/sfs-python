@@ -1,6 +1,8 @@
-""" Example how to generate an animation from a pre-computed sound field.
+"""Example how to generate an animation from a pre-computed sound field.
 
-    p,x,y should contain the pressure field and axes of the sound field
+p and grid should contain the pressure field and axes of the sound
+field, respectively.
+
 """
 
 import numpy as np
@@ -14,7 +16,7 @@ fig = plt.figure(figsize=(15, 15))
 for i in range(frames):
     plt.cla()
     ph = sfs.mono.synthesized.shiftphase(p, i / frames * 4 * np.pi)
-    sfs.plot.soundfield(2.5e-9 * ph, x, y, colorbar=False, cmap=plt.cm.BrBG)
+    sfs.plot.soundfield(2.5e-9 * ph, grid, colorbar=False, cmap=plt.cm.BrBG)
     fname = '_tmp%03d.png' % i
     print('Saving frame', fname)
     plt.savefig(fname)

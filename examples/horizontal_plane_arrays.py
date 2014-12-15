@@ -17,6 +17,7 @@ talpha = 0.3  # parameter for tapering window
 xnorm = [1, 1, 0]  # normalization point for plots
 x = np.arange(-2.5, 2.5, 0.02)  # spatial grid
 y = np.arange(-1.5, 2.5, 0.02)  # spatial grid
+grid = np.meshgrid(x, y, 0, sparse=True)
 acenter = [0.3, 0.7, 0]  # center and normal vector of array
 anormal = sfs.util.normal(np.radians(35), np.radians(90))
 
@@ -31,12 +32,12 @@ def compute_and_plot_soundfield(title):
     print('Computing ', title)
 
     twin = tapering(a, talpha)
-    p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0, x, y, 0,
+    p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0, grid,
                                      source=sourcetype)
 
     plt.figure(figsize=(15, 15))
     plt.cla()
-    sfs.plot.soundfield(p, x, y, xnorm)
+    sfs.plot.soundfield(p, grid, xnorm)
     sfs.plot.loudspeaker_2d(x0, n0, twin)
     sfs.plot.virtualsource_2d(xs)
     sfs.plot.virtualsource_2d([0, 0], npw, type='plane')

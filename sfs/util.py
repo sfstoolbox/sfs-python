@@ -1,4 +1,4 @@
-"""Various utility functions"""
+"""Various utility functions."""
 
 import numpy as np
 from . import defs
@@ -58,3 +58,31 @@ def cart2sph(x, y, z):
     r = np.sqrt(x**2 + y**2 + z**2)
 
     return alpha, beta, r
+
+
+def asarray_1d(a, **kwargs):
+    """Squeeze the input and check if the result is one-dimensional.
+
+    Returns `a` converted to a `numpy.array` and stripped of all
+    singleton dimensions.  The result must have exactly one dimension.
+    If not, an error is raised.
+
+    """
+    result = np.squeeze(np.asarray(a, **kwargs))
+    if result.ndim != 1:
+        raise ValueError("array must be one-dimensional")
+    return result
+
+
+def asarray_of_arrays(a, **kwargs):
+    """Convert the input to an array consisting of arrays.
+
+    A one-dimensional array with `dtype=object` is returned, containing
+    the elements of `a` as arrays (whose `dtype` and other options can
+    be specified with `**kwargs`).
+
+    """
+    result = np.empty(len(a), dtype=object)
+    for i, element in enumerate(a):
+        result[i] = np.asarray(element, **kwargs)
+    return result

@@ -20,6 +20,7 @@ f = 500  # frequency
 R = 1.5  # radius of spherical/circular array
 x = np.arange(-2, 2, 0.02)  # spatial grid along x-axis
 y = np.arange(-2, 2, 0.02)  # spatial grid along y-axis
+grid = np.meshgrid(x, y, 0, sparse=True)
 
 # angular frequency
 omega = 2 * np.pi * f
@@ -71,13 +72,13 @@ twin = sfs.tapering.none(a)
 
 
 # === compute synthesized sound field ===
-p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0 , x, y, 0,
+p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0 , grid,
                                  source=sfs.mono.source.point)
 
 
 # === plot synthesized sound field ===
 plt.figure(figsize=(10, 10))
-sfs.plot.soundfield(p, x, y, [0, 0, 0])
+sfs.plot.soundfield(p, grid, [0, 0, 0])
 sfs.plot.loudspeaker_2d(x0, n0, twin)
 plt.grid()
 plt.savefig('soundfield.png')
