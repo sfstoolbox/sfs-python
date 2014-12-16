@@ -1,4 +1,6 @@
-"""Generates sound fields for various arrays and virtual source types."""
+"""
+    Generates sound fields for various arrays and virtual source types.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt

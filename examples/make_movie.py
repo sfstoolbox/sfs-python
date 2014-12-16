@@ -1,4 +1,4 @@
-""" Example how to generate an animation from a computed sound field.
+""" Example how to generate an animation from a pre-computed sound field.
 
     p,x,y should contain the pressure field and axes of the sound field
 """

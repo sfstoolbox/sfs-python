@@ -1,5 +1,8 @@
 """
   This example illustrates the synthesis of a sound figure.
+
+  The sound figure is defined by a grayscale PNG image. Various examples
+  are located in the directory figures.
 """
 
 import numpy as np
@@ -22,8 +25,8 @@ omega = 2 * np.pi * f
 npw = sfs.util.normal(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
 
 # spatial grid
-x = np.arange(-3, 3, 0.01)
-y = np.arange(-3, 3, 0.01)
+x = np.arange(-3, 3, 0.02)
+y = np.arange(-3, 3, 0.02)
 
 
 # --------------------------------------------------------------------------------

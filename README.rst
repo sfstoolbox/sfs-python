@@ -40,3 +40,15 @@ now you should get it from Github_::
 
 .. _PyPI: http://pypi.python.org/
 .. _Github: http://github.com/sfstoolbox/sfs-python/
+
+How to Get Started
+------------------
+
+Various examples are located in the directory examples/
+
+* soound_field_sythesis.py: 
+    Illustrates the usage of the toolbox
+* horizontal_plane_arrays.py: 
+    Computes the sound fields for various techniques, virtual sources and loudspeaker array configurations
+* soundfigures.py: 
+    Illustrates the synthesis of sound figures with Wave Field Synthesis
