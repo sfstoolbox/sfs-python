@@ -5,6 +5,12 @@ Python implementation of the `Sound Field Synthesis Toolbox`_.
 
 .. _Sound Field Synthesis Toolbox: http://github.com/sfstoolbox/sfs/
 
+Documentation:
+   http://sfs.rtfd.org/
+
+Code:
+   http://github.com/sfstoolbox/sfs-python/
+
 Requirements
 ------------
 
