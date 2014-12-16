@@ -46,8 +46,8 @@ How to Get Started
 
 Various examples are located in the directory examples/
 
-* sound_field_sythesis.py: 
-    Illustrates the usage of the toolbox
+* sound_field_synthesis.py: 
+    Illustrates the general usage of the toolbox
 * horizontal_plane_arrays.py: 
     Computes the sound fields for various techniques, virtual sources and loudspeaker array configurations
 * soundfigures.py: 
