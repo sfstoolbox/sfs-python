@@ -38,6 +38,19 @@ Monochromatic Sound Fields
    :members:
    :undoc-members:
 
+Plotting
+--------
+
+.. automodule:: sfs.plot
+   :members:
+   :undoc-members:
+
+Utilities
+---------
+
+.. automodule:: sfs.util
+   :members:
+   :undoc-members:
 
 Indices
 =======

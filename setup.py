@@ -41,13 +41,12 @@ setup(
     license="MIT",
     keywords="audio SFS WFS Ambisonics".split(),
     url="http://github.com/sfstoolbox",
-    download_url="http://github.com/sfstoolbox/sfs-python/releases",
     platforms='any',
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python",
         "Topic :: Scientific/Engineering",
     ],
 
