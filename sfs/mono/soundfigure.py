@@ -21,8 +21,8 @@ def wfs_3d_pw(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
     figure = np.fft.fftshift(figure, axes=(0, 1))  # sign of spatial DFT
     figure = np.fft.fft2(figure)
     # wavenumbers
-    kx = np.fft.fftfreq(nx, 1/nx)
-    ky = np.fft.fftfreq(ny, 1/ny)
+    kx = np.fft.fftfreq(nx, 1./nx)
+    ky = np.fft.fftfreq(ny, 1./ny)
     # shift spectrum due to desired plane wave
     figure = np.roll(figure, int(k*npw[0]), axis=0)
     figure = np.roll(figure, int(k*npw[1]), axis=1)
