@@ -205,6 +205,26 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
     return positions, directions, weights
 
 
+def load(fname, center=[0, 0, 0], n0=None):
+    """Load secondary source positions from datafile.
+
+       Comma Seperated Values (CSV) format with 7 values
+       (3 positions, 3 directions, 1 weight) per secondary source
+    """
+    data = np.loadtxt(fname, delimiter=',')
+    positions = data[:, 0:3]
+    directions = data[:, 3:6]
+    weights = data[:, 6]
+    # rotate array
+    if n0 is not None:
+        positions, directions = _rotate_array(positions, directions,
+                                              [1, 0, 0], n0)
+    # shift array to desired position
+    positions += np.asarray(center)
+
+    return positions, directions, weights
+
+
 def weights_linear(positions):
     """Calculate loudspeaker weights for a linear array."""
     N = len(positions)
