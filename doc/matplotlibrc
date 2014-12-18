@@ -1,0 +1,17 @@
+# For some unknown reason, selecting the backend didn't work as written here:
+# http://ipython.org/ipython-doc/dev/api/generated/IPython.sphinxext.ipython_directive.html
+#
+# Neither ipython_mplbackend nor ipython_execlines worked and there was always
+# this warning:
+#
+#   This call to matplotlib.use() has no effect
+#   because the backend has already been chosen;
+#   matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+#   or matplotlib.backends is imported for the first time.
+#
+# For some reason, the selected backend was always TkAgg, which didn't work on
+# http://readthedocs.org, where the DISPLAY variable was not set.
+#
+# The only thing that seems to work, is this file.
+
+backend : Agg

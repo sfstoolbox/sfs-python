@@ -34,6 +34,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
     # support for NumPy-style docstrings:
     'sphinxcontrib.napoleon',  # Will be 'sphinx.ext.napoleon' in Sphinx >= 1.3
     'sphinx.ext.intersphinx',
