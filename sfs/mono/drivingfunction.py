@@ -5,6 +5,7 @@ from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import hankel2
 from scipy.special import sph_jn, sph_yn
 from .. import util
+from .. import defs
 
 
 def wfs_2d_line(omega, x0, n0, xs, c=None):
@@ -127,7 +128,7 @@ def source_selection_plane(n0, n):
     """
     n0 = np.asarray(n0)
     n = np.squeeze(np.asarray(n))
-    return np.inner(n, n0) >= 0
+    return np.inner(n, n0) >= defs.selection_tolerance
 
 
 def source_selection_point(n0, x0, xs):
@@ -140,7 +141,7 @@ def source_selection_point(n0, x0, xs):
     x0 = np.asarray(x0)
     xs = np.squeeze(np.asarray(xs))
     ds = x0 - xs
-    return inner1d(ds, n0) >= 0
+    return inner1d(ds, n0) >= defs.selection_tolerance
 
 
 def source_selection_all(N):

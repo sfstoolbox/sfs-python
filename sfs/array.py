@@ -203,6 +203,18 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
     positions = center + radius * x0[:, 0:3]
 
     return positions, directions, weights
+    
+def load(fname, center=[0, 0, 0], n0=None):
+    """Load secondary source positions from datafile.
+    
+    
+    """
+    data = np.loadtxt(fname, delimiter=',')
+    positions = data[:, 0:3]
+    directions = data[:, 3:6]
+    weights = data[:, 6]
+
+    return positions, directions, weights   
 
 
 def weights_linear(positions):
