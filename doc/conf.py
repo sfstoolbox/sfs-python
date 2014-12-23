@@ -35,7 +35,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     # support for NumPy-style docstrings:
-    'sphinxcontrib.napoleon', # Will be 'sphinx.ext.napoleon' in Sphinx >= 1.3
+    'sphinxcontrib.napoleon',  # Will be 'sphinx.ext.napoleon' in Sphinx >= 1.3
+    'sphinx.ext.intersphinx',
 ]
 
 autoclass_content = "init"
@@ -51,6 +52,13 @@ napoleon_use_admonition_for_references = False
 napoleon_use_ivar = False
 napoleon_use_param = False
 napoleon_use_rtype = False
+
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/3/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+    'matplotlib': ('http://matplotlib.sourceforge.net/', None),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
