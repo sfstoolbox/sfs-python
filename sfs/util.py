@@ -86,3 +86,82 @@ def asarray_of_arrays(a, **kwargs):
     for i, element in enumerate(a):
         result[i] = np.asarray(element, **kwargs)
     return result
+
+
+def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
+    """Like :func:`numpy.arange`, but compensating numeric errors.
+
+    Unlike :func:`numpy.arange`, but similar to :func:`numpy.linspace`,
+    providing `endpoint=True` includes both endpoints.
+
+    Parameters
+    ----------
+    start, stop, step, dtype
+        See :func:`numpy.arange`.
+    endpoint
+        See :func:`numpy.linspace`.
+
+        .. note:: With `endpoint=True`, the difference between `start`
+           and `end` value must be an integer multiple of the
+           corresponding `spacing` value!
+    **kwargs
+        All further arguments are forwarded to :func:`numpy.isclose`.
+
+    Returns
+    -------
+    numpy.ndarray
+        Array of evenly spaced values.  See :func:`numpy.arange`.
+
+    """
+    remainder = (stop - start) % step
+    if np.any(np.isclose(remainder, (0.0, step), **kwargs)):
+        if endpoint:
+            stop += step * 0.5
+        else:
+            stop -= step * 0.5
+    elif endpoint:
+        raise ValueError("Invalid stop value for endpoint=True")
+    return np.arange(start, stop, step, dtype)
+
+
+def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
+    """Create a grid with given range and spacing.
+
+    Parameters
+    ----------
+    x, y, z : float or pair of floats
+        Inclusive range of the respective coordinate or a single value
+        if only a slice along this dimension is needed.
+    spacing : float or triple of floats
+        Grid spacing.  If a single value is specified, it is used for
+        all dimensions, if multiple values are given, one value is used
+        per dimension.  If a dimension (`x`, `y` or `z`) has only a
+        single value, the corresponding spacing is ignored.
+    endpoint : bool
+        If ``True`` (the default), the endpoint of each range is
+        included in the grid.  Use ``False`` to get a result similar to
+        :func:`numpy.arange`.  See :func:`strict_arange`.
+    **kwargs
+        All further arguments are forwarded to :func:`strict_arange`.
+
+    Returns
+    -------
+    list of numpy.ndarrays
+        A grid that can be used for sound field calculations.
+
+    See Also
+    --------
+    strict_arange, numpy.meshgrid
+
+    """
+    if np.isscalar(spacing):
+        spacing = [spacing] * 3
+    args = []
+    for i, coord in enumerate([x, y, z]):
+        if np.isscalar(coord):
+            args.append(coord)
+        else:
+            start, stop = coord
+            args.append(strict_arange(start, stop, spacing[i],
+                                      endpoint=endpoint, **kwargs))
+    return np.meshgrid(*args, sparse=True, copy=False)

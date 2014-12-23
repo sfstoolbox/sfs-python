@@ -15,9 +15,7 @@ xs = [-1.5, 0.2, 0]  # position of virtual monopole
 tapering = sfs.tapering.tukey  # tapering window
 talpha = 0.3  # parameter for tapering window
 xnorm = [1, 1, 0]  # normalization point for plots
-x = np.arange(-2.5, 2.5, 0.02)  # spatial grid
-y = np.arange(-1.5, 2.5, 0.02)  # spatial grid
-grid = np.meshgrid(x, y, 0, sparse=True)
+grid = sfs.util.xyz_grid([-2.5, 2.5], [-1.5, 2.5], 0, spacing=0.02)
 acenter = [0.3, 0.7, 0]  # center and normal vector of array
 anormal = sfs.util.normal(np.radians(35), np.radians(90))
 

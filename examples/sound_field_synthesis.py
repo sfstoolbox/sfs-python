@@ -18,9 +18,7 @@ pw_angle = 0  # traveling direction of plane wave
 xs = [2, 1, 0]  # position of virtual source
 f = 500  # frequency
 R = 1.5  # radius of spherical/circular array
-x = np.arange(-2, 2, 0.02)  # spatial grid along x-axis
-y = np.arange(-2, 2, 0.02)  # spatial grid along y-axis
-grid = np.meshgrid(x, y, 0, sparse=True)
+grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
 # angular frequency
 omega = 2 * np.pi * f

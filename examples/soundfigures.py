@@ -25,8 +25,8 @@ omega = 2 * np.pi * f
 npw = sfs.util.normal(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
 
 # spatial grid
-x = np.arange(-3, 3, 0.02)
-y = np.arange(-3, 3, 0.02)
+x = sfs.util.strict_arange(-3, 3, 0.2, endpoint=True)
+y = sfs.util.strict_arange(-3, 3, 0.2, endpoint=True)
 grid = np.meshgrid(x, y, 0, sparse=True)
 
 
@@ -55,7 +55,7 @@ plt.savefig('soundfigure.png')
 
 # plot and save level of synthesized sound field
 plt.figure(figsize=(12.5, 12.5))
-Lp = 20*np.log10(abs(p) / abs(p[len(x)//2, len(x)//2]))
+Lp = 20*np.log10(abs(p) / abs(p[len(x)//2, len(y)//2]))
 plt.imshow(Lp, origin='lower',
            extent=[min(x), max(x), min(y), max(y)],
            vmin=-50, vmax=0, aspect='equal')
