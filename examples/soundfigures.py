@@ -25,8 +25,8 @@ omega = 2 * np.pi * f
 npw = sfs.util.normal(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
 
 # spatial grid
-x = sfs.util.strict_arange(-3, 3, 0.2, endpoint=True)
-y = sfs.util.strict_arange(-3, 3, 0.2, endpoint=True)
+x = sfs.util.strict_arange(-3, 3, 0.02, endpoint=True)
+y = sfs.util.strict_arange(-3, 3, 0.02, endpoint=True)
 grid = np.meshgrid(x, y, 0, sparse=True)
 
 
