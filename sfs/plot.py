@@ -79,7 +79,7 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
     fig.show()
 
 
-def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu'):
+def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu', **kwargs):
     """Two-dimensional plot of sound field."""
     grid = util.asarray_of_arrays(grid)
 
@@ -97,7 +97,7 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu'):
     # plot sound field
     plt.imshow(np.real(p), cmap=cmap, origin='lower',
                extent=[x.min(), x.max(), y.min(), y.max()], vmax=2, vmin=-2,
-               aspect='equal')
+               aspect='equal', **kwargs)
 
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
