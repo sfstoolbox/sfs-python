@@ -79,7 +79,8 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
     fig.show()
 
 
-def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu', **kwargs):
+def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu', ax=None,
+               xlabel='x (m)', ylabel='y (m)', vmax=2.0, vmin=-2.0, **kwargs):
     """Two-dimensional plot of sound field."""
     grid = util.asarray_of_arrays(grid)
 
@@ -94,13 +95,17 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu', **kwargs):
 
     x, y = grid[:2]  # ignore z-component
 
-    # plot sound field
-    plt.imshow(np.real(p), cmap=cmap, origin='lower',
-               extent=[x.min(), x.max(), y.min(), y.max()], vmax=2, vmin=-2,
-               aspect='equal', **kwargs)
+    if ax is None:
+        ax = plt.gca()
 
-    plt.xlabel('x (m)')
-    plt.ylabel('y (m)')
-
-    if colorbar is True:
-        plt.colorbar()
+    im = ax.imshow(np.real(p), cmap=cmap, origin='lower',
+                   extent=[x.min(), x.max(), y.min(), y.max()],
+                   vmax=vmax, vmin=vmin, aspect='equal', **kwargs)
+    ax.set_adjustable('box-forced')  # avoid empty space btw. axis and image
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    if colorbar:
+        ax.figure.colorbar(im, ax=ax)
+    return im
