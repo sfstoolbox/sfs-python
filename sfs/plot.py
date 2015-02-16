@@ -8,6 +8,21 @@ import numpy as np
 from . import util
 
 
+def _register_coolwarm_clip():
+    """Create color map with "over" and "under" values."""
+    from matplotlib.colors import LinearSegmentedColormap
+    # The 'coolwarm' colormap is based on the paper
+    # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
+    # http://www.sandia.gov/~kmorel/documents/ColorMaps/
+    cdict = plt.cm.datad['coolwarm']
+    cmap = LinearSegmentedColormap('coolwarm_clip', cdict)
+    cmap.set_over(color=cmap(1.0), alpha=0.7)
+    cmap.set_under(color=cmap(0.0), alpha=0.7)
+    plt.cm.register_cmap(cmap=cmap)
+
+_register_coolwarm_clip()
+
+
 def virtualsource_2d(xs, ns=None, type='point'):
     """Draw position/orientation of virtual source."""
     xs = np.asarray(xs)
@@ -79,8 +94,9 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
     fig.show()
 
 
-def soundfield(p, grid, xnorm=None, colorbar=True, cmap='RdBu', ax=None,
-               xlabel='x (m)', ylabel='y (m)', vmax=2.0, vmin=-2.0, **kwargs):
+def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
+               ax=None, xlabel='x (m)', ylabel='y (m)', vmax=2.0, vmin=-2.0,
+               **kwargs):
     """Two-dimensional plot of sound field."""
     grid = util.asarray_of_arrays(grid)
 
