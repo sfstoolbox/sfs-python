@@ -20,7 +20,7 @@ def point(omega, x0, grid, c=None):
     grid = util.asarray_of_arrays(grid)
 
     r = np.linalg.norm(grid - x0)
-    return np.squeeze(np.exp(-1j * k * r) / r)
+    return np.squeeze(1/(4*np.pi) * np.exp(-1j * k * r) / r)
 
 
 def line(omega, x0, grid, c=None):
@@ -31,7 +31,7 @@ def line(omega, x0, grid, c=None):
     ::
 
                       (2)
-      G(x-xs, w) = j H0  (w/c |x-x0|)
+      G(x-xs, w) = -j/4 H0  (w/c |x-x0|)
 
     """
     k = util.wavenumber(omega, c)
@@ -40,7 +40,7 @@ def line(omega, x0, grid, c=None):
     grid = util.asarray_of_arrays(grid)
 
     r = np.linalg.norm(grid[:2] - x0)
-    p = special.hankel2(0, k * r)
+    p = -1j/4 * special.hankel2(0, k * r)
     # If necessary, duplicate in z-direction:
     gridshape = np.broadcast(*grid).shape
     if len(gridshape) > 2:
