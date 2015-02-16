@@ -84,7 +84,7 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     n0 = np.asarray(n0)
     n = np.squeeze(np.asarray(n))
     k = util.wavenumber(omega, c)
-    return 1j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
+    return 2j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
 wfs_2d_plane = _wfs_plane
@@ -104,8 +104,8 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n = np.squeeze(np.asarray(n))
     xref = np.squeeze(np.asarray(xref))
     k = util.wavenumber(omega, c)
-    return np.sqrt(1j * k * np.linalg.norm(xref - x0)) * np.inner(n, n0) * \
-        np.exp(-1j * k * np.inner(n, x0))
+    return np.sqrt(2*np.pi * 1j * k * np.linalg.norm(xref - x0)) * \
+        np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
 wfs_3d_plane = _wfs_plane
@@ -162,7 +162,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
         d = d + 1j**(-m) / hankel2(m, k * r0) * \
             np.exp(1j * m * (alpha0 - alpha))
 
-    return (4 / 1j) * d
+    return - 2j / (np.pi*r0) * d
 
 
 def nfchoa_25d_point(omega, x0, r0, xs, c=None):
@@ -213,10 +213,10 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     d = 0
     a = 1 / _sph_hn2(M, k * r0)
     for m in np.arange(-M, M):
-        d += (-1j)**abs(m) * a[0, abs(m)] * \
+        d += (1j)**(-abs(m)) * a[0, abs(m)] * \
             np.exp(1j * m * (alpha0 - alpha))
 
-    return (2j / r0) * d
+    return -2 / r0 * d
 
 
 def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
@@ -251,7 +251,7 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n = np.squeeze(np.asarray(n))
     xref = np.squeeze(np.asarray(xref))
     k = util.wavenumber(omega, c)
-    return np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
+    return 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
       np.exp(-1j*k*n[0]*x0[:, 0])
 
 

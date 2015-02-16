@@ -30,7 +30,7 @@ def line(omega, x0, grid, c=None):
 
     ::
 
-                      (2)
+                         (2)
       G(x-xs, w) = -j/4 H0  (w/c |x-x0|)
 
     """
