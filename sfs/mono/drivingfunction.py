@@ -219,10 +219,29 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     return -2 / r0 * d
 
 
+def sdm_2d_line(omega, x0, n0, xs, c=None):
+    """Line source by two-dimensional SDM.
+
+        The secondary sources have to be located on the x-axis (y0=0).
+        Derived from [Spors 2009, 126th AES Convention], Eq.(9), Eq.(4)
+    ::
+
+      D(x0,k) =
+
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    xs = np.squeeze(np.asarray(xs))
+    k = util.wavenumber(omega, c)
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+    return - 1j/2 * k * xs[1] / r * hankel2(1, k * r)
+
+
 def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by two-dimensional SDM.
 
-        The secondary sources have to be located on the x-axis (y=0).
+        The secondary sources have to be located on the x-axis (y0=0).
         Derived from [Ahrens 2011, Springer], Eq.(3.73), Eq.(C.5), Eq.(C.11)
     ::
 
@@ -239,7 +258,7 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     """Plane wave by 2.5-dimensional SDM.
 
-        The secondary sources have to be located on the x-axis (y=0).
+        The secondary sources have to be located on the x-axis (y0=0).
         Eq.(3.79) from [Ahrens 2011, Springer].
     ::
 
@@ -252,7 +271,30 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     xref = np.squeeze(np.asarray(xref))
     k = util.wavenumber(omega, c)
     return 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
-      np.exp(-1j*k*n[0]*x0[:, 0])
+        np.exp(-1j*k*n[0]*x0[:, 0])
+
+
+def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
+    """Point source by 2.5-dimensional SDM.
+
+        The secondary sources have to be located on the x-axis (y0=0).
+        Driving funcnction from [Spors 2010, 128th AES Covention], Eq.(24)
+
+    ::
+
+      D(x0,k) =
+
+
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    xs = np.squeeze(np.asarray(xs))
+    xref = np.squeeze(np.asarray(xref))
+    k = util.wavenumber(omega, c)
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+    return 1/2 * 1j * k * np.sqrt(xref[1] / (xref[1] - xs[1])) * \
+        xs[1] / r * hankel2(1, k * r)
 
 
 def _sph_hn2(n, z):
