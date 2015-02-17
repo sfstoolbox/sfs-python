@@ -11,7 +11,7 @@ def generic(omega, x0, d, grid, c=None, source=point):
         raise ValueError("length mismatch")
     p = 0
     for weight, position in zip(d, x0):
-        if weight != 0:
+        if np.abs(weight) != 0:
             p += weight * source(omega, position, grid, c)
     return p
 

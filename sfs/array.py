@@ -214,7 +214,7 @@ def load(fname, center=[0, 0, 0], n0=None):
     data = np.loadtxt(fname, delimiter=',')
     positions = data[:, [0, 1, 2]]
     directions = data[:, [3, 4, 5]]
-    weights = data[:, [6]]
+    weights = data[:, [6]].T
     # rotate array
     if n0 is not None:
         positions, directions = _rotate_array(positions, directions,
