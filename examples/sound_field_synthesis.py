@@ -12,12 +12,14 @@ import sfs
 
 
 # simulation parameters
-dx = 0.1  # secondary source distance
-N = 64  # number of secondary sources
-pw_angle = 0  # traveling direction of plane wave
+dx = 0.2  # secondary source distance
+N = 16  # number of secondary sources
+pw_angle = 30  # traveling direction of plane wave
 xs = [2, 1, 0]  # position of virtual source
-f = 500  # frequency
+xref = [0, 0, 0]  # reference position for 2.5D
+f = 680  # frequency
 R = 1.5  # radius of spherical/circular array
+
 grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
 # angular frequency
@@ -27,11 +29,12 @@ npw = sfs.util.normal(np.radians(pw_angle), np.radians(90))
 
 
 # === get secondary source positions ===
-#x0, n0, a0 = sfs.array.linear(N, dx)
+#x0, n0, a0 = sfs.array.linear(N, dx, center=[-1, 0, 0])
 #x0, n0, a0 = sfs.array.linear_nested(N, dx, 2*dx)
 #x0, n0, a0 = sfs.array.linear_random(N, 0.2*dx, 5*dx)
-#x0, n0, a0 = sfs.array.rectangular(2*N, dx, N, dx, n0=sfs.util.normal(0*np.pi/4, np.pi/2))
-x0, n0, a0 = sfs.array.circular(N, R)
+#x0, n0, a0 = sfs.array.rectangular(N, dx, N, dx, n0=sfs.util.normal(0*np.pi/4, np.pi/2))
+#x0, n0, a0 = sfs.array.circular(N, R)
+x0, n0, a0 = sfs.array.load('../data/arrays/university_rostock.csv')
 
 #x0, n0, a0 = sfs.array.planar(N, dx, N, dx, n0=sfs.util.normal(np.radians(0),np.radians(180)))
 #x0, n0, a0 = sfs.array.cube(N, dx, N, dx, N, dx, n0=sfs.util.normal(0, np.pi/2))
@@ -45,7 +48,7 @@ x0, n0, a0 = sfs.array.circular(N, R)
 #d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
 
 #d = sfs.mono.drivingfunction.wfs_2d_plane(omega, x0, n0, npw)
-d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw)
+d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref)
 #d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
 
 #d = sfs.mono.drivingfunction.wfs_2d_point(omega, x0, n0, xs)
@@ -64,10 +67,9 @@ a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
 
 
 # === compute tapering window ===
-twin = sfs.tapering.none(a)
+#twin = sfs.tapering.none(a)
 #twin = sfs.tapering.kaiser(a)
-#twin = sfs.tapering.tukey(a,.3)
-
+twin = sfs.tapering.tukey(a,.3)
 
 # === compute synthesized sound field ===
 p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0 , grid,
