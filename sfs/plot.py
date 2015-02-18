@@ -12,14 +12,17 @@ def virtualsource_2d(xs, ns=None, type='point'):
     """Draw position/orientation of virtual source."""
     xs = np.asarray(xs)
     ns = np.asarray(ns)
-
+    ax = plt.axes()
+    
     if type == 'point':
-        vps = plt.Circle(xs, .05, color='k')
-        fig = plt.gcf()
-        fig.gca().add_artist(vps)
+        vps = plt.Circle(xs, .05, edgecolor='k', facecolor='k')
+        ax.add_artist(vps)
+        for n in range(1,3):        
+            vps = plt.Circle(xs, .05+n*0.05, edgecolor='k', fill=False)
+            ax.add_artist(vps)
     elif type == 'plane':
         ns = 0.2 * ns
-        ax = plt.axes()
+        
         ax.arrow(xs[0], xs[1], ns[0], ns[1], head_width=0.05,
                  head_length=0.1, fc='k', ec='k')
 
