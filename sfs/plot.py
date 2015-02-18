@@ -42,7 +42,7 @@ def virtualsource_2d(xs, ns=None, type='point'):
                  head_length=0.1, fc='k', ec='k')
 
 
-def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08):
+def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False):
     """Draw loudspeaker symbols at given locations, angles."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
@@ -82,6 +82,16 @@ def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08):
     p = PatchCollection(patches, edgecolor='0', facecolor=fc, alpha=1)
     ax = plt.gca()
     ax.add_collection(p)
+
+    # plot index of secondary source
+    if index is True:
+        idx = 1
+        for (x00, n00) in zip(x0, n0):
+            x = x00[0] - 0.3 * n00[0]
+            y = x00[1] - 0.3 * n00[1]
+            ax.text(x, y, idx, fontsize=9, horizontalalignment='center',
+                    verticalalignment='center')
+            idx += 1
 
 
 def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
@@ -127,4 +137,13 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
         ax.set_ylabel(ylabel)
     if colorbar:
         ax.figure.colorbar(im, ax=ax)
+    return im
+
+
+def level(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
+          ax=None, xlabel='x (m)', ylabel='y (m)', vmax=3.0, vmin=-50,
+          **kwargs):
+    """Two-dimensional plot of level of sound field."""
+    im = soundfield(20*np.log10(np.abs(p)), grid, xnorm, colorbar, cmap, ax, xlabel, ylabel, vmax, vmin, **kwargs)
+
     return im
