@@ -43,15 +43,14 @@ def virtualsource_2d(xs, ns=None, type='point'):
 
 
 def secondarysource_2d(x0, n0):
-    """Simple plot of secondary source locations.
-
-       This is a low complexity alternative to loudspeaker_2d.
-    """
+    """Simple plot of secondary source locations."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
     ax = plt.axes()
 
-    plt.plot(x0[:, 0], x0[:, 1], 'ko', axes=ax)
+    for x00 in x0:
+        ss = plt.Circle(x00[0:2], .05, edgecolor='k', facecolor='k')
+        ax.add_artist(ss)
 
 
 def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False):

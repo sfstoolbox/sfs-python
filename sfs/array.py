@@ -114,6 +114,48 @@ def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0], n0=None):
     return positions, directions, weights
 
 
+def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
+    """Array along the xy-axis with rounded edge at origin.
+
+    """
+
+    # radius of rounded edge
+    Nr += 1
+    R = 2/np.pi * Nr * dx
+
+    # array along y-axis
+    x00, n00, a00 = linear(Nxy, dx, center=[0, Nxy//2*dx+dx/2+R, 0])
+    x00 = np.flipud(x00)
+    positions = x00
+    directions = n00
+    weights = a00
+
+    # round part
+    x00 = np.zeros((Nr, 3))
+    n00 = np.zeros((Nr, 3))
+    a00 = np.zeros(Nr)
+    for n in range(0, Nr):
+        alpha = np.pi/2 * n/Nr
+        x00[n, 0] = R * (1-np.cos(alpha))
+        x00[n, 1] = R * (1-np.sin(alpha))
+        n00[n, 0] = np.cos(alpha)
+        n00[n, 1] = np.sin(alpha)
+        a00[n] = dx
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    weights = np.concatenate((weights, a00))
+
+    # array along x-axis
+    x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2+R, 0, 0],
+                           n0=[0, 1, 0])
+    x00 = np.flipud(x00)
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    weights = np.concatenate((weights, a00))
+
+    return positions, directions, weights
+
+
 def planar(Ny, dy, Nz, dz, center=[0, 0, 0], n0=None):
     """Planar secondary source distribtion."""
     center = np.squeeze(np.asarray(center, dtype=np.float64))
