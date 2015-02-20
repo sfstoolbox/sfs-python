@@ -28,18 +28,30 @@ def virtualsource_2d(xs, ns=None, type='point'):
     xs = np.asarray(xs)
     ns = np.asarray(ns)
     ax = plt.axes()
-    
+
     if type == 'point':
         vps = plt.Circle(xs, .05, edgecolor='k', facecolor='k')
         ax.add_artist(vps)
-        for n in range(1,3):        
+        for n in range(1, 3):
             vps = plt.Circle(xs, .05+n*0.05, edgecolor='k', fill=False)
             ax.add_artist(vps)
     elif type == 'plane':
         ns = 0.2 * ns
-        
+
         ax.arrow(xs[0], xs[1], ns[0], ns[1], head_width=0.05,
                  head_length=0.1, fc='k', ec='k')
+
+
+def secondarysource_2d(x0, n0):
+    """Simple plot of secondary source locations.
+
+       This is a low complexity alternative to loudspeaker_2d.
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    ax = plt.axes()
+
+    plt.plot(x0[:, 0], x0[:, 1], 'ko', axes=ax)
 
 
 def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False):

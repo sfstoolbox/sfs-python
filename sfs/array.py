@@ -226,7 +226,10 @@ def load(fname, center=[0, 0, 0], n0=None):
 
 
 def weights_linear(positions):
-    """Calculate loudspeaker weights for a linear array."""
+    """Calculate loudspeaker weights for a linear array.
+
+       The linear array has to be parallel to the y-axis.
+    """
     N = len(positions)
     weights = np.zeros(N)
     dy = np.diff(positions[:, 1])
@@ -235,7 +238,7 @@ def weights_linear(positions):
         weights[m] = 0.5 * (dy[m-1] + dy[m])
     weights[-1] = dy[-1]
 
-    return weights
+    return np.abs(weights)
 
 
 def _rotate_array(x0, n0, n1, n2):
