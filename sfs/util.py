@@ -165,3 +165,13 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
             args.append(strict_arange(start, stop, spacing[i],
                                       endpoint=endpoint, **kwargs))
     return np.meshgrid(*args, sparse=True, copy=False)
+
+
+def normalize(p, grid, xnorm):
+    """Normalize sound field wrt position xnorm."""
+    xnorm = asarray_1d(xnorm)
+    r = np.linalg.norm(grid - xnorm)
+    idx = np.unravel_index(r.argmin(), r.shape)
+    # p is normally squeezed, therefore we need only 2 dimensions:
+    idx = idx[:p.ndim]
+    return p / abs(p[idx])

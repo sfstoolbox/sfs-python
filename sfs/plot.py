@@ -126,12 +126,7 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
 
     # normalize sound field wrt xnorm
     if xnorm is not None:
-        xnorm = util.asarray_1d(xnorm)
-        r = np.linalg.norm(grid - xnorm)
-        idx = np.unravel_index(r.argmin(), r.shape)
-        # p is normally squeezed, therefore we need only 2 dimensions:
-        idx = idx[:p.ndim]
-        p = p / abs(p[idx])
+        p = util.normalize(p, grid, xnorm)
 
     x, y = grid[:2]  # ignore z-component
 
@@ -154,7 +149,13 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
 def level(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
           ax=None, xlabel='x (m)', ylabel='y (m)', vmax=3.0, vmin=-50,
           **kwargs):
-    """Two-dimensional plot of level of sound field."""
-    im = soundfield(20*np.log10(np.abs(p)), grid, xnorm, colorbar, cmap, ax, xlabel, ylabel, vmax, vmin, **kwargs)
+    """Two-dimensional plot of level (dB) of sound field."""
+    # normalize sound field wrt xnorm
+    if xnorm is not None:
+        p = util.normalize(p, grid, xnorm)
+
+    xnorm = None
+    im = soundfield(20*np.log10(np.abs(p)), grid, xnorm, colorbar, cmap, ax,
+                    xlabel, ylabel, vmax, vmin, **kwargs)
 
     return im
