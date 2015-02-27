@@ -42,18 +42,23 @@ def virtualsource_2d(xs, ns=None, type='point'):
                  head_length=0.1, fc='k', ec='k')
 
 
-def secondarysource_2d(x0, n0):
+def secondarysource_2d(x0, n0, grid=None):
     """Simple plot of secondary source locations."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
     ax = plt.axes()
 
+    # plot only secondary sources inside simulated area
+    if grid is not None:
+        x0, n0 = _visible_secondarysources_2d(x0, n0, grid)
+
+    # plot symbols
     for x00 in x0:
         ss = plt.Circle(x00[0:2], .05, edgecolor='k', facecolor='k')
         ax.add_artist(ss)
 
 
-def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False):
+def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False, grid=None):
     """Draw loudspeaker symbols at given locations, angles."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
@@ -63,6 +68,10 @@ def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False):
         a0 = 0.5 * np.ones(len(x0))
     else:
         a0 = np.asarray(a0)
+
+    # plot only secondary sources inside simulated area
+    if grid is not None:
+        x0, n0 = _visible_secondarysources_2d(x0, n0, grid)
 
     # coordinates of loudspeaker symbol
     v01 = np.asarray([[-h, -h, -h / 2, -h / 2, -h], [-w / 2, w / 2, w / 2,
@@ -103,6 +112,17 @@ def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False):
             ax.text(x, y, idx, fontsize=9, horizontalalignment='center',
                     verticalalignment='center')
             idx += 1
+
+
+def _visible_secondarysources_2d(x0, n0, grid):
+    """Determines secondary sources which lie within grid"""
+    grid = util.asarray_of_arrays(grid)
+    x, y = grid[:2]
+    idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
+                   (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
+    idx = np.squeeze(idx)
+
+    return x0[idx, :], n0[idx, :]
 
 
 def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
