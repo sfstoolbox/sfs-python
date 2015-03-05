@@ -49,7 +49,7 @@ def _wfs_point(omega, x0, n0, xs, c=None):
 wfs_2d_point = _wfs_point
 
 
-def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
+def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     """Point source by 2.5-dimensional WFS.
 
     ::
@@ -66,7 +66,9 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return np.sqrt(1j * k * np.linalg.norm(xref - x0)) * inner1d(ds, n0) / \
+
+    return wfs_25d_preeq(omega, omalias, c) * \
+        np.sqrt(np.linalg.norm(xref - x0)) * inner1d(ds, n0) / \
         r ** (3 / 2) * np.exp(-1j * k * r)
 
 
@@ -91,7 +93,8 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 wfs_2d_plane = _wfs_plane
 
 
-def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
+def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
+                  omalias=None):
     """Plane wave by 2.5-dimensional WFS.
 
     ::
@@ -105,11 +108,23 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n = np.squeeze(np.asarray(n))
     xref = np.squeeze(np.asarray(xref))
     k = util.wavenumber(omega, c)
-    return np.sqrt(2*np.pi * 1j * k * np.linalg.norm(xref - x0)) * \
+    return wfs_25d_preeq(omega, omalias, c) * \
+        np.sqrt(2*np.pi * np.linalg.norm(xref - x0)) * \
         np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
 wfs_3d_plane = _wfs_plane
+
+
+def wfs_25d_preeq(omega, omalias, c):
+    """Preqeualization for 2.5D WFS"""
+    if omalias is None:
+        return np.sqrt(1j * util.wavenumber(omega, c))
+    else:
+        if omega <= omalias:
+            return np.sqrt(1j * util.wavenumber(omega, c))
+        else:
+            return np.sqrt(1j * util.wavenumber(omalias, c))
 
 
 def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
