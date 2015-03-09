@@ -43,6 +43,16 @@ def virtualsource_2d(xs, ns=None, type='point', ax=None):
                  head_length=0.1, fc='k', ec='k')
 
 
+def reference_2d(xref, size=0.1, ax=None):
+    """Draw reference/normalization point"""
+    xref = np.asarray(xref)
+    if ax is None:
+        ax = plt.axes()
+
+    ax.plot((xref[0]-size, xref[0]+size), (xref[1]-size, xref[1]+size), 'k-')
+    ax.plot((xref[0]-size, xref[0]+size), (xref[1]+size, xref[1]-size), 'k-')
+
+
 def secondarysource_2d(x0, n0, grid=None):
     """Simple plot of secondary source locations."""
     x0 = np.asarray(x0)
