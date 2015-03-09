@@ -23,11 +23,12 @@ def _register_coolwarm_clip():
 _register_coolwarm_clip()
 
 
-def virtualsource_2d(xs, ns=None, type='point'):
+def virtualsource_2d(xs, ns=None, type='point', ax=None):
     """Draw position/orientation of virtual source."""
     xs = np.asarray(xs)
     ns = np.asarray(ns)
-    ax = plt.axes()
+    if ax is None:
+        ax = plt.axes()
 
     if type == 'point':
         vps = plt.Circle(xs, .05, edgecolor='k', facecolor='k')
