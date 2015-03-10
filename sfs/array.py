@@ -115,7 +115,27 @@ def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0], n0=None):
 
 
 def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
-    """Array along the xy-axis with rounded edge at origin.
+    """Array along the xy-axis with rounded edge at the origin.
+
+    Parameters
+    ----------
+    Nxy : integer
+        Number of secondary sources along x- and y-axis
+    Nr : integer
+        Number of secondary sources in rounded edge
+    center : triple of floats
+        Position of edge
+    n0 : triple of floats
+        Normal vector of array. Default orientation is along xy-axis
+
+    Returns
+    -------
+    positions : list of triplets of floats
+        positions of secondary sources
+    directions : list of triplets of floats
+        orientations (normal vectors) of secondary sources
+    weights : list of floats
+        integration weights of secondary sources
 
     """
 
@@ -152,6 +172,13 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
+    
+    # rotate array
+    if n0 is not None:
+        positions, directions = _rotate_array(positions, directions,
+                                              [1, 0, 0], n0)
+    # shift array to desired position
+    positions += np.asarray(center)
 
     return positions, directions, weights
 
