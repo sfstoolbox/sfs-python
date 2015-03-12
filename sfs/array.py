@@ -120,13 +120,14 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
     Parameters
     ----------
     Nxy : integer
-        Number of secondary sources along x- and y-axis
+        Number of secondary sources along x- and y-axis.
     Nr : integer
-        Number of secondary sources in rounded edge
+        Number of secondary sources in rounded edge. Radius of edge is
+        adjusted to equdistant sampling along entire array.
     center : triple of floats
-        Position of edge
+        Position of edge.
     n0 : triple of floats
-        Normal vector of array. Default orientation is along xy-axis
+        Normal vector of array. Default orientation is along xy-axis.
 
     Returns
     -------
@@ -172,7 +173,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
-    
+
     # rotate array
     if n0 is not None:
         positions, directions = _rotate_array(positions, directions,

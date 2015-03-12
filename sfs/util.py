@@ -169,9 +169,14 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
 
 def normalize(p, grid, xnorm):
     """Normalize sound field wrt position xnorm."""
-    xnorm = asarray_1d(xnorm)
-    r = np.linalg.norm(grid - xnorm)
+    return p / level(p, grid, xnorm)
+
+
+def level(p, grid, x):
+    """Determine level at position x in the sound field p."""
+    x = asarray_1d(x)
+    r = np.linalg.norm(grid - x)
     idx = np.unravel_index(r.argmin(), r.shape)
     # p is normally squeezed, therefore we need only 2 dimensions:
     idx = idx[:p.ndim]
-    return p / abs(p[idx])
+    return abs(p[idx])
