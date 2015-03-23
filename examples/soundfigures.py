@@ -43,7 +43,7 @@ figure = np.rot90(figure)  # turn 0deg to the top
 d = sfs.mono.soundfigure.wfs_3d_pw(omega, x0, n0, figure, npw=npw)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(omega, x0, d * a0, grid,
+p = sfs.mono.synthesized.generic(omega, x0, n0, d * a0, grid,
                                  source=sfs.mono.source.point)
 
 # plot and save synthesized sound field

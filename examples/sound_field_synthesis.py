@@ -72,7 +72,7 @@ a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
 twin = sfs.tapering.tukey(a,.3)
 
 # === compute synthesized sound field ===
-p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0 , grid,
+p = sfs.mono.synthesized.generic(omega, x0, n0, d * twin * a0 , grid,
                                  source=sfs.mono.source.point)
 
 

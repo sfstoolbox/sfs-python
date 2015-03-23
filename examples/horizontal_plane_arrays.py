@@ -30,7 +30,7 @@ def compute_and_plot_soundfield(title):
     print('Computing ', title)
 
     twin = tapering(a, talpha)
-    p = sfs.mono.synthesized.generic(omega, x0, d * twin * a0, grid,
+    p = sfs.mono.synthesized.generic(omega, x0, n0, d * twin * a0, grid,
                                      source=sourcetype)
 
     plt.figure(figsize=(15, 15))

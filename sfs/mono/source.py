@@ -2,7 +2,6 @@
 
 import numpy as np
 from scipy import special
-from numpy.core.umath_tests import inner1d  # element-wise inner product
 from .. import util
 
 
@@ -12,7 +11,7 @@ def point(omega, x0, n0, grid, c=None):
     ::
 
                     1  e^(-j w/c |x-x0|)
-      G(x-xs, w) = --- -----------------
+      G(x-x0, w) = --- -----------------
                    4pi      |x-x0|
 
     """
@@ -32,7 +31,7 @@ def line(omega, x0, n0, grid, c=None):
     ::
 
                          (2)
-      G(x-xs, w) = -j/4 H0  (w/c |x-x0|)
+      G(x-x0, w) = -j/4 H0  (w/c |x-x0|)
 
     """
     k = util.wavenumber(omega, c)
@@ -47,19 +46,27 @@ def line(omega, x0, n0, grid, c=None):
     if len(gridshape) > 2:
         p = np.tile(p, [1, 1, gridshape[2]])
     return np.squeeze(p)
-    
+
 
 def line_dipole(omega, x0, n0, grid, c=None):
     """Line source with dipole characteristics parallel to the z-axis.
+
+    Note: third component of x0 is ignored.
+
+    ::
+
+                         (2)
+      G(x-x0, w) = jk/4 H1  (w/c |x-x0|) cos(phi)
 
 
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    #x0 = x0[:2]  # ignore z-component
+    x0 = x0[:2]  # ignore z-component
+    n0 = n0[:2]
     grid = util.asarray_of_arrays(grid)
-    dx = grid - x0
-    r = np.linalg.norm(dx[:2])
+    dx = grid[:2] - x0
+    r = np.linalg.norm(dx)
     p = 1j*k/4 * special.hankel2(1, k * r) * np.inner(dx, n0) / r
     # If necessary, duplicate in z-direction:
     gridshape = np.broadcast(*grid).shape
