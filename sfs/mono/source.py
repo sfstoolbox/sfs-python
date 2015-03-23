@@ -2,10 +2,11 @@
 
 import numpy as np
 from scipy import special
+from numpy.core.umath_tests import inner1d  # element-wise inner product
 from .. import util
 
 
-def point(omega, x0, grid, c=None):
+def point(omega, x0, n0, grid, c=None):
     """Point source.
 
     ::
@@ -23,7 +24,7 @@ def point(omega, x0, grid, c=None):
     return np.squeeze(1/(4*np.pi) * np.exp(-1j * k * r) / r)
 
 
-def line(omega, x0, grid, c=None):
+def line(omega, x0, n0, grid, c=None):
     """Line source parallel to the z-axis.
 
     Note: third component of x0 is ignored.
@@ -41,6 +42,25 @@ def line(omega, x0, grid, c=None):
 
     r = np.linalg.norm(grid[:2] - x0)
     p = -1j/4 * special.hankel2(0, k * r)
+    # If necessary, duplicate in z-direction:
+    gridshape = np.broadcast(*grid).shape
+    if len(gridshape) > 2:
+        p = np.tile(p, [1, 1, gridshape[2]])
+    return np.squeeze(p)
+    
+
+def line_dipole(omega, x0, n0, grid, c=None):
+    """Line source with dipole characteristics parallel to the z-axis.
+
+
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    #x0 = x0[:2]  # ignore z-component
+    grid = util.asarray_of_arrays(grid)
+    dx = grid - x0
+    r = np.linalg.norm(dx[:2])
+    p = 1j*k/4 * special.hankel2(1, k * r) * np.inner(dx, n0) / r
     # If necessary, duplicate in z-direction:
     gridshape = np.broadcast(*grid).shape
     if len(gridshape) > 2:
