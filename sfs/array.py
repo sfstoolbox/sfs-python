@@ -326,7 +326,7 @@ def weights_closed(positions):
         successors = np.roll(positions, -1, axis=0)
         d = [np.linalg.norm(b - a) for a, b in zip(positions, successors)]
         weights = [0.5 * (a + b) for a, b in zip(d, d[-1:] + d)]
-    return np.abs(weights)
+    return weights
 
 
 def _rotate_array(x0, n0, n1, n2):
