@@ -41,10 +41,7 @@ def line(omega, x0, n0, grid, c=None):
 
     r = np.linalg.norm(grid[:2] - x0)
     p = -1j/4 * special.hankel2(0, k * r)
-    # If necessary, duplicate in z-direction:
-    gridshape = np.broadcast(*grid).shape
-    if len(gridshape) > 2:
-        p = np.tile(p, [1, 1, gridshape[2]])
+    p = _duplicate_zdirection(p, grid)
     return np.squeeze(p)
 
 
@@ -68,10 +65,7 @@ def line_dipole(omega, x0, n0, grid, c=None):
     dx = grid[:2] - x0
     r = np.linalg.norm(dx)
     p = 1j*k/4 * special.hankel2(1, k * r) * np.inner(dx, n0) / r
-    # If necessary, duplicate in z-direction:
-    gridshape = np.broadcast(*grid).shape
-    if len(gridshape) > 2:
-        p = np.tile(p, [1, 1, gridshape[2]])
+    p = _duplicate_zdirection(p, grid)
     return np.squeeze(p)
 
 
@@ -89,3 +83,12 @@ def plane(omega, x0, n0, grid, c=None):
     grid = util.asarray_of_arrays(grid)
 
     return np.squeeze(np.exp(-1j * k * np.inner(grid - x0, n0)))
+
+
+def _duplicate_zdirection(p, grid):
+    """If necessary, duplicate field in z-direction"""
+    gridshape = np.broadcast(*grid).shape
+    if len(gridshape) > 2:
+        return np.tile(p, [1, 1, gridshape[2]])
+    else:
+        return p

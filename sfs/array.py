@@ -309,7 +309,7 @@ def weights_linear(positions):
     weights[-1] = dy[-1]
 
     return np.abs(weights)
-    
+
 
 def weights_closed(positions):
     """Calculate loudspeaker weights for a simply connected array.
@@ -317,20 +317,16 @@ def weights_closed(positions):
     Note: The loudspeaker positions have to be ordered on the closed contour
 
     """
-    N = len(positions)
-    weights = np.zeros(N)
-    positions = np.concatenate((positions, positions[[0],:]))
-    d = np.zeros(N)    
-    for n in range(N):
-        d[n] = np.linalg.norm(positions[n+1] - positions[n])
-    
-    for m in range(1, N):
-        weights[m] = 0.5 * (d[m-1] + d[m])
-        
-    weights[0] = 0.5 * (d[0] + d[-1])
-    
+    positions = np.asarray(positions)
+    if len(positions) == 0:
+        weights = []
+    elif len(positions) == 1:
+        weights = [1.0]
+    else:
+        successors = np.roll(positions, -1, axis=0)
+        d = [np.linalg.norm(b - a) for a, b in zip(positions, successors)]
+        weights = [0.5 * (a + b) for a, b in zip(d, d[-1:] + d)]
     return np.abs(weights)
-    
 
 
 def _rotate_array(x0, n0, n1, n2):
