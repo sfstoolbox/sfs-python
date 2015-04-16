@@ -314,6 +314,8 @@ def weights_linear(positions):
 def weights_closed(positions):
     """Calculate loudspeaker weights for a simply connected array.
 
+    The weights are calculated according to the midpoint rule
+
     Note: The loudspeaker positions have to be ordered on the closed contour
 
     """
