@@ -23,6 +23,68 @@ def point(omega, x0, n0, grid, c=None):
     return np.squeeze(1/(4*np.pi) * np.exp(-1j * k * r) / r)
 
 
+def point_modal(omega, x0, grid, L, N=None, deltan=0, c=None):
+    """Point source in a rectangular room using a modal room model.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : triple of floats
+        Position of source.
+    grid : list of numpy.ndarrays
+        The grid that is used for the sound field calculations.
+    L : triple of floats
+        Dimensionons of the rectangular room.
+    N : triple of integers
+        Combination of modal orders in the three-spatial dimensions to
+        calculate the sound field for. If not given, the maximum modal order
+        is determined and the sound field is computed up to this max.
+    deltan : float
+        Absorption coefficient of the walls.
+    c : float
+        Speed of sound.
+   
+    Returns
+    -------
+
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    x, y, z = util.asarray_of_arrays(grid)
+
+    if N is None:
+        # determine maximum modal order per dimension
+        Nx = int(np.ceil(L[0]/np.pi * k))
+        Ny = int(np.ceil(L[1]/np.pi * k))
+        Nz = int(np.ceil(L[2]/np.pi * k))
+        mm = range(Nx)
+        nn = range(Ny)
+        ll = range(Nz)
+    else:
+        # compute field for one order combination only
+        mm = [N[0]]
+        nn = [N[1]]
+        ll = [N[2]]
+
+    p = 0
+    for m in mm:
+        for n in nn:
+            for l in ll:
+                kx = m*np.pi/L[0]
+                ky = n*np.pi/L[1]
+                kz = l*np.pi/L[2]
+
+                km = (kx + 1j*deltan)**2 + (ky + 1j*deltan)**2 + \
+                    (kz + 1j*deltan)**2
+
+                p = p + 1 / (k**2 - km) * \
+                    np.cos(kx*x) * np.cos(ky*y) * np.cos(kz*z) * \
+                    np.cos(kx*x0[0]) * np.cos(ky*x0[1]) * np.cos(kz*x0[2])
+
+    return np.squeeze(p)
+
+
 def line(omega, x0, n0, grid, c=None):
     """Line source parallel to the z-axis.
 
