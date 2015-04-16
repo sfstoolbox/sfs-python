@@ -6,6 +6,7 @@ x0 = [1, 3, 1.80]  # source position
 L = [6, 6, 3]  # dimensions of room
 N = 20  # number of modal components per dimension
 deltan = 0.1  # absorption factor of walls
+n0 = [1, 0, 0]  # normal vector of source (only for compatibilty)
 
 
 # compute frequency response
@@ -16,7 +17,7 @@ if False is True:
 
     p = []
     for om in omega:
-        p.append(sfs.mono.source.point_modal(om, x0, grid, L, N, deltan))
+        p.append(sfs.mono.source.point_modal(om, x0, n0, grid, L, N, deltan))
 
     p = np.asarray(p)
 
@@ -30,6 +31,6 @@ if True is True:
     omega = 2 * np.pi * f  # angular frequency
     grid = sfs.util.xyz_grid([0, 6], [0, 6], 1.80, spacing=.1)
 
-    p = sfs.mono.source.point_modal(omega, x0, grid, L, N=[2, 0, 0], deltan=deltan)
+    p = sfs.mono.source.point_modal(omega, x0, n0, grid, L, N=[2, 0, 0], deltan=deltan)
 
     sfs.plot.soundfield(p, grid, xnorm=[3, 3, 0], colorbar=False, vmax=1.5, vmin=-1.5)

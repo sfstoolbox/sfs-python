@@ -23,7 +23,7 @@ def point(omega, x0, n0, grid, c=None):
     return np.squeeze(1/(4*np.pi) * np.exp(-1j * k * r) / r)
 
 
-def point_modal(omega, x0, grid, L, N=None, deltan=0, c=None):
+def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
 
     Parameters
@@ -32,6 +32,8 @@ def point_modal(omega, x0, grid, L, N=None, deltan=0, c=None):
         Frequency of source.
     x0 : triple of floats
         Position of source.
+    n0 : triple of floats
+        Normal vector (direction) of source (only required for compatibility).
     grid : list of numpy.ndarrays
         The grid that is used for the sound field calculations.
     L : triple of floats
