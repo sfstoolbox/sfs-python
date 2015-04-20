@@ -38,15 +38,16 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         The grid that is used for the sound field calculations.
     L : triple of floats
         Dimensionons of the rectangular room.
-    N : triple of integers
+    N : triple of integers or integer
         Combination of modal orders in the three-spatial dimensions to
-        calculate the sound field for. If not given, the maximum modal order
-        is determined and the sound field is computed up to this max.
+        calculate the sound field for or maximum order for all dimensions.
+        If not given, the maximum modal order is determined and the sound
+        field is computed up to this max.
     deltan : float
         Absorption coefficient of the walls.
     c : float
         Speed of sound.
-   
+
     Returns
     -------
 
@@ -63,6 +64,11 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         mm = range(Nx)
         nn = range(Ny)
         ll = range(Nz)
+    elif np.isscalar(N):
+        # compute up to a given order
+        mm = range(N)
+        nn = range(N)
+        ll = range(N)
     else:
         # compute field for one order combination only
         mm = [N[0]]
@@ -71,18 +77,19 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
 
     p = 0
     for m in mm:
+        kx = m*np.pi/L[0]
+        km0 = (kx + 1j*deltan)**2
+        p0 = np.cos(kx*x) * np.cos(kx*x0[0])
         for n in nn:
+            ky = n*np.pi/L[1]
+            km1 = (ky + 1j*deltan)**2
+            p1 = np.cos(ky*y) * np.cos(ky*x0[1])
             for l in ll:
-                kx = m*np.pi/L[0]
-                ky = n*np.pi/L[1]
                 kz = l*np.pi/L[2]
+                km = km0 + km1 + (kz + 1j*deltan)**2
 
-                km = (kx + 1j*deltan)**2 + (ky + 1j*deltan)**2 + \
-                    (kz + 1j*deltan)**2
-
-                p = p + 1 / (k**2 - km) * \
-                    np.cos(kx*x) * np.cos(ky*y) * np.cos(kz*z) * \
-                    np.cos(kx*x0[0]) * np.cos(ky*x0[1]) * np.cos(kz*x0[2])
+                p = p + 1 / (k**2 - km) * p0 * p1 * \
+                    np.cos(kz*z) * np.cos(kz*x0[2])
 
     return np.squeeze(p)
 

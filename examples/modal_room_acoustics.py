@@ -4,33 +4,37 @@ import sfs
 
 x0 = [1, 3, 1.80]  # source position
 L = [6, 6, 3]  # dimensions of room
-N = 20  # number of modal components per dimension
-deltan = 0.1  # absorption factor of walls
+deltan = 0.01  # absorption factor of walls
 n0 = [1, 0, 0]  # normal vector of source (only for compatibilty)
+N = 20  # maximum order of modes
+#N = [1, 0, 0]  # room mode to compute
 
+fresponse = 1  # freqeuency response or sound field?
 
 # compute frequency response
-if False is True:
+if fresponse is 1:
     f = np.linspace(20, 200, 180)  # frequency
     omega = 2 * np.pi * f  # angular frequency
     grid = sfs.util.xyz_grid(1, 1, 1.80, spacing=1)
 
     p = []
     for om in omega:
-        p.append(sfs.mono.source.point_modal(om, x0, n0, grid, L, N, deltan))
+        p.append(sfs.mono.source.point_modal(om, x0, n0, grid, L, N=N, deltan=deltan))
 
     p = np.asarray(p)
 
     plt.plot(f, 20*np.log10(np.abs(p)))
+    plt.xlabel('frequency / Hz')
+    plt.ylabel('level / dB')
     plt.grid()
 
 
 # compute sound field
-if True is True:
+if fresponse is 0:
     f = 500  # frequency
     omega = 2 * np.pi * f  # angular frequency
-    grid = sfs.util.xyz_grid([0, 6], [0, 6], 1.80, spacing=.1)
+    grid = sfs.util.xyz_grid([0, L[0]], [0, L[1]], L[2], spacing=.1)
 
-    p = sfs.mono.source.point_modal(omega, x0, n0, grid, L, N=[2, 0, 0], deltan=deltan)
+    p = sfs.mono.source.point_modal(omega, x0, n0, grid, L, N=N, deltan=deltan)
 
     sfs.plot.soundfield(p, grid, xnorm=[3, 3, 0], colorbar=False, vmax=1.5, vmin=-1.5)
