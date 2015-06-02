@@ -21,6 +21,7 @@ from subprocess import check_output
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('.'))  # temporary, for plot_directive
 
 # -- General configuration ------------------------------------------------
 
@@ -37,6 +38,9 @@ extensions = [
     # support for NumPy-style docstrings:
     'sphinxcontrib.napoleon',  # Will be 'sphinx.ext.napoleon' in Sphinx >= 1.3
     'sphinx.ext.intersphinx',
+    'plot_directive',  # temporary, for :context:close-figs feature
+    # When matplotlib > 1.4.3 is available on readthedocs, we can use this:
+    #'matplotlib.sphinxext.plot_directive',
 ]
 
 autoclass_content = "init"
@@ -59,6 +63,11 @@ intersphinx_mapping = {
     'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
     'matplotlib': ('http://matplotlib.sourceforge.net/', None),
 }
+
+plot_include_source = True
+plot_html_show_source_link = False
+plot_html_show_formats = False
+plot_pre_code = ""
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

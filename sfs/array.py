@@ -1,11 +1,32 @@
-"""Compute positions of various secondary source distributions."""
+"""Compute positions of various secondary source distributions.
+
+.. plot::
+    :context: reset
+
+    import sfs
+    import matplotlib.pyplot as plt
+    plt.rcParams['figure.figsize'] = 8, 4  # inch
+    plt.rcParams['axes.grid'] = True
+
+"""
 
 import numpy as np
 from . import util
 
 
 def linear(N, dx, center=[0, 0, 0], n0=[1, 0, 0]):
-    """Linear secondary source distribution."""
+    """Linear secondary source distribution.
+
+    Example
+    -------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.linear(16, 0.2, n0=[0, -1, 0])
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+
+    """
     center = np.squeeze(np.asarray(center, dtype=np.float64))
     positions = np.zeros((N, 3))
     positions[:, 1] = (np.arange(N) - N / 2 + 1 / 2) * dx
@@ -17,7 +38,18 @@ def linear(N, dx, center=[0, 0, 0], n0=[1, 0, 0]):
 
 
 def linear_nested(N, dx1, dx2, center=[0, 0, 0], n0=[1, 0, 0]):
-    """Nested linear secondary source distribution."""
+    """Nested linear secondary source distribution.
+
+    Example
+    -------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.linear_nested(16, 0.15, 0.2, n0=[0, -1, 0])
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+
+    """
 
     # first segment
     x00, n00, a00 = linear(N//3, dx2, center=[0, -N//6*(dx1+dx2), 0])
@@ -41,7 +73,18 @@ def linear_nested(N, dx1, dx2, center=[0, 0, 0], n0=[1, 0, 0]):
 
 
 def linear_random(N, dy1, dy2, center=[0, 0, 0], n0=[1, 0, 0]):
-    """Randomly sampled linear array."""
+    """Randomly sampled linear array.
+
+    Example
+    -------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.linear_random(12, 0.15, 0.4, n0=[0, -1, 0])
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+
+    """
     # vector of uniformly distributed random distances between dy2 > dy1
     dist = dy1 + (dy2-dy1)*np.random.rand(N-1)
     # positions of secondary sources
@@ -62,7 +105,18 @@ def linear_random(N, dy1, dy2, center=[0, 0, 0], n0=[1, 0, 0]):
 
 
 def circular(N, R, center=[0, 0, 0]):
-    """Circular secondary source distribution parallel to the xy-plane."""
+    """Circular secondary source distribution parallel to the xy-plane.
+
+    Example
+    -------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.circular(16, 1)
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+
+    """
     center = np.squeeze(np.asarray(center, dtype=np.float64))
     positions = np.tile(center, (N, 1))
     alpha = np.linspace(0, 2 * np.pi, N, endpoint=False)
@@ -76,7 +130,18 @@ def circular(N, R, center=[0, 0, 0]):
 
 
 def rectangular(Nx, dx, Ny, dy, center=[0, 0, 0], n0=None):
-    """Rectangular secondary source distribution."""
+    """Rectangular secondary source distribution.
+
+    Example
+    -------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.rectangular(8, 0.2, 4, 0.2)
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+
+    """
 
     # left array
     x00, n00, a00 = linear(Ny, dy)
@@ -137,6 +202,15 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
         orientations (normal vectors) of secondary sources
     weights : list of floats
         integration weights of secondary sources
+
+    Example
+    -------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.rounded_edge(8, 5, 0.2)
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
 
     """
 
