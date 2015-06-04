@@ -42,8 +42,8 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     N : triple of integers or integer
         Combination of modal orders in the three-spatial dimensions to
         calculate the sound field for or maximum order for all dimensions.
-        If not given, the maximum modal order is determined and the sound
-        field is computed up to this max.
+        If not given, the maximum modal order is approximately determined and
+        the sound field is computed up to this maximum order.
     deltan : float
         Absorption coefficient of the walls.
     c : float
@@ -51,6 +51,8 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
 
     Returns
     -------
+    p : array of floats
+        Sound pressure at positions given by grid
 
     """
     k = util.wavenumber(omega, c)
