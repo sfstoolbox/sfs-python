@@ -1,4 +1,4 @@
-"""Definition of constants"""
+"""Definition of constants."""
 
 # speed of sound
 c = 343

@@ -1,4 +1,4 @@
-"""Plot sound fields etc"""
+"""Plot sound fields etc."""
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
@@ -44,7 +44,7 @@ def virtualsource_2d(xs, ns=None, type='point', ax=None):
 
 
 def reference_2d(xref, size=0.1, ax=None):
-    """Draw reference/normalization point"""
+    """Draw reference/normalization point."""
     xref = np.asarray(xref)
     if ax is None:
         ax = plt.axes()
@@ -126,7 +126,7 @@ def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False, grid=None):
 
 
 def _visible_secondarysources_2d(x0, n0, grid):
-    """Determines secondary sources which lie within grid"""
+    """Determine secondary sources which lie within `grid`."""
     grid = util.asarray_of_arrays(grid)
     x, y = grid[:2]
     idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
@@ -137,8 +137,7 @@ def _visible_secondarysources_2d(x0, n0, grid):
 
 
 def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
-    """Plot positions and normal vectors of a 3D secondary source
-    distribution."""
+    """Plot positions and normals of a 3D secondary source distribution."""
     fig = plt.figure(figsize=(15, 15))
     ax = fig.add_subplot(111, projection='3d')
     ax.quiver(x0[:, 0], x0[:, 1], x0[:, 2], n0[:, 0],

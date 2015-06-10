@@ -13,9 +13,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
 
     ::
 
-
-      D(x0,k) = j k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
-
+        D(x0,k) = j k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
 
     """
     x0 = np.asarray(x0)
@@ -32,9 +30,9 @@ def _wfs_point(omega, x0, n0, xs, c=None):
 
     ::
 
-                     (x0-xs) n0
-      D(x0,k) = j k ------------- e^(-j k |x0-xs|)
-                    |x0-xs|^(3/2)
+                       (x0-xs) n0
+        D(x0,k) = j k ------------- e^(-j k |x0-xs|)
+                      |x0-xs|^(3/2)
 
     """
     x0 = np.asarray(x0)
@@ -54,9 +52,9 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
 
     ::
 
-                  ____________   (x0-xs) n0
-      D(x0,k) = \|j k |xref-x0| ------------- e^(-j k |x0-xs|)
-                                |x0-xs|^(3/2)
+                    ____________   (x0-xs) n0
+        D(x0,k) = \|j k |xref-x0| ------------- e^(-j k |x0-xs|)
+                                  |x0-xs|^(3/2)
 
     """
     x0 = np.asarray(x0)
@@ -80,7 +78,7 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 
     Eq.(17) from [Spors et al, 2008]::
 
-      D(x0,k) =  j k n n0  e^(-j k n x0)
+        D(x0,k) =  j k n n0  e^(-j k n x0)
 
     """
     x0 = np.asarray(x0)
@@ -99,8 +97,8 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
 
     ::
 
-                       ____________
-      D_2.5D(x0,w) = \|j k |xref-x0| n n0 e^(-j k n x0)
+                         ____________
+        D_2.5D(x0,w) = \|j k |xref-x0| n n0 e^(-j k n x0)
 
     """
     x0 = np.asarray(x0)
@@ -117,7 +115,7 @@ wfs_3d_plane = _wfs_plane
 
 
 def wfs_25d_preeq(omega, omalias, c):
-    """Preqeualization for 2.5D WFS"""
+    """Preqeualization for 2.5D WFS."""
     if omalias is None:
         return np.sqrt(1j * util.wavenumber(omega, c))
     else:
@@ -186,11 +184,11 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
 
     ::
 
-                              __      (2)
-                       1     \       h|m| (w/c r)
-         D(phi0,w) = -----   /__    ------------- e^(i m (phi0-phi))
-                      2pi r0 m=-N..N  (2)
-                                     h|m| (w/c r0)
+                             __      (2)
+                      1     \       h|m| (w/c r)
+        D(phi0,w) = -----   /__    ------------- e^(i m (phi0-phi))
+                     2pi r0 m=-N..N  (2)
+                                    h|m| (w/c r0)
 
     """
     x0 = np.asarray(x0)
@@ -218,6 +216,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
         D_25D(phi0,w) = --  /__    ------------------ e^(i m (phi0-phi_pw) )
                         r0 m=-N..N       (2)
                                     w/c h|m| (w/c r0)
+
     """
     x0 = np.asarray(x0)
     k = util.wavenumber(omega, c)
@@ -238,11 +237,10 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
 def sdm_2d_line(omega, x0, n0, xs, c=None):
     """Line source by two-dimensional SDM.
 
-        The secondary sources have to be located on the x-axis (y0=0).
-        Derived from [Spors 2009, 126th AES Convention], Eq.(9), Eq.(4)
-    ::
+    The secondary sources have to be located on the x-axis (y0=0).
+    Derived from [Spors 2009, 126th AES Convention], Eq.(9), Eq.(4)::
 
-      D(x0,k) =
+        D(x0,k) =
 
     """
     x0 = np.asarray(x0)
@@ -257,11 +255,10 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
 def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by two-dimensional SDM.
 
-        The secondary sources have to be located on the x-axis (y0=0).
-        Derived from [Ahrens 2011, Springer], Eq.(3.73), Eq.(C.5), Eq.(C.11)
-    ::
+    The secondary sources have to be located on the x-axis (y0=0).
+    Derived from [Ahrens 2011, Springer], Eq.(3.73), Eq.(C.5), Eq.(C.11)::
 
-      D(x0,k) = kpw,y * e^(-j*kpw,x*x)
+        D(x0,k) = kpw,y * e^(-j*kpw,x*x)
 
     """
     x0 = np.asarray(x0)
@@ -274,11 +271,10 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     """Plane wave by 2.5-dimensional SDM.
 
-        The secondary sources have to be located on the x-axis (y0=0).
-        Eq.(3.79) from [Ahrens 2011, Springer].
-    ::
+    The secondary sources have to be located on the x-axis (y0=0).
+    Eq.(3.79) from [Ahrens 2011, Springer]::
 
-      D_2.5D(x0,w) =
+        D_2.5D(x0,w) =
 
     """
     x0 = np.asarray(x0)
@@ -293,13 +289,10 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     """Point source by 2.5-dimensional SDM.
 
-        The secondary sources have to be located on the x-axis (y0=0).
-        Driving funcnction from [Spors 2010, 128th AES Covention], Eq.(24)
+    The secondary sources have to be located on the x-axis (y0=0).
+    Driving funcnction from [Spors 2010, 128th AES Covention], Eq.(24)::
 
-    ::
-
-      D(x0,k) =
-
+        D(x0,k) =
 
     """
     x0 = np.asarray(x0)

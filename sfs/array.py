@@ -184,24 +184,24 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=None):
 
     Parameters
     ----------
-    Nxy : integer
+    Nxy : int
         Number of secondary sources along x- and y-axis.
-    Nr : integer
-        Number of secondary sources in rounded edge. Radius of edge is
+    Nr : int
+        Number of secondary sources in rounded edge.  Radius of edge is
         adjusted to equdistant sampling along entire array.
-    center : triple of floats
+    center : (3,) array_like, optional
         Position of edge.
-    n0 : triple of floats
-        Normal vector of array. Default orientation is along xy-axis.
+    n0 : (3,) array_like, optional
+        Normal vector of array.  Default orientation is along xy-axis.
 
     Returns
     -------
-    positions : list of triplets of floats
-        positions of secondary sources
-    directions : list of triplets of floats
-        orientations (normal vectors) of secondary sources
-    weights : list of floats
-        integration weights of secondary sources
+    positions : (N, 3) numpy.ndarray
+        Positions of secondary sources
+    directions : (N, 3) numpy.ndarray
+        Orientations (normal vectors) of secondary sources
+    weights : (N,) numpy.ndarray
+        Integration weights of secondary sources
 
     Example
     -------
@@ -338,8 +338,9 @@ def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], n0=None):
 def sphere_load(fname, radius, center=[0, 0, 0]):
     """Spherical secondary source distribution loaded from datafile.
 
-    ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 position, 1 weight)
-    per secondary source located on the unit circle.
+    ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 position, 1
+    weight) per secondary source located on the unit circle.
+
     """
     x0 = np.loadtxt(fname)
     weights = x0[:, 3]
@@ -352,8 +353,9 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
 def load(fname, center=[0, 0, 0], n0=None):
     """Load secondary source positions from datafile.
 
-       Comma Seperated Values (CSV) format with 7 values
-       (3 positions, 3 directions, 1 weight) per secondary source
+    Comma Seperated Values (CSV) format with 7 values
+    (3 positions, 3 directions, 1 weight) per secondary source.
+
     """
     data = np.loadtxt(fname, delimiter=',')
     positions = data[:, [0, 1, 2]]
@@ -372,7 +374,8 @@ def load(fname, center=[0, 0, 0], n0=None):
 def weights_linear(positions):
     """Calculate loudspeaker weights for a linear array.
 
-       The linear array has to be parallel to the y-axis.
+    The linear array has to be parallel to the y-axis.
+
     """
     N = len(positions)
     weights = np.zeros(N)
@@ -388,9 +391,10 @@ def weights_linear(positions):
 def weights_closed(positions):
     """Calculate loudspeaker weights for a simply connected array.
 
-    The weights are calculated according to the midpoint rule
+    The weights are calculated according to the midpoint rule.
 
-    Note: The loudspeaker positions have to be ordered on the closed contour
+    Note: The loudspeaker positions have to be ordered on the closed
+    contour.
 
     """
     positions = np.asarray(positions)

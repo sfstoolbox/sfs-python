@@ -5,7 +5,7 @@ from .source import point
 
 
 def generic(omega, x0, n0, d, grid, c=None, source=point):
-    """Compute sound field for a generic driving function"""
+    """Compute sound field for a generic driving function."""
     d = np.squeeze(np.asarray(d))
     if len(d) != len(x0):
         raise ValueError("length mismatch")

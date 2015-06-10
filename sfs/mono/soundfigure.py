@@ -9,7 +9,8 @@ def wfs_3d_pw(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
     """Compute driving function for a 2D sound figure.
 
     Based on
-    [Hewani et al., The Synthesis of Sound Figures, MSSP, 2013]
+    [Helwani et al., The Synthesis of Sound Figures, MSSP, 2013]
+
     """
 
     x0 = np.asarray(x0)

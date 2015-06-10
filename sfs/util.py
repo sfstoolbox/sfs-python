@@ -5,7 +5,7 @@ from . import defs
 
 
 def rotation_matrix(n1, n2):
-    """Compute rotation matrix for rotation from n1 to n2"""
+    """Compute rotation matrix for rotation from `n1` to `n2`."""
     n1 = np.asarray(n1)
     n2 = np.asarray(n2)
     # no rotation required
@@ -30,7 +30,7 @@ def rotation_matrix(n1, n2):
 
 
 def wavenumber(omega, c=None):
-    """Compute the wavenumber for a given radial frequency"""
+    """Compute the wavenumber for a given radial frequency."""
     if c is None:
         c = defs.c
     return omega / c
@@ -62,9 +62,9 @@ def cart2sph(x, y, z):
 def asarray_1d(a, **kwargs):
     """Squeeze the input and check if the result is one-dimensional.
 
-    Returns `a` converted to a `numpy.array` and stripped of all
-    singleton dimensions.  The result must have exactly one dimension.
-    If not, an error is raised.
+    Returns `a` converted to a :class:`numpy.ndarray` and stripped of
+    all singleton dimensions.  The result must have exactly one
+    dimension.  If not, an error is raised.
 
     """
     result = np.squeeze(np.asarray(a, **kwargs))
@@ -76,9 +76,9 @@ def asarray_1d(a, **kwargs):
 def asarray_of_arrays(a, **kwargs):
     """Convert the input to an array consisting of arrays.
 
-    A one-dimensional array with `dtype=object` is returned, containing
-    the elements of `a` as arrays (whose `dtype` and other options can
-    be specified with `**kwargs`).
+    A one-dimensional :class:`numpy.ndarray` with `dtype=object` is
+    returned, containing the elements of `a` as :class:`numpy.ndarray`
+    (whose `dtype` and other options can be specified with `**kwargs`).
 
     """
     result = np.empty(len(a), dtype=object)
@@ -128,15 +128,15 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
 
     Parameters
     ----------
-    x, y, z : float or pair of floats
+    x, y, z : float or pair of float
         Inclusive range of the respective coordinate or a single value
         if only a slice along this dimension is needed.
-    spacing : float or triple of floats
+    spacing : float or triple of float
         Grid spacing.  If a single value is specified, it is used for
         all dimensions, if multiple values are given, one value is used
         per dimension.  If a dimension (`x`, `y` or `z`) has only a
         single value, the corresponding spacing is ignored.
-    endpoint : bool
+    endpoint : bool, optional
         If ``True`` (the default), the endpoint of each range is
         included in the grid.  Use ``False`` to get a result similar to
         :func:`numpy.arange`.  See :func:`strict_arange`.
@@ -167,12 +167,12 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
 
 
 def normalize(p, grid, xnorm):
-    """Normalize sound field wrt position xnorm."""
+    """Normalize sound field wrt position `xnorm`."""
     return p / level(p, grid, xnorm)
 
 
 def level(p, grid, x):
-    """Determine level at position x in the sound field p."""
+    """Determine level at position `x` in the sound field `p`."""
     x = asarray_1d(x)
     r = np.linalg.norm(grid - x)
     idx = np.unravel_index(r.argmin(), r.shape)

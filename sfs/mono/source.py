@@ -27,9 +27,9 @@ def point(omega, x0, n0, grid, c=None):
 
     ::
 
-                    1  e^(-j w/c |x-x0|)
-      G(x-x0, w) = --- -----------------
-                   4pi      |x-x0|
+                      1  e^(-j w/c |x-x0|)
+        G(x-x0, w) = --- -----------------
+                     4pi      |x-x0|
 
     Examples
     --------
@@ -65,28 +65,30 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     ----------
     omega : float
         Frequency of source.
-    x0 : triple of floats
+    x0 : (3,) array_like
         Position of source.
-    n0 : triple of floats
-        Normal vector (direction) of source (only required for compatibility).
-    grid : list of numpy.ndarrays
+    n0 : (3,) array_like
+        Normal vector (direction) of source (only required for
+        compatibility).
+    grid : triple of numpy.ndarray
         The grid that is used for the sound field calculations.
-    L : triple of floats
+    L : (3,) array_like
         Dimensionons of the rectangular room.
-    N : triple of integers or integer
+    N : (3,) array_like or int, optional
         Combination of modal orders in the three-spatial dimensions to
-        calculate the sound field for or maximum order for all dimensions.
-        If not given, the maximum modal order is approximately determined and
-        the sound field is computed up to this maximum order.
-    deltan : float
+        calculate the sound field for or maximum order for all
+        dimensions.  If not given, the maximum modal order is
+        approximately determined and the sound field is computed up to
+        this maximum order.
+    deltan : float, optional
         Absorption coefficient of the walls.
-    c : float
+    c : float, optional
         Speed of sound.
 
     Returns
     -------
-    p : array of floats
-        Sound pressure at positions given by grid
+    numpy.ndarray
+        Sound pressure at positions given by `grid`.
 
     """
     k = util.wavenumber(omega, c)
@@ -134,8 +136,8 @@ def line(omega, x0, n0, grid, c=None):
 
     ::
 
-                         (2)
-      G(x-x0, w) = -j/4 H0  (w/c |x-x0|)
+                           (2)
+        G(x-x0, w) = -j/4 H0  (w/c |x-x0|)
 
     Examples
     --------
@@ -174,8 +176,8 @@ def line_dipole(omega, x0, n0, grid, c=None):
 
     ::
 
-                         (2)
-      G(x-x0, w) = jk/4 H1  (w/c |x-x0|) cos(phi)
+                           (2)
+        G(x-x0, w) = jk/4 H1  (w/c |x-x0|) cos(phi)
 
 
     """
@@ -196,7 +198,7 @@ def plane(omega, x0, n0, grid, c=None):
 
     ::
 
-      G(x, w) = e^(-i w/c n x)
+        G(x, w) = e^(-i w/c n x)
 
     Example
     -------
@@ -219,7 +221,7 @@ def plane(omega, x0, n0, grid, c=None):
 
 
 def _duplicate_zdirection(p, grid):
-    """If necessary, duplicate field in z-direction"""
+    """If necessary, duplicate field in z-direction."""
     gridshape = np.broadcast(*grid).shape
     if len(gridshape) > 2:
         return np.tile(p, [1, 1, gridshape[2]])
