@@ -125,7 +125,7 @@ def circular(N, R, center=[0, 0, 0]):
     directions = np.zeros_like(positions)
     directions[:, 0] = np.cos(alpha + np.pi)
     directions[:, 1] = np.sin(alpha + np.pi)
-    weights = R * np.ones(N)
+    weights = 2 * np.pi * R / N * np.ones(N)
     return positions, directions, weights
 
 
