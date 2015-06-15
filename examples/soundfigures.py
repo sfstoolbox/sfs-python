@@ -22,7 +22,7 @@ f = 2000  # frequency
 omega = 2 * np.pi * f
 
 # normal vector of plane wave
-npw = sfs.util.normal(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
+npw = sfs.util.direction_vector(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
 
 # spatial grid
 x = sfs.util.strict_arange(-3, 3, 0.02, endpoint=True)

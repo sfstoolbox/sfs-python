@@ -17,12 +17,12 @@ talpha = 0.3  # parameter for tapering window
 xnorm = [1, 1, 0]  # normalization point for plots
 grid = sfs.util.xyz_grid([-2.5, 2.5], [-1.5, 2.5], 0, spacing=0.02)
 acenter = [0.3, 0.7, 0]  # center and normal vector of array
-anormal = sfs.util.normal(np.radians(35), np.radians(90))
+anormal = sfs.util.direction_vector(np.radians(35), np.radians(90))
 
 # angular frequency
 omega = 2 * np.pi * f
 # normal vector of plane wave
-npw = sfs.util.normal(np.radians(pw_angle), np.radians(90))
+npw = sfs.util.direction_vector(np.radians(pw_angle), np.radians(90))
 
 
 def compute_and_plot_soundfield(title):

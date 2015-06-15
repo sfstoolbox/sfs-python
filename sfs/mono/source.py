@@ -204,7 +204,7 @@ def plane(omega, x0, n0, grid, c=None):
         :context: close-figs
 
         direction = 45  # degree
-        n0 = sfs.util.normal(np.radians(direction), np.radians(90))
+        n0 = sfs.util.direction_vector(np.radians(direction))
         p_plane = sfs.mono.source.plane(omega, x0, n0, grid)
         sfs.plot.soundfield(p_plane, grid);
         plt.title("Plane wave with direction {} degree".format(direction))

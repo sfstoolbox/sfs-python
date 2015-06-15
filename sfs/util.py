@@ -36,10 +36,9 @@ def wavenumber(omega, c=None):
     return omega / c
 
 
-def normal(alpha, beta):
+def direction_vector(alpha, beta=np.pi/2):
     """Compute normal vector from azimuth, colatitude."""
-    return [np.cos(alpha) * np.sin(beta), np.sin(alpha) * np.sin(beta),
-            np.cos(beta)]
+    return sph2cart(alpha, beta, 1)
 
 
 def sph2cart(alpha, beta, r):
