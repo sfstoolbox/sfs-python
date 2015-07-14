@@ -1,7 +1,8 @@
 """Plot sound fields etc."""
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
+from matplotlib.patches import PathPatch
+from matplotlib.path import Path
 from matplotlib.collections import PatchCollection
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
@@ -69,7 +70,7 @@ def secondarysource_2d(x0, n0, grid=None):
         ax.add_artist(ss)
 
 
-def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False, grid=None):
+def loudspeaker_2d(x0, n0, a0=None, size=0.08, index=False, grid=None):
     """Draw loudspeaker symbols at given locations, angles."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
@@ -84,29 +85,29 @@ def loudspeaker_2d(x0, n0, a0=None, w=0.08, h=0.08, index=False, grid=None):
     if grid is not None:
         x0, n0 = _visible_secondarysources_2d(x0, n0, grid)
 
-    # coordinates of loudspeaker symbol
-    v01 = np.asarray([[-h, -h, -h / 2, -h / 2, -h], [-w / 2, w / 2, w / 2,
-                      -w / 2, -w / 2], [0, 0, 0, 0, 0]])
-    v02 = np.asarray(
-        [[-h / 2, 0, 0, -h / 2], [-w / 6, -w / 2, w / 2, w / 6], [0, 0, 0, 0]])
-
-    v01 = v01.T
-    v02 = v02.T
+    # normalized coordinates of loudspeaker symbol (see IEC 60617-9)
+    codes, coordinates = zip(*(
+        (Path.MOVETO, [-0.62, 0.21]),
+        (Path.LINETO, [-0.31, 0.21]),
+        (Path.LINETO, [0, 0.5]),
+        (Path.LINETO, [0, -0.5]),
+        (Path.LINETO, [-0.31, -0.21]),
+        (Path.LINETO, [-0.62, -0.21]),
+        (Path.CLOSEPOLY, [0, 0]),
+        (Path.MOVETO, [-0.31, 0.21]),
+        (Path.LINETO, [-0.31, -0.21]),
+    ))
+    coordinates = np.column_stack([coordinates, np.zeros(len(coordinates))])
+    coordinates *= size
 
     for x00, n00, a00 in zip(x0, n0, a0):
         # rotate and translate coordinates
         R = util.rotation_matrix([1, 0, 0], n00)
-        v1 = np.inner(v01, R) + x00
-        v2 = np.inner(v02, R) + x00
+        transformed_coordinates = np.inner(coordinates, R) + x00
 
-        # add coordinates to list of patches
-        polygon = Polygon(v1[:, :-1], True)
-        patches.append(polygon)
-        polygon = Polygon(v2[:, :-1], True)
-        patches.append(polygon)
+        patches.append(PathPatch(Path(transformed_coordinates[:, :2], codes)))
 
-        # set facecolor (two times due to split patches)
-        fc.append((1-a00) * np.ones(3))
+        # set facecolor
         fc.append((1-a00) * np.ones(3))
 
     # add collection of patches to current axis
