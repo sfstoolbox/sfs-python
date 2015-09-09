@@ -22,6 +22,7 @@ def _register_coolwarm_clip():
     plt.cm.register_cmap(cmap=cmap)
 
 _register_coolwarm_clip()
+del _register_coolwarm_clip
 
 
 def virtualsource_2d(xs, ns=None, type='point', ax=None):
@@ -70,16 +71,33 @@ def secondarysource_2d(x0, n0, grid=None):
         ax.add_artist(ss)
 
 
-def loudspeaker_2d(x0, n0, a0=None, size=0.08, index=False, grid=None):
-    """Draw loudspeaker symbols at given locations, angles."""
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    patches = []
-    fc = []
-    if a0 is None:
-        a0 = 0.5 * np.ones(len(x0))
-    else:
-        a0 = np.asarray(a0)
+def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
+                   ax=None):
+    """Draw loudspeaker symbols at given locations and angles.
+
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Loudspeaker positions.
+    n0 : (N, 3) or (3,) array_like
+        Normal vector(s) of loudspeakers.
+    a0 : float or (N,) array_like, optional
+        Weighting factor(s) of loudspeakers.
+    size : float, optional
+        Size of loudspeakers in metres.
+    show_numbers : bool, optional
+        If ``True``, loudspeaker numbers are shown.
+    grid : triple of numpy.ndarray, optional
+        If specified, only loudspeakers within the `grid` are shown.
+    ax : Axes object, optional
+        The loudspeakers are plotted into this
+        :class:`~matplotlib.axes.Axes` object or -- if not specified --
+        into the current axes.
+
+    """
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    a0 = util.asarray_1d(a0).reshape(-1, 1)
 
     # plot only secondary sources inside simulated area
     if grid is not None:
@@ -100,30 +118,25 @@ def loudspeaker_2d(x0, n0, a0=None, size=0.08, index=False, grid=None):
     coordinates = np.column_stack([coordinates, np.zeros(len(coordinates))])
     coordinates *= size
 
-    for x00, n00, a00 in zip(x0, n0, a0):
+    patches = []
+    for x00, n00 in util.broadcast_zip(x0, n0):
         # rotate and translate coordinates
         R = util.rotation_matrix([1, 0, 0], n00)
         transformed_coordinates = np.inner(coordinates, R) + x00
 
         patches.append(PathPatch(Path(transformed_coordinates[:, :2], codes)))
 
-        # set facecolor
-        fc.append((1-a00) * np.ones(3))
-
     # add collection of patches to current axis
-    p = PatchCollection(patches, edgecolor='0', facecolor=fc, alpha=1)
-    ax = plt.gca()
+    p = PatchCollection(patches, edgecolor='0', facecolor=np.tile(1 - a0, 3))
+    if ax is None:
+        ax = plt.gca()
     ax.add_collection(p)
 
-    # plot index of secondary source
-    if index is True:
-        idx = 1
-        for (x00, n00) in zip(x0, n0):
-            x = x00[0] - 0.3 * n00[0]
-            y = x00[1] - 0.3 * n00[1]
-            ax.text(x, y, idx, fontsize=9, horizontalalignment='center',
+    if show_numbers:
+        for idx, (x00, n00) in enumerate(util.broadcast_zip(x0, n0)):
+            x, y = x00[:2] - 1.2 * size * n00[:2]
+            ax.text(x, y, idx + 1, horizontalalignment='center',
                     verticalalignment='center')
-            idx += 1
 
 
 def _visible_secondarysources_2d(x0, n0, grid):

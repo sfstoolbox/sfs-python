@@ -6,8 +6,8 @@ from . import defs
 
 def rotation_matrix(n1, n2):
     """Compute rotation matrix for rotation from `n1` to `n2`."""
-    n1 = np.asarray(n1)
-    n2 = np.asarray(n2)
+    n1 = asarray_1d(n1)
+    n2 = asarray_1d(n2)
     # no rotation required
     if all(n1 == n2):
         return np.eye(3)
@@ -63,13 +63,30 @@ def asarray_1d(a, **kwargs):
     """Squeeze the input and check if the result is one-dimensional.
 
     Returns `a` converted to a :class:`numpy.ndarray` and stripped of
-    all singleton dimensions.  The result must have exactly one
-    dimension.  If not, an error is raised.
+    all singleton dimensions.  Scalars are "upgraded" to 1D arrays.
+    The result must have exactly one dimension.
+    If not, an error is raised.
 
     """
     result = np.squeeze(np.asarray(a, **kwargs))
-    if result.ndim != 1:
+    if result.ndim == 0:
+        result = result.reshape((1,))
+    elif result.ndim > 1:
         raise ValueError("array must be one-dimensional")
+    return result
+
+
+def asarray_of_rows(a, **kwargs):
+    """Convert to 2D array, turn column vector into row vector.
+
+    Returns `a` converted to a :class:`numpy.ndarray` and stripped of
+    all singleton dimensions.  If the result has exactly one dimension,
+    it is re-shaped into a 2D row vector.
+
+    """
+    result = np.squeeze(np.asarray(a, **kwargs))
+    if result.ndim == 1:
+        result = result.reshape(1, -1)
     return result
 
 
@@ -179,3 +196,8 @@ def level(p, grid, x):
     # p is normally squeezed, therefore we need only 2 dimensions:
     idx = idx[:p.ndim]
     return abs(p[idx])
+
+
+def broadcast_zip(*args):
+    """Broadcast arguments to the same shape and then use :func:`zip`."""
+    return zip(*np.broadcast_arrays(*args))
