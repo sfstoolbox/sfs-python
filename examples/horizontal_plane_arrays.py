@@ -27,7 +27,7 @@ npw = sfs.util.direction_vector(np.radians(pw_angle), np.radians(90))
 
 def compute_and_plot_soundfield(title):
     """Compute and plot synthesized sound field."""
-    print('Computing ', title)
+    print('Computing', title)
 
     twin = tapering(a, talpha)
     p = sfs.mono.synthesized.generic(omega, x0, n0, d * twin * a0, grid,
@@ -80,7 +80,8 @@ compute_and_plot_soundfield('linear_ps_wfs_2d_plane')
 
 
 # non-uniform linear array, secondary point sources
-x0, n0, a0 = sfs.array.linear_nested(N, dx/2, dx, center=acenter, n0=anormal)
+x0, n0, a0 = sfs.array.linear_diff(N//3 * [dx] + N//3 * [dx/2] + N//3 * [dx],
+                                   center=acenter, n0=anormal)
 
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
@@ -105,7 +106,7 @@ compute_and_plot_soundfield('linear_random_ps_wfs_25d_plane')
 
 
 # rectangular array, secondary point sources
-x0, n0, a0 = sfs.array.rectangular(N//2, dx, N, dx, center=acenter, n0=anormal)
+x0, n0, a0 = sfs.array.rectangular((N, N//2), dx, center=acenter, n0=anormal)
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 compute_and_plot_soundfield('rectangular_ps_wfs_25d_point')

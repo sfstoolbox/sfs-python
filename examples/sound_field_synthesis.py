@@ -30,9 +30,8 @@ npw = sfs.util.direction_vector(np.radians(pw_angle), np.radians(90))
 
 # === get secondary source positions ===
 #x0, n0, a0 = sfs.array.linear(N, dx, center=[-1, 0, 0])
-#x0, n0, a0 = sfs.array.linear_nested(N, dx, 2*dx)
 #x0, n0, a0 = sfs.array.linear_random(N, 0.2*dx, 5*dx)
-#x0, n0, a0 = sfs.array.rectangular(N, dx, N, dx, n0=sfs.util.direction_vector(0*np.pi/4, np.pi/2))
+#x0, n0, a0 = sfs.array.rectangular(N, dx, n0=sfs.util.direction_vector(0*np.pi/4, np.pi/2))
 #x0, n0, a0 = sfs.array.circular(N, R)
 x0, n0, a0 = sfs.array.load('../data/arrays/university_rostock.csv')
 

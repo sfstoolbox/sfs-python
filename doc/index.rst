@@ -9,6 +9,7 @@ Loudspeaker Arrays
 .. automodule:: sfs.array
    :members:
    :undoc-members:
+   :exclude-members: ArrayData
 
 Tapering
 --------
