@@ -441,15 +441,9 @@ def weights_closed(positions):
 
     """
     positions = util.asarray_of_rows(positions)
-    if len(positions) == 0:
-        weights = []
-    elif len(positions) == 1:
-        weights = [1.0]
-    else:
-        successors = np.roll(positions, -1, axis=0)
-        d = [np.linalg.norm(b - a) for a, b in zip(positions, successors)]
-        weights = [np.mean(pair) for pair in zip(d, d[-1:] + d)]
-    return np.array(weights)
+    successors = np.roll(positions, -1, axis=0)
+    d = [np.linalg.norm(b - a) for a, b in zip(positions, successors)]
+    return np.array([np.mean(pair) for pair in zip(d, d[-1:] + d)])
 
 
 def _rotate_array(positions, normals, n1, n2):
