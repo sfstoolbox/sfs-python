@@ -5,28 +5,36 @@ from . import defs
 
 
 def rotation_matrix(n1, n2):
-    """Compute rotation matrix for rotation from `n1` to `n2`."""
-    n1 = asarray_1d(n1)
-    n2 = asarray_1d(n2)
-    # no rotation required
-    if all(n1 == n2):
-        return np.eye(3)
+    """Compute rotation matrix for rotation from `n1` to `n2`.
 
-    v = np.cross(n1, n2)
-    s = np.linalg.norm(v)
+    Parameters
+    ----------
+    n1, n2 : (3,) array_like
+        Two vectors.  They don't have to be normalized.
 
-    # check for rotation of 180deg around one axis
-    if s == 0:
-        rot = np.identity(3)
-        for i in np.arange(3):
-            if np.abs(n1[i]) > 0 and np.abs(n1[i]) > 0 and n1[i] == -n2[i]:
-                rot[i, i] = -1
-        return rot
+    Returns
+    -------
+    (3, 3) numpy.ndarray
+        Rotation matrix.
 
-    c = np.inner(n1, n2)
-    vx = [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]
+    """
+    n1 = normal_vector(n1)
+    n2 = normal_vector(n2)
+    I = np.identity(3)
+    if np.all(n1 == n2):
+        return I  # no rotation
+    elif np.all(n1 == -n2):
+        return -I  # flip
+    # TODO: check for *very close to* parallel vectors
 
-    return np.identity(3) + vx + np.dot(vx, vx) * (1 - c) / s ** 2
+    # Algorithm from http://math.stackexchange.com/a/476311
+    v = v0, v1, v2 = np.cross(n1, n2)
+    s = np.linalg.norm(v)  # sine
+    c = np.inner(n1, n2)  # cosine
+    vx = np.matrix([[0, -v2, v1],
+                    [v2, 0, -v0],
+                    [-v1, v0, 0]])  # skew-symmetric cross-product matrix
+    return I + vx + vx**2 * (1 - c) / s**2
 
 
 def wavenumber(omega, c=None):
@@ -201,3 +209,9 @@ def level(p, grid, x):
 def broadcast_zip(*args):
     """Broadcast arguments to the same shape and then use :func:`zip`."""
     return zip(*np.broadcast_arrays(*args))
+
+
+def normal_vector(x):
+    """Normalize a 1D vector."""
+    x = asarray_1d(x)
+    return x / np.linalg.norm(x)
