@@ -45,7 +45,7 @@ def compute_and_plot_soundfield(title):
 
 
 # linear array, secondary point sources, virtual monopole
-x0, n0, a0 = sfs.array.linear(N, dx, center=acenter, n0=anormal)
+x0, n0, a0 = sfs.array.linear(N, dx, center=acenter, orientation=anormal)
 
 sourcetype = sfs.mono.source.point
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
@@ -81,7 +81,7 @@ compute_and_plot_soundfield('linear_ps_wfs_2d_plane')
 
 # non-uniform linear array, secondary point sources
 x0, n0, a0 = sfs.array.linear_diff(N//3 * [dx] + N//3 * [dx/2] + N//3 * [dx],
-                                   center=acenter, n0=anormal)
+                                   center=acenter, orientation=anormal)
 
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
@@ -94,7 +94,7 @@ compute_and_plot_soundfield('linear_nested_ps_wfs_25d_plane')
 
 # random sampled linear array, secondary point sources
 x0, n0, a0 = sfs.array.linear_random(N, dx/2, 1.5*dx, center=acenter,
-                                     n0=anormal)
+                                     orientation=anormal)
 
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
@@ -106,7 +106,7 @@ compute_and_plot_soundfield('linear_random_ps_wfs_25d_plane')
 
 
 # rectangular array, secondary point sources
-x0, n0, a0 = sfs.array.rectangular((N, N//2), dx, center=acenter, n0=anormal)
+x0, n0, a0 = sfs.array.rectangular((N, N//2), dx, center=acenter, orientation=anormal)
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 compute_and_plot_soundfield('rectangular_ps_wfs_25d_point')

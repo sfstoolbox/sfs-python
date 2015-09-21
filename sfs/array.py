@@ -32,7 +32,7 @@ a : (N,) numpy.ndarray
 """
 
 
-def linear(N, spacing, center=[0, 0, 0], n0=[1, 0, 0]):
+def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Linear secondary source distribution.
 
     Parameters
@@ -43,8 +43,9 @@ def linear(N, spacing, center=[0, 0, 0], n0=[1, 0, 0]):
         Distance (in metres) between secondary sources.
     center : (3,) array_like, optional
         Coordinates of array center.
-    n0 : (3,) array_like, optional
-        Normal vector of array.
+    orientation : (3,) array_like, optional
+        Orientation of the array.  By default, the loudspeakers have
+        their main axis pointing into positive x-direction.
 
     Returns
     -------
@@ -57,22 +58,22 @@ def linear(N, spacing, center=[0, 0, 0], n0=[1, 0, 0]):
     .. plot::
         :context: close-figs
 
-        x0, n0, a0 = sfs.array.linear(16, 0.2, n0=[0, -1, 0])
+        x0, n0, a0 = sfs.array.linear(16, 0.2, orientation=[0, -1, 0])
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
 
     """
-    return _linear_helper(np.arange(N) * spacing, center, n0)
+    return _linear_helper(np.arange(N) * spacing, center, orientation)
 
 
-def linear_diff(distances, center=[0, 0, 0], n0=[1, 0, 0]):
+def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Linear secondary source distribution from a list of distances.
 
     Parameters
     ----------
     distances : (N-1,) array_like
         Sequence of secondary sources distances in metres.
-    center, n0
+    center, orientation
         See :func:`linear`
 
     Returns
@@ -86,18 +87,19 @@ def linear_diff(distances, center=[0, 0, 0], n0=[1, 0, 0]):
     .. plot::
         :context: close-figs
 
-        x0, n0, a0 = sfs.array.linear_diff(4 * [0.3] + 6 * [0.15] + 4 * [0.3], n0=[0, -1, 0])
+        x0, n0, a0 = sfs.array.linear_diff(4 * [0.3] + 6 * [0.15] + 4 * [0.3],
+                                           orientation=[0, -1, 0])
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
 
     """
     distances = util.asarray_1d(distances)
     ycoordinates = np.concatenate(([0], np.cumsum(distances)))
-    return _linear_helper(ycoordinates, center, n0)
+    return _linear_helper(ycoordinates, center, orientation)
 
 
 def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
-                  n0=[1, 0, 0], seed=None):
+                  orientation=[1, 0, 0], seed=None):
     """Randomly sampled linear array.
 
     Parameters
@@ -107,7 +109,7 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
     min_spacing, max_spacing : float
         Minimal and maximal distance (in metres) between secondary
         sources.
-    center, n0
+    center, orientation
         See :func:`linear`
     seed : {None, int, array_like}, optional
         Random seed.  See :class:`numpy.random.RandomState`.
@@ -123,14 +125,14 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
     .. plot::
         :context: close-figs
 
-        x0, n0, a0 = sfs.array.linear_random(12, 0.15, 0.4, n0=[0, -1, 0])
+        x0, n0, a0 = sfs.array.linear_random(12, 0.15, 0.4, orientation=[0, -1, 0])
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
 
     """
     r = np.random.RandomState(seed)
     distances = r.uniform(min_spacing, max_spacing, size=N-1)
-    return linear_diff(distances, center, n0)
+    return linear_diff(distances, center, orientation)
 
 
 def circular(N, R, center=[0, 0, 0]):
@@ -174,7 +176,7 @@ def circular(N, R, center=[0, 0, 0]):
     return ArrayData(positions, normals, weights)
 
 
-def rectangular(N, spacing, center=[0, 0, 0], n0=[1, 0, 0]):
+def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Rectangular secondary source distribution.
 
     Parameters
@@ -189,9 +191,9 @@ def rectangular(N, spacing, center=[0, 0, 0], n0=[1, 0, 0]):
         If a pair of numbers is given, the first one specifies the first
         and third segment, the second number specifies the second and
         fourth segment.
-    center, n0
-        See :func:`linear`.  The normal vector `n0` corresponds to the
-        first linear segment.
+    center, orientation
+        See :func:`linear`.  The `orientation` corresponds to the first
+        linear segment.
 
     Returns
     -------
@@ -214,17 +216,18 @@ def rectangular(N, spacing, center=[0, 0, 0], n0=[1, 0, 0]):
     offset1 = N2/2 * d2
     offset2 = N1/2 * d1
     positions, normals, weights = concatenate(
-        linear(N1, d1, center=[-offset1, 0, 0], n0=[1, 0, 0]),  # left
-        linear(N2, d2, center=[0, offset2, 0], n0=[0, -1, 0]),  # upper
-        linear(N1, d1, center=[offset1, 0, 0], n0=[-1, 0, 0]),  # right
-        linear(N2, d2, center=[0, -offset2, 0], n0=[0, 1, 0]),  # lower
+        linear(N1, d1, [-offset1, 0, 0], [1, 0, 0]),  # left
+        linear(N2, d2, [0, offset2, 0], [0, -1, 0]),  # upper
+        linear(N1, d1, [offset1, 0, 0], [-1, 0, 0]),  # right
+        linear(N2, d2, [0, -offset2, 0], [0, 1, 0]),  # lower
     )
-    positions, normals = _rotate_array(positions, normals, [1, 0, 0], n0)
+    positions, normals = _rotate_array(positions, normals,
+                                       [1, 0, 0], orientation)
     positions += center
     return ArrayData(positions, normals, weights)
 
 
-def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=[1, 0, 0]):
+def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Array along the xy-axis with rounded edge at the origin.
 
     Parameters
@@ -236,7 +239,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=[1, 0, 0]):
         adjusted to equdistant sampling along entire array.
     center : (3,) array_like, optional
         Position of edge.
-    n0 : (3,) array_like, optional
+    orientation : (3,) array_like, optional
         Normal vector of array.  Default orientation is along xy-axis.
 
     Returns
@@ -283,20 +286,21 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], n0=[1, 0, 0]):
 
     # array along x-axis
     x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2+R, 0, 0],
-                           n0=[0, 1, 0])
+                           orientation=[0, 1, 0])
     x00 = np.flipud(x00)
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
 
     # rotate array
-    positions, directions = _rotate_array(positions, directions, [1, 0, 0], n0)
+    positions, directions = _rotate_array(positions, directions,
+                                          [1, 0, 0], orientation)
     # shift array to desired position
     positions += center
     return ArrayData(positions, directions, weights)
 
 
-def planar(Ny, dy, Nz, dz, center=[0, 0, 0], n0=[1, 0, 0]):
+def planar(Ny, dy, Nz, dz, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Planar secondary source distribtion.
 
     Returns
@@ -318,13 +322,14 @@ def planar(Ny, dy, Nz, dz, center=[0, 0, 0], n0=[1, 0, 0]):
     directions = np.delete(directions, 0, axis=0)
     weights = dy * dz * np.ones(Ny*Nz)
     # rotate array
-    positions, directions = _rotate_array(positions, directions, [1, 0, 0], n0)
+    positions, directions = _rotate_array(positions, directions,
+                                          [1, 0, 0], orientation)
     # shift array to desired position
     positions += center
     return ArrayData(positions, directions, weights)
 
 
-def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], n0=[1, 0, 0]):
+def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Cube shaped secondary source distribtion.
 
     Returns
@@ -342,13 +347,13 @@ def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], n0=[1, 0, 0]):
     # upper array
     x00, n00, a00 = planar(Nx, dx, Nz, dz,
                            center=[Nx/2 * dx, x00[-1, 1] + dy/2, 0],
-                           n0=[0, -1, 0])
+                           orientation=[0, -1, 0])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
     # right array
     x00, n00, a00 = planar(Ny, dy, Nz, dz, center=[x00[-1, 0] + dx/2, 0, 0],
-                           n0=[-1, 0, 0])
+                           orientation=[-1, 0, 0])
     x00 = np.flipud(x00)
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
@@ -356,26 +361,27 @@ def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], n0=[1, 0, 0]):
     # lower array
     x00, n00, a00 = planar(Nx, dx, Nz, dz,
                            center=[Nx/2 * dx, x00[-1, 1] - dy/2, 0],
-                           n0=[0, 1, 0])
+                           orientation=[0, 1, 0])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
     # bottom array
     x00, n00, a00 = planar(Nx, dx, Ny, dy, center=[Nx/2 * dx, 0, -Nz/2 * dz],
-                           n0=[0, 0, 1])
+                           orientation=[0, 0, 1])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
     # top array
     x00, n00, a00 = planar(Nx, dx, Ny, dy, center=[Nx/2 * dx, 0, Nz/2 * dz],
-                           n0=[0, 0, -1])
+                           orientation=[0, 0, -1])
     positions = np.concatenate((positions, x00))
     directions = np.concatenate((directions, n00))
     weights = np.concatenate((weights, a00))
     # shift array to origin
     positions -= [Nx/2 * dx, 0, 0]
     # rotate array
-    positions, directions = _rotate_array(positions, directions, [1, 0, 0], n0)
+    positions, directions = _rotate_array(positions, directions,
+                                          [1, 0, 0], orientation)
     # shift array to desired position
     positions += center
     return ArrayData(positions, directions, weights)
@@ -402,7 +408,7 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
     return ArrayData(positions, normals, weights)
 
 
-def load(fname, center=[0, 0, 0], n0=[1, 0, 0]):
+def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Load secondary source positions from datafile.
 
     Comma Seperated Values (CSV) format with 7 values
@@ -417,7 +423,8 @@ def load(fname, center=[0, 0, 0], n0=[1, 0, 0]):
     """
     data = np.loadtxt(fname, delimiter=',')
     positions, normals, weights = data[:, :3], data[:, 3:6], data[:, 6]
-    positions, normals = _rotate_array(positions, normals, [1, 0, 0], n0)
+    positions, normals = _rotate_array(positions, normals,
+                                       [1, 0, 0], orientation)
     positions += center
     return ArrayData(positions, normals, weights)
 
@@ -454,12 +461,13 @@ def _rotate_array(positions, normals, n1, n2):
     return positions, normals
 
 
-def _linear_helper(ycoordinates, center, n0):
+def _linear_helper(ycoordinates, center, orientation):
     """Create a full linear array from an array of y-coordinates."""
     N = len(ycoordinates)
     positions = np.zeros((N, 3))
     positions[:, 1] = ycoordinates - np.mean(ycoordinates[[0, -1]])
-    positions, normals = _rotate_array(positions, [1, 0, 0], [1, 0, 0], n0)
+    positions, normals = _rotate_array(positions, [1, 0, 0],
+                                       [1, 0, 0], orientation)
     positions += center
     normals = np.tile(normals, (N, 1))
     weights = weights_linear(positions)
