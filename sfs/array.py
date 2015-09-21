@@ -300,9 +300,23 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
     return ArrayData(positions, directions, weights)
 
 
-def planar(Ny, dy, Nz, dz, center=[0, 0, 0], orientation=[1, 0, 0]):
+def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Planar secondary source distribtion.
 
+    Parameters
+    ----------
+    N : int or pair of int
+        Number of secondary sources along each edge.
+        If a pair of numbers is given, the first one specifies the
+        number on the horizontal edge, the second one specifies the
+        number on the vertical edge.
+    spacing : float or pair of float
+        Distance (in metres) between secondary sources.
+        If a pair of numbers is given, the first one specifies the
+        horizontal, the second number specifies the vertical spacing.
+    center, orientation
+        See :func:`linear`.
+
     Returns
     -------
     ArrayData
@@ -310,27 +324,35 @@ def planar(Ny, dy, Nz, dz, center=[0, 0, 0], orientation=[1, 0, 0]):
         See :class:`ArrayData`.
 
     """
-    # initialize vectors for later np.concatenate
-    positions = np.zeros((1, 3))
-    directions = np.zeros((1, 3))
-    for z in (np.arange(Nz) - Nz / 2 + 1 / 2) * dz:
-        x00, n00, a00 = linear(Ny, dy, center=[0, 0, z])
-        positions = np.concatenate((positions, x00), axis=0)
-        directions = np.concatenate((directions, n00), axis=0)
-    # remove first element from initialization
-    positions = np.delete(positions, 0, axis=0)
-    directions = np.delete(directions, 0, axis=0)
-    weights = dy * dz * np.ones(Ny*Nz)
-    # rotate array
-    positions, directions = _rotate_array(positions, directions,
-                                          [1, 0, 0], orientation)
-    # shift array to desired position
+    N1, N2 = (N, N) if np.isscalar(N) else N
+    d1, d2 = (spacing, spacing) if np.isscalar(spacing) else spacing
+    zcoordinates = np.arange(N2) * d2
+    zcoordinates -= np.mean(zcoordinates[[0, -1]])  # move center to origin
+    subarrays = [linear(N1, d1, center=[0, 0, z]) for z in zcoordinates]
+    positions, normals, weights = concatenate(*subarrays)
+    weights *= d2
+    positions, normals = _rotate_array(positions, normals,
+                                       [1, 0, 0], orientation)
     positions += center
-    return ArrayData(positions, directions, weights)
+    return ArrayData(positions, normals, weights)
 
 
-def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Cube shaped secondary source distribtion.
+def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
+    """Cube-shaped secondary source distribtion.
+
+    Parameters
+    ----------
+    N : int or triple of int
+        Number of secondary sources along each edge.  If a triple of
+        numbers is given, the first two specify the edges like in
+        :func:`rectangular`, the last one specifies the vertical edge.
+    spacing : float or triple of float
+        Distance (in metres) between secondary sources.  If a triple of
+        numbers is given, the first two specify the edges like in
+        :func:`rectangular`, the last one specifies the vertical edge.
+    center, orientation
+        See :func:`linear`.  The `orientation` corresponds to the first
+        planar segment.
 
     Returns
     -------
@@ -339,50 +361,21 @@ def cube(Nx, dx, Ny, dy, Nz, dz, center=[0, 0, 0], orientation=[1, 0, 0]):
         See :class:`ArrayData`.
 
     """
-    # left array
-    x00, n00, a00 = planar(Ny, dy, Nz, dz)
-    positions = x00
-    directions = n00
-    weights = a00
-    # upper array
-    x00, n00, a00 = planar(Nx, dx, Nz, dz,
-                           center=[Nx/2 * dx, x00[-1, 1] + dy/2, 0],
-                           orientation=[0, -1, 0])
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
-    # right array
-    x00, n00, a00 = planar(Ny, dy, Nz, dz, center=[x00[-1, 0] + dx/2, 0, 0],
-                           orientation=[-1, 0, 0])
-    x00 = np.flipud(x00)
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
-    # lower array
-    x00, n00, a00 = planar(Nx, dx, Nz, dz,
-                           center=[Nx/2 * dx, x00[-1, 1] - dy/2, 0],
-                           orientation=[0, 1, 0])
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
-    # bottom array
-    x00, n00, a00 = planar(Nx, dx, Ny, dy, center=[Nx/2 * dx, 0, -Nz/2 * dz],
-                           orientation=[0, 0, 1])
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
-    # top array
-    x00, n00, a00 = planar(Nx, dx, Ny, dy, center=[Nx/2 * dx, 0, Nz/2 * dz],
-                           orientation=[0, 0, -1])
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
-    # shift array to origin
-    positions -= [Nx/2 * dx, 0, 0]
-    # rotate array
+    N1, N2, N3 = (N, N, N) if np.isscalar(N) else N
+    d1, d2, d3 = (spacing,) * 3 if np.isscalar(spacing) else spacing
+    offset1 = N2/2 * d2
+    offset2 = N1/2 * d1
+    offset3 = N3/2 * d3
+    positions, directions, weights = concatenate(
+        planar((N1, N3), (d1, d3), [-offset1, 0, 0], [1, 0, 0]),  # west
+        planar((N2, N3), (d2, d3), [0, offset2, 0], [0, -1, 0]),  # north
+        planar((N1, N3), (d1, d3), [offset1, 0, 0], [-1, 0, 0]),  # east
+        planar((N2, N3), (d2, d3), [0, -offset2, 0], [0, 1, 0]),  # south
+        planar((N2, N1), (d2, d1), [0, 0, -offset3], [0, 0, 1]),  # bottom
+        planar((N2, N1), (d2, d1), [0, 0, offset3], [0, 0, -1]),  # top
+    )
     positions, directions = _rotate_array(positions, directions,
                                           [1, 0, 0], orientation)
-    # shift array to desired position
     positions += center
     return ArrayData(positions, directions, weights)
 

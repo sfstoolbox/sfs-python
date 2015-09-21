@@ -35,7 +35,7 @@ grid = np.meshgrid(x, y, 0, sparse=True)
 # --------------------------------------------------------------------------------
 
 # get secondary source positions
-x0, n0, a0 = sfs.array.cube(N, dx, N, dx, N, dx)
+x0, n0, a0 = sfs.array.cube(N, dx)
 
 # driving function for sound figure
 figure = np.array(Image.open('figures/tree.png'))  # read image from file

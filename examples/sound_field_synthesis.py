@@ -35,8 +35,8 @@ npw = sfs.util.direction_vector(np.radians(pw_angle), np.radians(90))
 #x0, n0, a0 = sfs.array.circular(N, R)
 x0, n0, a0 = sfs.array.load('../data/arrays/university_rostock.csv')
 
-#x0, n0, a0 = sfs.array.planar(N, dx, N, dx, orientation=sfs.util.direction_vector(np.radians(0),np.radians(180)))
-#x0, n0, a0 = sfs.array.cube(N, dx, N, dx, N, dx, orientation=sfs.util.direction_vector(0, np.pi/2))
+#x0, n0, a0 = sfs.array.planar(N, dx, orientation=sfs.util.direction_vector(np.radians(0),np.radians(180)))
+#x0, n0, a0 = sfs.array.cube(N, dx, orientation=sfs.util.direction_vector(0, np.pi/2))
 
 #x0, n0, a0 = sfs.array.sphere_load('/Users/spors/Documents/src/SFS/data/spherical_grids/equally_spaced_points/006561points.mat', 1, center=[.5,0,0])
 
