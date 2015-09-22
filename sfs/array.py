@@ -9,6 +9,7 @@
     plt.rcParams['axes.grid'] = True
 
 .. autoclass:: ArrayData
+   :members: take
 
 """
 from __future__ import division  # for Python 2.x
@@ -17,19 +18,28 @@ import numpy as np
 from . import util
 
 
-ArrayData = namedtuple('ArrayData', 'x n a')
-"""Named tuple returned by array functions.
+class ArrayData(namedtuple('ArrayData', 'x n a')):
 
-Attributes
-----------
-x : (N, 3) numpy.ndarray
-    Positions of secondary sources
-n : (N, 3) numpy.ndarray
-    Orientations (normal vectors) of secondary sources
-a : (N,) numpy.ndarray
-    Weights of secondary sources
+    """Named tuple returned by array functions.
 
-"""
+    Attributes
+    ----------
+    x : (N, 3) numpy.ndarray
+        Positions of secondary sources
+    n : (N, 3) numpy.ndarray
+        Orientations (normal vectors) of secondary sources
+    a : (N,) numpy.ndarray
+        Weights of secondary sources
+
+    """
+
+    __slots__ = ()
+
+    def take(self, indices):
+        """Return a sub-array given by `indices`."""
+        return ArrayData(self.x[indices, :],
+                         self.n[indices, :],
+                         self.a[indices])
 
 
 def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
