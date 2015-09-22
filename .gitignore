@@ -3,4 +3,4 @@ __pycache__/
 build/
 dist/
 .eggs/
-SoundFieldSynthesis.egg-info/
+sfs.egg-info/

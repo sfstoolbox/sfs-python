@@ -11,6 +11,9 @@ Documentation:
 Code:
    http://github.com/sfstoolbox/sfs-python/
 
+Python Package Index:
+   http://pypi.python.org/pypi/sfs/
+
 Requirements
 ------------
 
@@ -31,14 +34,26 @@ distribution that already includes everything, e.g. Anaconda_.
 Installation
 ------------
 
-Currently, the package is not yet available on PyPI_ (but coming soon!), for
-now you should get it from Github_::
+Once you have installed the above-mentioned dependencies, you can use pip_
+to download and install the latest release with a single command::
+
+   pip install sfs --user
+
+If you want to install it system-wide for all users (assuming you have the
+necessary rights), you can just drop the ``--user`` option.
+
+To un-install, use::
+
+   pip uninstall sfs
+
+If you want to keep up with the latest and greatest development version you
+should get it from Github_::
 
    git clone https://github.com/sfstoolbox/sfs-python.git
    cd sfs-python
    python setup.py develop --user
 
-.. _PyPI: http://pypi.python.org/
+.. _pip: http://www.pip-installer.org/en/latest/installing.html
 .. _Github: http://github.com/sfstoolbox/sfs-python/
 
 How to Get Started

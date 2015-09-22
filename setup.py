@@ -26,7 +26,7 @@ class PyTest(TestCommand):
 exec(open('sfs/_version.py').read())  # "import" __version__
 
 setup(
-    name="SoundFieldSynthesis",
+    name="sfs",
     version=__version__,
     packages=['sfs'],
     install_requires=[
@@ -40,7 +40,7 @@ setup(
     long_description=open('README.rst').read(),
     license="MIT",
     keywords="audio SFS WFS Ambisonics".split(),
-    url="http://github.com/sfstoolbox",
+    url="http://github.com/sfstoolbox/",
     platforms='any',
     classifiers=[
         "Development Status :: 3 - Alpha",
