@@ -434,28 +434,37 @@ def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
     return ArrayData(positions, normals, weights)
 
 
-def weights_linear(positions):
-    """Calculate loudspeaker weights for a linear array."""
-    positions = util.asarray_of_rows(positions)
-    distances = np.linalg.norm(np.diff(positions, axis=0), axis=1)
-    return np.array([distances[0]] +
-                    [np.mean(pair) for pair in zip(distances, distances[1:])] +
-                    [distances[-1]])
-
-
-def weights_closed(positions):
+def weights_midpoint(positions, closed):
     """Calculate loudspeaker weights for a simply connected array.
 
     The weights are calculated according to the midpoint rule.
 
-    Note: The loudspeaker positions have to be ordered on the closed
-    contour.
+
+    Parameters
+    ----------
+    positions : (N, 3) array_like
+        Sequence of secondary source positions.
+
+        .. note:: The loudspeaker positions have to be ordered on the
+                  contour!
+
+    closed : bool
+        ``True`` if the loudspeaker contour is closed.
+
+    Returns
+    -------
+    (N,) numpy.ndarray
+        Weights of secondary sources.
 
     """
     positions = util.asarray_of_rows(positions)
-    successors = np.roll(positions, -1, axis=0)
-    d = [np.linalg.norm(b - a) for a, b in zip(positions, successors)]
-    return np.array([np.mean(pair) for pair in zip(d, d[-1:] + d)])
+    if closed:
+        before, after = -1, 0  # cyclic
+    else:
+        before, after = 1, -2  # mirrored
+    positions = np.row_stack((positions[before], positions, positions[after]))
+    distances = np.linalg.norm(np.diff(positions, axis=0), axis=1)
+    return (distances[:-1] + distances[1:]) / 2
 
 
 def _rotate_array(positions, normals, n1, n2):
@@ -475,7 +484,7 @@ def _linear_helper(ycoordinates, center, orientation):
                                        [1, 0, 0], orientation)
     positions += center
     normals = np.tile(normals, (N, 1))
-    weights = weights_linear(positions)
+    weights = weights_midpoint(positions, closed=False)
     return ArrayData(positions, normals, weights)
 
 
