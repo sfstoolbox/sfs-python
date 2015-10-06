@@ -489,5 +489,5 @@ def _linear_helper(ycoordinates, center, orientation):
 
 
 def concatenate(*arrays):
-    """Concatenate ArrayData objects."""
+    """Concatenate :class:`ArrayData` objects."""
     return ArrayData._make(np.concatenate(i) for i in zip(*arrays))
