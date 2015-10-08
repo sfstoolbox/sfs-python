@@ -52,8 +52,9 @@ Utilities
    :members:
    :undoc-members:
 
-Indices
-=======
+.. only:: html
 
-* :ref:`genindex`
-* :ref:`modindex`
+   Index
+   -----
+ 
+   :ref:`genindex`
