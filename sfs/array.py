@@ -198,11 +198,8 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         If a pair of numbers is given, the first one specifies the first
         and third segment, the second number specifies the second and
         fourth segment.
-    spacing : float or pair of float
+    spacing : float
         Distance (in metres) between secondary sources.
-        If a pair of numbers is given, the first one specifies the first
-        and third segment, the second number specifies the second and
-        fourth segment.
     center, orientation
         See :func:`linear`.  The `orientation` corresponds to the first
         linear segment.
@@ -224,14 +221,13 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     """
     N1, N2 = (N, N) if np.isscalar(N) else N
-    d1, d2 = (spacing, spacing) if np.isscalar(spacing) else spacing
-    offset1 = N2/2 * d2
-    offset2 = N1/2 * d1
+    offset1 = spacing * (N2 - 1) / 2 + spacing / np.sqrt(2)
+    offset2 = spacing * (N1 - 1) / 2 + spacing / np.sqrt(2)
     positions, normals, weights = concatenate(
-        linear(N1, d1, [-offset1, 0, 0], [1, 0, 0]),  # left
-        linear(N2, d2, [0, offset2, 0], [0, -1, 0]),  # upper
-        linear(N1, d1, [offset1, 0, 0], [-1, 0, 0]),  # right
-        linear(N2, d2, [0, -offset2, 0], [0, 1, 0]),  # lower
+        linear(N1, spacing, [-offset1, 0, 0], [1, 0, 0]),  # left
+        linear(N2, spacing, [0, offset2, 0], [0, -1, 0]),  # upper
+        linear(N1, spacing, [offset1, 0, 0], [-1, 0, 0]),  # right
+        linear(N2, spacing, [0, -offset2, 0], [0, 1, 0]),  # lower
     )
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
@@ -322,10 +318,8 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         If a pair of numbers is given, the first one specifies the
         number on the horizontal edge, the second one specifies the
         number on the vertical edge.
-    spacing : float or pair of float
+    spacing : float
         Distance (in metres) between secondary sources.
-        If a pair of numbers is given, the first one specifies the
-        horizontal, the second number specifies the vertical spacing.
     center, orientation
         See :func:`linear`.
 
@@ -337,12 +331,11 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     """
     N1, N2 = (N, N) if np.isscalar(N) else N
-    d1, d2 = (spacing, spacing) if np.isscalar(spacing) else spacing
-    zcoordinates = np.arange(N2) * d2
+    zcoordinates = np.arange(N2) * spacing
     zcoordinates -= np.mean(zcoordinates[[0, -1]])  # move center to origin
-    subarrays = [linear(N1, d1, center=[0, 0, z]) for z in zcoordinates]
+    subarrays = [linear(N1, spacing, center=[0, 0, z]) for z in zcoordinates]
     positions, normals, weights = concatenate(*subarrays)
-    weights *= d2
+    weights *= spacing
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
     positions += center
@@ -358,10 +351,8 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         Number of secondary sources along each edge.  If a triple of
         numbers is given, the first two specify the edges like in
         :func:`rectangular`, the last one specifies the vertical edge.
-    spacing : float or triple of float
-        Distance (in metres) between secondary sources.  If a triple of
-        numbers is given, the first two specify the edges like in
-        :func:`rectangular`, the last one specifies the vertical edge.
+    spacing : float
+        Distance (in metres) between secondary sources.
     center, orientation
         See :func:`linear`.  The `orientation` corresponds to the first
         planar segment.
@@ -374,17 +365,16 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     """
     N1, N2, N3 = (N, N, N) if np.isscalar(N) else N
-    d1, d2, d3 = (spacing,) * 3 if np.isscalar(spacing) else spacing
-    offset1 = N2/2 * d2
-    offset2 = N1/2 * d1
-    offset3 = N3/2 * d3
+    offset1 = spacing * (N2 - 1) / 2 + spacing / np.sqrt(2)
+    offset2 = spacing * (N1 - 1) / 2 + spacing / np.sqrt(2)
+    offset3 = spacing * (N3 - 1) / 2 + spacing / np.sqrt(2)
     positions, directions, weights = concatenate(
-        planar((N1, N3), (d1, d3), [-offset1, 0, 0], [1, 0, 0]),  # west
-        planar((N2, N3), (d2, d3), [0, offset2, 0], [0, -1, 0]),  # north
-        planar((N1, N3), (d1, d3), [offset1, 0, 0], [-1, 0, 0]),  # east
-        planar((N2, N3), (d2, d3), [0, -offset2, 0], [0, 1, 0]),  # south
-        planar((N2, N1), (d2, d1), [0, 0, -offset3], [0, 0, 1]),  # bottom
-        planar((N2, N1), (d2, d1), [0, 0, offset3], [0, 0, -1]),  # top
+        planar((N1, N3), spacing, [-offset1, 0, 0], [1, 0, 0]),  # west
+        planar((N2, N3), spacing, [0, offset2, 0], [0, -1, 0]),  # north
+        planar((N1, N3), spacing, [offset1, 0, 0], [-1, 0, 0]),  # east
+        planar((N2, N3), spacing, [0, -offset2, 0], [0, 1, 0]),  # south
+        planar((N2, N1), spacing, [0, 0, -offset3], [0, 0, 1]),  # bottom
+        planar((N2, N1), spacing, [0, 0, offset3], [0, 0, -1]),  # top
     )
     positions, directions = _rotate_array(positions, directions,
                                           [1, 0, 0], orientation)
