@@ -1,5 +1,5 @@
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
@@ -28,7 +28,7 @@ exec(open('sfs/_version.py').read())  # "import" __version__
 setup(
     name="sfs",
     version=__version__,
-    packages=['sfs'],
+    packages=find_packages(),
     install_requires=[
         'numpy',
         'scipy',
