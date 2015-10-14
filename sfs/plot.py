@@ -293,3 +293,19 @@ def level(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
                     xlabel, ylabel, vmax, vmin, **kwargs)
 
     return im
+
+
+def particles(x, ax=None, xlabel='x (m)', ylabel='y (m)', **kwargs):
+    """Plot particle positions as scatter plot"""
+
+    XX, YY = np.broadcast_arrays(*x)
+
+    if ax is None:
+        ax = plt.gca()
+
+    ax.scatter(np.real(XX), np.real(YY), **kwargs)
+
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)

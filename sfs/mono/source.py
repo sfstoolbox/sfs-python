@@ -20,6 +20,7 @@ import itertools
 import numpy as np
 from scipy import special
 from .. import util
+from .. import defs
 
 
 def point(omega, x0, n0, grid, c=None):
@@ -214,6 +215,19 @@ def plane(omega, x0, n0, grid, c=None):
     n0 = util.asarray_1d(n0)
     grid = util.asarray_of_arrays(grid)
     return np.exp(-1j * k * np.inner(grid - x0, n0))
+
+
+def plane_velocity(omega, x0, n0, grid, c=None):
+    """Vecolity of a plane wave.
+
+    ::
+
+        V(x, w) = 1/(rho c) e^(-i w/c n x) n
+
+    """
+    p = 1/(defs.rho0 * defs.c) * plane(omega, x0, n0, grid, c=c)
+
+    return p*n0[0], p*n0[1], p*n0[2]
 
 
 def _duplicate_zdirection(p, grid):

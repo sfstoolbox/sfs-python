@@ -218,3 +218,13 @@ def normal_vector(x):
     """Normalize a 1D vector."""
     x = asarray_1d(x)
     return x / np.linalg.norm(x)
+
+
+def displacement(v, omega):
+    """Particle displacement
+
+    .. math::
+      d(x, t) = \int_0^t v(x, t) dt
+
+    """
+    return v * 1/(1j*omega)
