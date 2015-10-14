@@ -59,6 +59,23 @@ def point(omega, x0, n0, grid, c=None):
     return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
 
 
+def point_velocity(omega, x0, n0, grid, c=None):
+    """Velocity of a point source.
+
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    grid = util.asarray_of_arrays(grid)
+
+    r = np.linalg.norm(grid - x0)
+
+    v = (defs.rho0 * defs.c)*(1j*k*r)/(1+1j*k*r)*point(omega, x0, n0, grid, c=c)
+
+    er = (grid - x0)/r
+
+    return v*er[0], v*er[1], v*er[2]
+
+
 def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
 
@@ -225,9 +242,9 @@ def plane_velocity(omega, x0, n0, grid, c=None):
         V(x, w) = 1/(rho c) e^(-i w/c n x) n
 
     """
-    p = 1/(defs.rho0 * defs.c) * plane(omega, x0, n0, grid, c=c)
+    v = 1/(defs.rho0 * defs.c) * plane(omega, x0, n0, grid, c=c)
 
-    return p*n0[0], p*n0[1], p*n0[2]
+    return v*n0[0], v*n0[1], v*n0[2]
 
 
 def _duplicate_zdirection(p, grid):
