@@ -180,15 +180,19 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
     """
     if np.isscalar(spacing):
         spacing = [spacing] * 3
-    args = []
+    ranges = []
+    scalars = []
     for i, coord in enumerate([x, y, z]):
         if np.isscalar(coord):
-            args.append(coord)
+            scalars.append((i, coord))
         else:
             start, stop = coord
-            args.append(strict_arange(start, stop, spacing[i],
-                                      endpoint=endpoint, **kwargs))
-    return np.meshgrid(*args, sparse=True, copy=False)
+            ranges.append(strict_arange(start, stop, spacing[i],
+                                        endpoint=endpoint, **kwargs))
+    grid = np.meshgrid(*ranges, sparse=True, copy=False)
+    for i, s in scalars:
+        grid.insert(i, s)
+    return grid
 
 
 def normalize(p, grid, xnorm):
