@@ -163,16 +163,104 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
 
 
 def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
-               ax=None, xlabel='x (m)', ylabel='y (m)', vmax=2.0, vmin=-2.0,
+               ax=None, xlabel=None, ylabel=None, vmax=2.0, vmin=-2.0,
                **kwargs):
-    """Two-dimensional plot of sound field."""
+    """Two-dimensional plot of sound field.
+
+    Parameters
+    ----------
+    p : array_like
+        Sound pressure values (or any other scalar quantity if you
+        like).  If the values are complex, the imaginary part is
+        ignored.
+        Typically, `p` is two-dimensional with a shape of `(Ny, Nx)`,
+        `(Nz, Nx)` or `(Nz, Ny)`.  This is the case if
+        :func:`sfs.util.xyz_grid` was used with a single number for `z`,
+        `y` or `x`, respectively.
+        However, `p` can also be three-dimensional with a shape of `(Ny,
+        Nx, 1)`, `(1, Nx, Nz)` or `(Ny, 1, Nz)`.  This is the case if
+        :func:`numpy.meshgrid` was used with a scalar for `z`, `y` or
+        `x`, respectively (and of course with the default
+        ``indexing='xy'``).
+
+        .. note:: If you want to plot a single slice of a pre-computed
+                  "full" 3D sound field, make sure that the slice still
+                  has three dimensions (including one singleton
+                  dimension).  This way, you can use the original `grid`
+                  of the full volume without changes.
+                  This works because the grid component corresponding to
+                  the singleton dimension is simply ignored.
+
+    grid : triple or pair of numpy.ndarray
+        The grid that was used to calculate `p`, see
+        :func:`sfs.util.xyz_grid`.  If `p` is two-dimensional, but
+        `grid` has 3 components, one of them must be scalar.
+    xnorm : array_like, optional
+        Coordinates of a point to which the sound field should be
+        normalized before plotting.  If not specified, no normalization
+        is used.  See :func:`sfs.util.normalize`.
+
+    Returns
+    -------
+    AxesImage
+        See :func:`matplotlib.pyplot.imshow`.
+
+    Other Parameters
+    ----------------
+    xlabel, ylabel : str
+        Overwrite default x/y labels.  Use ``xlabel=''`` and
+        ``ylabel=''`` to remove x/y labels.  The labels can be changed
+        afterwards with :func:`matplotlib.pyplot.xlabel` and
+        :func:`matplotlib.pyplot.xlabel`.
+    colorbar : bool, optional
+        If ``False``, no colorbar is created.
+    ax : Axes
+        If given, the plot is created on `ax` instead of the current
+        axis (see :func:`matplotlib.pyplot.gca`).
+    cmap, vmin, vmax, **kwargs
+        All further parameters are forwarded to
+        :func:`matplotlib.pyplot.imshow`.
+
+    """
+    p = np.asarray(p)
     grid = util.asarray_of_arrays(grid)
 
     # normalize sound field wrt xnorm
     if xnorm is not None:
         p = util.normalize(p, grid, xnorm)
 
-    x, y = grid[:2]  # ignore z-component
+    if p.ndim == 3:
+        if p.shape[2] == 1:
+            p = p[:, :, 0]  # first axis: y; second axis: x
+            plotting_plane = 'xy'
+        elif p.shape[1] == 1:
+            p = p[:, 0, :].T  # first axis: z; second axis: y
+            plotting_plane = 'yz'
+        elif p.shape[0] == 1:
+            p = p[0, :, :].T  # first axis: z; second axis: x
+            plotting_plane = 'xz'
+        else:
+            raise ValueError("If p is 3D, one dimension must have length 1")
+    elif len(grid) == 3:
+        if grid[2].ndim == 0:
+            plotting_plane = 'xy'
+        elif grid[1].ndim == 0:
+            plotting_plane = 'xz'
+        elif grid[0].ndim == 0:
+            plotting_plane = 'yz'
+        else:
+            raise ValueError(
+                "If p is 2D and grid is 3D, one grid component must be scalar")
+    else:
+        # 2-dimensional case
+        plotting_plane = 'xy'
+
+    if plotting_plane == 'xy':
+        x, y = grid[[0, 1]]
+    elif plotting_plane == 'xz':
+        x, y = grid[[0, 2]]
+    elif plotting_plane == 'yz':
+        x, y = grid[[1, 2]]
 
     if ax is None:
         ax = plt.gca()
@@ -181,10 +269,12 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
                    extent=[x.min(), x.max(), y.min(), y.max()],
                    vmax=vmax, vmin=vmin, aspect='equal', **kwargs)
     ax.set_adjustable('box-forced')  # avoid empty space btw. axis and image
-    if xlabel:
-        ax.set_xlabel(xlabel)
-    if ylabel:
-        ax.set_ylabel(ylabel)
+    if xlabel is None:
+        xlabel = plotting_plane[0] + ' / m'
+    if ylabel is None:
+        ylabel = plotting_plane[1] + ' / m'
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     if colorbar:
         ax.figure.colorbar(im, ax=ax)
     return im

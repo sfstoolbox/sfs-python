@@ -202,11 +202,10 @@ def normalize(p, grid, xnorm):
 
 def level(p, grid, x):
     """Determine level at position `x` in the sound field `p`."""
+    grid = asarray_of_arrays(grid)
     x = asarray_1d(x)
     r = np.linalg.norm(grid - x)
     idx = np.unravel_index(r.argmin(), r.shape)
-    # p is normally squeezed, therefore we need only 2 dimensions:
-    idx = idx[:p.ndim]
     return abs(p[idx])
 
 

@@ -55,7 +55,7 @@ def point(omega, x0, n0, grid, c=None):
     grid = util.asarray_of_arrays(grid)
 
     r = np.linalg.norm(grid - x0)
-    return np.squeeze(1/(4*np.pi) * np.exp(-1j * k * r) / r)
+    return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
 
 
 def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
@@ -125,8 +125,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     for (km0, p0), (km1, p1), (km2, p2) in itertools.product(kmp0, kmp1, kmp2):
         km = km0 + km1 + km2
         p = p + 1 / (ksquared - km) * p0 * p1 * p2
-
-    return np.squeeze(p)
+    return p
 
 
 def line(omega, x0, n0, grid, c=None):
@@ -165,8 +164,7 @@ def line(omega, x0, n0, grid, c=None):
 
     r = np.linalg.norm(grid[:2] - x0)
     p = -1j/4 * special.hankel2(0, k * r)
-    p = _duplicate_zdirection(p, grid)
-    return np.squeeze(p)
+    return _duplicate_zdirection(p, grid)
 
 
 def line_dipole(omega, x0, n0, grid, c=None):
@@ -189,8 +187,7 @@ def line_dipole(omega, x0, n0, grid, c=None):
     dx = grid[:2] - x0
     r = np.linalg.norm(dx)
     p = 1j*k/4 * special.hankel2(1, k * r) * np.inner(dx, n0) / r
-    p = _duplicate_zdirection(p, grid)
-    return np.squeeze(p)
+    return _duplicate_zdirection(p, grid)
 
 
 def plane(omega, x0, n0, grid, c=None):
@@ -216,8 +213,7 @@ def plane(omega, x0, n0, grid, c=None):
     x0 = util.asarray_1d(x0)
     n0 = util.asarray_1d(n0)
     grid = util.asarray_of_arrays(grid)
-
-    return np.squeeze(np.exp(-1j * k * np.inner(grid - x0, n0)))
+    return np.exp(-1j * k * np.inner(grid - x0, n0))
 
 
 def _duplicate_zdirection(p, grid):
