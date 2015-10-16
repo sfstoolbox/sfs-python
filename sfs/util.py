@@ -224,7 +224,9 @@ def displacement(v, omega):
     """Particle displacement
 
     .. math::
-      d(x, t) = \int_0^t v(x, t) dt
+
+        d(x, t) = \int_0^t v(x, t) dt
 
     """
-    return v * 1/(1j*omega)
+    v = asarray_of_arrays(v)
+    return v / (1j * omega)

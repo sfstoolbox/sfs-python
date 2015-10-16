@@ -295,15 +295,15 @@ def level(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
     return im
 
 
-def particles(x, ax=None, xlabel='x (m)', ylabel='y (m)', **kwargs):
+def particles(x, ax=None, xlabel='x (m)', ylabel='y (m)', edgecolor='',
+              **kwargs):
     """Plot particle positions as scatter plot"""
-
-    XX, YY = np.broadcast_arrays(*x)
+    XX, YY = x[:2]
 
     if ax is None:
         ax = plt.gca()
 
-    ax.scatter(np.real(XX), np.real(YY), **kwargs)
+    ax.scatter(np.real(XX), np.real(YY), edgecolor=edgecolor, **kwargs)
 
     if xlabel:
         ax.set_xlabel(xlabel)

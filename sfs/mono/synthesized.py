@@ -17,5 +17,6 @@ def generic(omega, x0, n0, d, grid, c=None, source=point):
 
 
 def shiftphase(p, phase):
-    """Shift pahse of a sound field."""
+    """Shift phase of a sound field."""
+    p = np.asarray(p)
     return p * np.exp(1j * phase)
