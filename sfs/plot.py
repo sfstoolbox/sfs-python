@@ -211,7 +211,7 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
         Overwrite default x/y labels.  Use ``xlabel=''`` and
         ``ylabel=''`` to remove x/y labels.  The labels can be changed
         afterwards with :func:`matplotlib.pyplot.xlabel` and
-        :func:`matplotlib.pyplot.xlabel`.
+        :func:`matplotlib.pyplot.ylabel`.
     colorbar : bool, optional
         If ``False``, no colorbar is created.
     ax : Axes
