@@ -69,7 +69,7 @@ def point_velocity(omega, x0, n0, grid, c=None):
     offset = grid - x0
     r = np.linalg.norm(offset)
     v = point(omega, x0, n0, grid, c=c)
-    v *= defs.rho0 * defs.c * (1j*k*r) / (1+1j*k*r)
+    v *= (1+1j*k*r) / (defs.rho0 * defs.c * 1j*k*r)
     return [v * o / r for o in offset]
 
 
