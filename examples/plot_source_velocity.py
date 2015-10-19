@@ -25,6 +25,9 @@ gridv = [np.random.uniform(-2, 2, 10000), np.random.uniform(-2, 2, 10000), 0]
 # compute velocity and pressure field
 v = sfs.mono.source.plane_velocity(omega, xs, npw, gridv)
 v = sfs.mono.synthesized.shiftphase(v, omega * t)
+
+v = sfs.mono.source.point_velocity(omega, xs, [0,0,0], gridv)
+
 p = sfs.mono.source.plane(omega, xs, npw, gridp)
 p = sfs.mono.synthesized.shiftphase(p, omega * t)
 

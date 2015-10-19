@@ -295,10 +295,18 @@ def level(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
     return im
 
 
-def particles(x, ax=None, xlabel='x (m)', ylabel='y (m)', edgecolor='',
-              **kwargs):
+def particles(x, extend=None, ax=None, xlabel='x (m)', ylabel='y (m)',
+              edgecolor='', **kwargs):
     """Plot particle positions as scatter plot"""
     XX, YY = x[:2]
+
+    if extend is not None:
+        idx = np.where((XX > extend[0]) & (XX < extend[1]))
+        XX = XX[idx]
+        YY = YY[idx]
+        idx = np.where((YY > extend[2]) & (YY < extend[3]))
+        XX = XX[idx]
+        YY = YY[idx]
 
     if ax is None:
         ax = plt.gca()
