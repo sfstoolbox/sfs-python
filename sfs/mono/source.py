@@ -182,6 +182,23 @@ def line(omega, x0, n0, grid, c=None):
     return _duplicate_zdirection(p, grid)
 
 
+def line_velocity(omega, x0, n0, grid, c=None):
+    """Velocity of line source parallel to the z-axis.
+
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    x0 = x0[:2]  # ignore z-component
+    grid = util.asarray_of_arrays(grid)
+
+    offset = grid[:2] - x0
+    r = np.linalg.norm(offset)
+    v = -1/(4*defs.c*defs.rho0) * special.hankel2(1, k * r)
+    v = [v * o / r for o in offset]
+
+    return np.concatenate((v, np.zeros((1, len(r)))), axis=0)
+
+
 def line_dipole(omega, x0, n0, grid, c=None):
     """Line source with dipole characteristics parallel to the z-axis.
 
