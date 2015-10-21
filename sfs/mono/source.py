@@ -37,8 +37,8 @@ def point(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p_point = sfs.mono.source.point(omega, x0, None, grid)
-        sfs.plot.soundfield(p_point, grid)
+        p = sfs.mono.source.point(omega, x0, None, grid)
+        sfs.plot.soundfield(p, grid)
         plt.title("Point Source at {} m".format(x0))
 
     Normalization ... multiply by :math:`4\pi` ...
@@ -46,8 +46,8 @@ def point(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p_point *= 4 * np.pi
-        sfs.plot.soundfield(p_point, grid)
+        p *= 4 * np.pi
+        sfs.plot.soundfield(p, grid)
         plt.title("Point Source at {} m (normalized)".format(x0))
 
     """
@@ -234,8 +234,8 @@ def line(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p_line = sfs.mono.source.line(omega, x0, None, grid)
-        sfs.plot.soundfield(p_line, grid)
+        p = sfs.mono.source.line(omega, x0, None, grid)
+        sfs.plot.soundfield(p, grid)
         plt.title("Line Source at {} m".format(x0[:2]))
 
     Normalization ...
@@ -243,8 +243,8 @@ def line(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p_line *= np.sqrt(8 * np.pi * omega / sfs.defs.c) * np.exp(1j * np.pi / 4)
-        sfs.plot.soundfield(p_line, grid)
+        p *= np.sqrt(8 * np.pi * omega / sfs.defs.c) * np.exp(1j * np.pi / 4)
+        sfs.plot.soundfield(p, grid)
         plt.title("Line Source at {} m (normalized)".format(x0[:2]))
 
     """
