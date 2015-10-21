@@ -243,7 +243,7 @@ def line(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p_line *= np.exp(-1j*7*np.pi/4) / np.sqrt(1/(8*np.pi*omega/sfs.defs.c))
+        p_line *= np.sqrt(8 * np.pi * omega / sfs.defs.c) * np.exp(1j * np.pi / 4)
         sfs.plot.soundfield(p_line, grid)
         plt.title("Line Source at {} m (normalized)".format(x0[:2]))
 
