@@ -196,7 +196,10 @@ def line_velocity(omega, x0, n0, grid, c=None):
     v = -1/(4*defs.c*defs.rho0) * special.hankel2(1, k * r)
     v = [v * o / r for o in offset]
 
-    return np.concatenate((v, np.zeros((1, len(r)))), axis=0)
+    v[0] = _duplicate_zdirection(v[0], grid)
+    v[1] = _duplicate_zdirection(v[1], grid)
+
+    return [v[0], v[1], np.zeros_like(v[0])]
 
 
 def line_dipole(omega, x0, n0, grid, c=None):
