@@ -20,10 +20,10 @@ grid = [np.random.uniform(-3, 3, 40000), np.random.uniform(-3, 3, 40000), 0]
 def plot_particle_displacement(title):
     # compute displacement
     X = grid + amplitude * sfs.util.displacement(v, omega)
-    # plot pressure and displacement
+    # plot displacement
     plt.figure(figsize=(15, 15))
     plt.cla()
-    sfs.plot.particles(X, facecolor='black', s=3, extent=[-3, 3, -3, 3])
+    sfs.plot.particles(X, facecolor='black', s=3, trim=[-3, 3, -3, 3])
     plt.axis('off')
     plt.title(title)
     plt.grid()
@@ -32,12 +32,12 @@ def plot_particle_displacement(title):
 
 # point source
 v = sfs.mono.source.point_velocity(omega, xs, npw, grid)
-amplitude = 1.7e6
+amplitude = 1.5e6
 plot_particle_displacement('particle_displacement_point_source')
 
 # line source
-v = sfs.mono.source.point_velocity(omega, xs, npw, grid)
-amplitude = 1.7e6
+v = sfs.mono.source.line_velocity(omega, xs, npw, grid)
+amplitude = 1.3e6
 plot_particle_displacement('particle_displacement_line_source')
 
 # plane wave
