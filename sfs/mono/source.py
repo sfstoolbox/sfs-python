@@ -139,8 +139,84 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     p = 0
     for (km0, p0), (km1, p1), (km2, p2) in itertools.product(kmp0, kmp1, kmp2):
         km = km0 + km1 + km2
-        p = p + 1 / (ksquared - km) * p0 * p1 * p2
+        p = p + 8 / (ksquared - km) * p0 * p1 * p2
     return p
+
+
+def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
+    """Velocity of point source in a rectangular room using a modal room model.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of source (only required for
+        compatibility).
+    grid : triple of numpy.ndarray
+        The grid that is used for the sound field calculations.
+    L : (3,) array_like
+        Dimensionons of the rectangular room.
+    N : (3,) array_like or int, optional
+        Combination of modal orders in the three-spatial dimensions to
+        calculate the sound field for or maximum order for all
+        dimensions.  If not given, the maximum modal order is
+        approximately determined and the sound field is computed up to
+        this maximum order.
+    deltan : float, optional
+        Absorption coefficient of the walls.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Particle velocity at positions given by `grid`.
+
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    x, y, z = util.asarray_of_arrays(grid)
+
+    if N is None:
+        # determine maximum modal order per dimension
+        Nx = int(np.ceil(L[0]/np.pi * k))
+        Ny = int(np.ceil(L[1]/np.pi * k))
+        Nz = int(np.ceil(L[2]/np.pi * k))
+        mm = range(Nx)
+        nn = range(Ny)
+        ll = range(Nz)
+    elif np.isscalar(N):
+        # compute up to a given order
+        mm = range(N)
+        nn = range(N)
+        ll = range(N)
+    else:
+        # compute field for one order combination only
+        mm = [N[0]]
+        nn = [N[1]]
+        ll = [N[2]]
+
+    kmp0 = [((kx + 1j * deltan)**2, np.sin(kx * x) * np.cos(kx * x0[0]))
+            for kx in [m * np.pi / L[0] for m in mm]]
+    kmp1 = [((ky + 1j * deltan)**2, np.sin(ky * y) * np.cos(ky * x0[1]))
+            for ky in [n * np.pi / L[1] for n in nn]]
+    kmp2 = [((kz + 1j * deltan)**2, np.sin(kz * z) * np.cos(kz * x0[2]))
+            for kz in [l * np.pi / L[2] for l in ll]]
+    ksquared = k**2
+    vx = 0+0j
+    vy = 0+0j
+    vz = 0+0j
+    for (km0, p0), (km1, p1), (km2, p2) in itertools.product(kmp0, kmp1, kmp2):
+        km = km0 + km1 + km2
+        vx = vx - 8*1j / (ksquared - km) * p0
+        vy = vy - 8*1j / (ksquared - km) * p1
+        vz = vz - 8*1j / (ksquared - km) * p2
+        
+    
+    return vx, vy, vz
 
 
 def line(omega, x0, n0, grid, c=None):
@@ -196,10 +272,12 @@ def line_velocity(omega, x0, n0, grid, c=None):
     v = -1/(4*defs.c*defs.rho0) * special.hankel2(1, k * r)
     v = [v * o / r for o in offset]
 
-    v[0] = _duplicate_zdirection(v[0], grid)
-    v[1] = _duplicate_zdirection(v[1], grid)
+    assert v[0].shape == v[1].shape
 
-    return [v[0], v[1], np.zeros_like(v[0])]
+    if len(grid) > 2:
+        v.append(np.zeros_like(v[0]))
+
+    return [_duplicate_zdirection(vi, grid) for vi in v]
 
 
 def line_dipole(omega, x0, n0, grid, c=None):
