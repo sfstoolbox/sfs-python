@@ -7,6 +7,7 @@ Further Reading
    :maxdepth: 2
 
    sources
+   arrays
    api
 
 Indices
