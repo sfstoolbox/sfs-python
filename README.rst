@@ -35,7 +35,8 @@ Installation
 ------------
 
 Once you have installed the above-mentioned dependencies, you can use pip_
-to download and install the latest release with a single command::
+to download and install the latest release of the Sound Field Synthesis Toolbox
+with a single command::
 
    pip install sfs --user
 
@@ -46,15 +47,7 @@ To un-install, use::
 
    pip uninstall sfs
 
-If you want to keep up with the latest and greatest development version you
-should get it from Github_::
-
-   git clone https://github.com/sfstoolbox/sfs-python.git
-   cd sfs-python
-   python setup.py develop --user
-
 .. _pip: http://www.pip-installer.org/en/latest/installing.html
-.. _Github: http://github.com/sfstoolbox/sfs-python/
 
 How to Get Started
 ------------------
