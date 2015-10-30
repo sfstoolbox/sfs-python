@@ -39,9 +39,7 @@ class ArrayData(namedtuple('ArrayData', 'x n a')):
 
     def take(self, indices):
         """Return a sub-array given by `indices`."""
-        return ArrayData(self.x[indices, :],
-                         self.n[indices, :],
-                         self.a[indices])
+        return ArrayData(self.x[indices], self.n[indices], self.a[indices])
 
 
 def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
