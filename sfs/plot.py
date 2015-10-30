@@ -267,8 +267,7 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
 
     im = ax.imshow(np.real(p), cmap=cmap, origin='lower',
                    extent=[x.min(), x.max(), y.min(), y.max()],
-                   vmax=vmax, vmin=vmin, aspect='equal', **kwargs)
-    ax.set_adjustable('box-forced')  # avoid empty space btw. axis and image
+                   vmax=vmax, vmin=vmin, **kwargs)
     if xlabel is None:
         xlabel = plotting_plane[0] + ' / m'
     if ylabel is None:
