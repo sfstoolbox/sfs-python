@@ -19,7 +19,6 @@ from . import util
 
 
 class ArrayData(namedtuple('ArrayData', 'x n a')):
-
     """Named tuple returned by array functions.
 
     See :obj:`collections.namedtuple`.
