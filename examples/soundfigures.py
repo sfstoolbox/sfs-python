@@ -1,38 +1,27 @@
-"""
-  This example illustrates the synthesis of a sound figure.
+"""This example illustrates the synthesis of a sound figure.
 
-  The sound figure is defined by a grayscale PNG image. Various examples
-  are located in the directory figures.
-"""
+The sound figure is defined by a grayscale PNG image. Various example
+images are located in the "figures/" directory.
 
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import sfs
 
-
-# parameters
 dx = 0.10  # secondary source distance
 N = 60  # number of secondary sources
 pw_angle = [90, 45]  # traveling direction of plane wave
 f = 2000  # frequency
 
-
 # angular frequency
 omega = 2 * np.pi * f
 
 # normal vector of plane wave
-npw = sfs.util.direction_vector(np.radians(pw_angle[0]), np.radians(pw_angle[1]))
+npw = sfs.util.direction_vector(*np.radians(pw_angle))
 
 # spatial grid
-x = sfs.util.strict_arange(-3, 3, 0.02, endpoint=True)
-y = sfs.util.strict_arange(-3, 3, 0.02, endpoint=True)
-grid = np.meshgrid(x, y, 0, sparse=True)
-
-
-# --------------------------------------------------------------------------------
-# main
-# --------------------------------------------------------------------------------
+grid = sfs.util.xyz_grid([-3, 3], [-3, 3], 0, spacing=0.02)
 
 # get secondary source positions
 x0, n0, a0 = sfs.array.cube(N, dx)
@@ -48,20 +37,15 @@ p = sfs.mono.synthesized.generic(omega, x0, n0, d * a0, grid,
 
 # plot and save synthesized sound field
 plt.figure(figsize=(10, 10))
-sfs.plot.soundfield(2.5e-9 * p, grid, colorbar=False, cmap=plt.cm.BrBG)
+sfs.plot.soundfield(p, grid, xnorm=[0, -2.2, 0], cmap='BrBG', colorbar=False,
+                    vmin=-1, vmax=1)
 plt.title('Synthesized Sound Field')
 plt.savefig('soundfigure.png')
 
-
 # plot and save level of synthesized sound field
 plt.figure(figsize=(12.5, 12.5))
-Lp = 20*np.log10(abs(p) / abs(p[len(x)//2, len(y)//2]))
-plt.imshow(Lp, origin='lower',
-           extent=[min(x), max(x), min(y), max(y)],
-           vmin=-50, vmax=0, aspect='equal')
+im = sfs.plot.level(p, grid, xnorm=[0, -2.2, 0], colorbar=False,
+                    vmin=-50, vmax=0)
 plt.title('Level of Synthesized Sound Field')
-plt.xlabel('x (m)')
-plt.ylabel('y (m)')
-cbar = plt.colorbar(shrink=0.8)
-cbar.set_label('dB')
+cbar = plt.colorbar(im, label='dB', shrink=0.8)
 plt.savefig('soundfigure_level.png')
