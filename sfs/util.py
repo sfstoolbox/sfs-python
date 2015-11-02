@@ -230,3 +230,19 @@ def displacement(v, omega):
     """
     v = asarray_of_arrays(v)
     return v / (1j * omega)
+
+
+def db(x, power=False):
+    """Convert `x` to decibel.
+
+    Parameters
+    ----------
+    x : array_like
+        Input data.  Values of 0 lead to negative infinity.
+    power : bool, optional
+        If `power=False` (the default), `x` is squared before
+        conversion.
+
+    """
+    with np.errstate(divide='ignore'):
+        return 10 if power else 20 * np.log10(np.abs(x))
