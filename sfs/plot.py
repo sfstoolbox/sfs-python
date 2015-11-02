@@ -221,6 +221,10 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
         All further parameters are forwarded to
         :func:`matplotlib.pyplot.imshow`.
 
+    See Also
+    --------
+    sfs.plot.level
+
     """
     p = np.asarray(p)
     grid = util.asarray_of_arrays(grid)
@@ -279,19 +283,25 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
     return im
 
 
-def level(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
-          ax=None, xlabel='x (m)', ylabel='y (m)', vmax=3.0, vmin=-50,
-          **kwargs):
-    """Two-dimensional plot of level (dB) of sound field."""
-    # normalize sound field wrt xnorm
+def level(p, grid, xnorm=None, power=False, colorbar=True, cmap=None,
+          ax=None, xlabel=None, ylabel=None, vmax=3, vmin=-50, **kwargs):
+    """Two-dimensional plot of level (dB) of sound field.
+
+    Takes the same parameters as :func:`sfs.plot.soundfield`.
+
+    Other Parameters
+    ----------------
+    power : bool, optional
+        See :func:`sfs.util.db`.
+
+    """
+    # normalize before converting to dB!
     if xnorm is not None:
         p = util.normalize(p, grid, xnorm)
-
-    xnorm = None
-    im = soundfield(20*np.log10(np.abs(p)), grid, xnorm, colorbar, cmap, ax,
-                    xlabel, ylabel, vmax, vmin, **kwargs)
-
-    return im
+    L = util.db(p, power=power)
+    return soundfield(L, grid=grid, xnorm=None, colorbar=colorbar, cmap=cmap,
+                      ax=ax, xlabel=xlabel, ylabel=ylabel,
+                      vmax=vmax, vmin=vmin, **kwargs)
 
 
 def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
