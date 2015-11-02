@@ -197,16 +197,16 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
 
 def normalize(p, grid, xnorm):
     """Normalize sound field wrt position `xnorm`."""
-    return p / level(p, grid, xnorm)
+    return p / np.abs(probe(p, grid, xnorm))
 
 
-def level(p, grid, x):
-    """Determine level at position `x` in the sound field `p`."""
+def probe(p, grid, x):
+    """Determine the value at position `x` in the sound field `p`."""
     grid = asarray_of_arrays(grid)
     x = asarray_1d(x)
     r = np.linalg.norm(grid - x)
     idx = np.unravel_index(r.argmin(), r.shape)
-    return abs(p[idx])
+    return p[idx]
 
 
 def broadcast_zip(*args):
