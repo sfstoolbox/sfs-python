@@ -1,9 +1,10 @@
 """Plot sound fields etc."""
-
+from __future__ import division
 import matplotlib.pyplot as plt
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 from matplotlib.collections import PatchCollection
+from mpl_toolkits.axes_grid1 import make_axes_locatable, axes_size
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from . import util
@@ -165,8 +166,9 @@ def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
     fig.show()
 
 
-def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
-               ax=None, xlabel=None, ylabel=None, vmax=2.0, vmin=-2.0,
+def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', colorbar=True,
+               colorbar_aspect=20, colorbar_pad=0.5, colorbar_label='',
+               xlabel=None, ylabel=None, ax=None, vmin=-2.0, vmax=2.0,
                **kwargs):
     """Two-dimensional plot of sound field.
 
@@ -217,7 +219,17 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
         :func:`matplotlib.pyplot.ylabel`.
     colorbar : bool, optional
         If ``False``, no colorbar is created.
-    ax : Axes
+    colorbar_aspect : float, optional
+        Aspect ratio of the colorbar, see
+        :func:`matplotlib.pyplot.colorbar`.
+        Strictly speaking, since the colorbar is vertical, it's actually
+        the inverse of the aspect ratio.
+    colorbar_pad : float, optional
+        Space between image plot and colorbar, as a fraction of the
+        width of the colorbar.
+    colorbar_label : str, optional
+        Label of the colorbar.
+    ax : Axes, optional
         If given, the plot is created on `ax` instead of the current
         axis (see :func:`matplotlib.pyplot.gca`).
     cmap, vmin, vmax, **kwargs
@@ -282,7 +294,12 @@ def soundfield(p, grid, xnorm=None, colorbar=True, cmap='coolwarm_clip',
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     if colorbar:
-        ax.figure.colorbar(im, ax=ax)
+        divider = make_axes_locatable(ax)
+        width = axes_size.AxesY(ax, aspect=1/colorbar_aspect)
+        pad = axes_size.Fraction(colorbar_pad, width)
+        cax = divider.append_axes("right", size=width, pad=pad)
+        ax.figure.colorbar(im, cax=cax, label=colorbar_label)
+        plt.sca(ax)
     return im
 
 

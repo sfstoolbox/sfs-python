@@ -44,8 +44,7 @@ plt.savefig('soundfigure.png')
 
 # plot and save level of synthesized sound field
 plt.figure(figsize=(12.5, 12.5))
-im = sfs.plot.level(p, grid, xnorm=[0, -2.2, 0], colorbar=False,
+im = sfs.plot.level(p, grid, xnorm=[0, -2.2, 0], colorbar_label='dB',
                     vmin=-50, vmax=0)
 plt.title('Level of Synthesized Sound Field')
-cbar = plt.colorbar(im, label='dB', shrink=0.8)
 plt.savefig('soundfigure_level.png')
