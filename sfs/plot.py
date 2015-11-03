@@ -33,7 +33,7 @@ def virtualsource_2d(xs, ns=None, type='point', ax=None):
     xs = np.asarray(xs)
     ns = np.asarray(ns)
     if ax is None:
-        ax = plt.axes()
+        ax = plt.gca()
 
     if type == 'point':
         vps = plt.Circle(xs, .05, edgecolor='k', facecolor='k')
@@ -52,7 +52,7 @@ def reference_2d(xref, size=0.1, ax=None):
     """Draw reference/normalization point."""
     xref = np.asarray(xref)
     if ax is None:
-        ax = plt.axes()
+        ax = plt.gca()
 
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]-size, xref[1]+size), 'k-')
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]+size, xref[1]-size), 'k-')
@@ -62,7 +62,7 @@ def secondarysource_2d(x0, n0, grid=None):
     """Simple plot of secondary source locations."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
-    ax = plt.axes()
+    ax = plt.gca()
 
     # plot only secondary sources inside simulated area
     if grid is not None:
