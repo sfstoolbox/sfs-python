@@ -303,8 +303,8 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', colorbar=True,
     return im
 
 
-def level(p, grid, xnorm=None, power=False, colorbar=True, cmap=None,
-          ax=None, xlabel=None, ylabel=None, vmax=3, vmin=-50, **kwargs):
+def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
+          **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
     Takes the same parameters as :func:`sfs.plot.soundfield`.
@@ -319,8 +319,7 @@ def level(p, grid, xnorm=None, power=False, colorbar=True, cmap=None,
     if xnorm is not None:
         p = util.normalize(p, grid, xnorm)
     L = util.db(p, power=power)
-    return soundfield(L, grid=grid, xnorm=None, colorbar=colorbar, cmap=cmap,
-                      ax=ax, xlabel=xlabel, ylabel=ylabel,
+    return soundfield(L, grid=grid, xnorm=None, cmap=cmap,
                       vmax=vmax, vmin=vmin, **kwargs)
 
 
