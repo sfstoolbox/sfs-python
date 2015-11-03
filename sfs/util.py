@@ -98,20 +98,6 @@ def asarray_of_rows(a, **kwargs):
     return result
 
 
-def asarray_of_arrays(a, **kwargs):
-    """Convert the input to an array consisting of arrays.
-
-    A one-dimensional :class:`numpy.ndarray` with `dtype=object` is
-    returned, containing the elements of `a` as :class:`numpy.ndarray`
-    (whose `dtype` and other options can be specified with `**kwargs`).
-
-    """
-    result = np.empty(len(a), dtype=object)
-    for i, element in enumerate(a):
-        result[i] = np.asarray(element, **kwargs)
-    return result
-
-
 def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
     """Like :func:`numpy.arange`, but compensating numeric errors.
 
@@ -202,7 +188,7 @@ def normalize(p, grid, xnorm):
 
 def probe(p, grid, x):
     """Determine the value at position `x` in the sound field `p`."""
-    grid = asarray_of_arrays(grid)
+    grid = XyzComponents(grid)
     x = asarray_1d(x)
     r = np.linalg.norm(grid - x)
     idx = np.unravel_index(r.argmin(), r.shape)
@@ -228,7 +214,7 @@ def displacement(v, omega):
         d(x, t) = \int_0^t v(x, t) dt
 
     """
-    v = asarray_of_arrays(v)
+    v = XyzComponents(v)
     return v / (1j * omega)
 
 
@@ -246,3 +232,91 @@ def db(x, power=False):
     """
     with np.errstate(divide='ignore'):
         return 10 if power else 20 * np.log10(np.abs(x))
+
+
+class XyzComponents(np.ndarray):
+    """See __init__()."""
+
+    def __init__(self, arg, **kwargs):
+        """Triple (or pair) of arrays: x, y, and optionally z.
+
+        Instances of this class can be used to store coordinate grids
+        (either regular grids like in :func:`sfs.util.xyz_grid` or
+        arbitrary point clouds) or vector fields (e.g. particle
+        velocity).
+
+        This class is a subclass of :class:`numpy.ndarray`.  It is
+        one-dimensional (like a plain :class:`list`) and has a length of
+        3 (or 2, if no z-component is available).  It uses
+        `dtype=object` in order to be able to store other
+        `numpy.ndarray`\s of arbitrary shapes but also scalars, if
+        needed.  Because it is a NumPy array subclass, it can be used in
+        operations with scalars and "normal" NumPy arrays, as long as
+        they have a compatible shape.  Like any NumPy array, instances
+        of this class are iterable and can be used, e.g., in for-loops
+        and tuple unpacking.  If slicing or broadcasting leads to an
+        incompatible shape, a plain `numpy.ndarray` with `dtype=object`
+        is returned.
+
+        Parameters
+        ----------
+        arg : triple or pair of array_like
+            The values to be used as X, Y and Z arrays.  Z is optional.
+        **kwargs
+            All further arguments are forwarded to
+            :func:`numpy.asarray`.
+
+        """
+        # This method does nothing, it's only here for the documentation!
+
+    def __new__(cls, arg, **kwargs):
+        # object arrays cannot be created and populated in a single step:
+        obj = np.ndarray.__new__(cls, len(arg), dtype=object)
+        for i, component in enumerate(arg):
+            obj[i] = np.asarray(component, **kwargs)
+        return obj
+
+    def __array_finalize__(self, obj):
+        if self.ndim == 0:
+            pass  # this is allowed, e.g. for np.inner()
+        elif self.ndim > 1 or len(self) not in (2, 3):
+            raise ValueError("XyzComponents can only have 2 or 3 components")
+
+    def __array_prepare__(self, obj, context=None):
+        if obj.ndim == 1 and len(obj) in (2, 3):
+            return obj.view(XyzComponents)
+        return obj
+
+    def __array_wrap__(self, obj, context=None):
+        if obj.ndim != 1 or len(obj) not in (2, 3):
+            return obj.view(np.ndarray)
+        return obj
+
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            start, stop, step = index.indices(len(self))
+            if start == 0 and stop in (2, 3) and step == 1:
+                return np.ndarray.__getitem__(self, index)
+        # Slices other than xy and xyz are "downgraded" to ndarray
+        return np.ndarray.__getitem__(self.view(np.ndarray), index)
+
+    def __repr__(self):
+        return 'XyzComponents(\n' + ',\n'.join(
+            '    {0}={1}'.format(name, repr(data).replace('\n', '\n      '))
+            for name, data in zip('xyz', self)) + ')'
+
+    def make_property(index, doc):
+
+        def getter(self):
+            return self[index]
+
+        def setter(self, value):
+            self[index] = value
+
+        return property(getter, setter, doc=doc)
+
+    x = make_property(0, doc='x-component.')
+    y = make_property(1, doc='y-component.')
+    z = make_property(2, doc='z-component (optional).')
+
+    del make_property

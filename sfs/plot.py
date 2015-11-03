@@ -145,7 +145,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
 
 def _visible_secondarysources_2d(x0, n0, grid):
     """Determine secondary sources which lie within `grid`."""
-    grid = util.asarray_of_arrays(grid)
+    grid = util.XyzComponents(grid)
     x, y = grid[:2]
     idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
@@ -242,7 +242,7 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', colorbar=True,
 
     """
     p = np.asarray(p)
-    grid = util.asarray_of_arrays(grid)
+    grid = util.XyzComponents(grid)
 
     # normalize sound field wrt xnorm
     if xnorm is not None:
