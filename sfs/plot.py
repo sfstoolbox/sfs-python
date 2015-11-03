@@ -9,19 +9,22 @@ import numpy as np
 from . import util
 
 
-def _register_coolwarm_clip():
-    """Create color map with "over" and "under" values."""
+def _register_coolwarm_clip(alpha):
+    """Create color map with "over" and "under" values.
+
+    The 'coolwarm' colormap is based on the paper
+    "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
+    http://www.sandia.gov/~kmorel/documents/ColorMaps/
+
+    """
     from matplotlib.colors import LinearSegmentedColormap
-    # The 'coolwarm' colormap is based on the paper
-    # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
-    # http://www.sandia.gov/~kmorel/documents/ColorMaps/
     cdict = plt.cm.datad['coolwarm']
     cmap = LinearSegmentedColormap('coolwarm_clip', cdict)
-    cmap.set_over(color=cmap(1.0), alpha=0.7)
-    cmap.set_under(color=cmap(0.0), alpha=0.7)
+    cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
+    cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
     plt.cm.register_cmap(cmap=cmap)
 
-_register_coolwarm_clip()
+_register_coolwarm_clip(0.7)
 del _register_coolwarm_clip
 
 
