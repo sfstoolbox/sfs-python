@@ -62,6 +62,12 @@ def point(omega, x0, n0, grid, c=None):
 def point_velocity(omega, x0, n0, grid, c=None):
     """Velocity of a point source.
 
+    Returns
+    -------
+    XyzComponents
+        Particle velocity at positions given by `grid`.
+        See :class:`sfs.util.XyzComponents`.
+
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
@@ -70,7 +76,7 @@ def point_velocity(omega, x0, n0, grid, c=None):
     r = np.linalg.norm(offset)
     v = point(omega, x0, n0, grid, c=c)
     v *= (1+1j*k*r) / (defs.rho0 * defs.c * 1j*k*r)
-    return [v * o / r for o in offset]
+    return util.XyzComponents([v * o / r for o in offset])
 
 
 def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
@@ -87,6 +93,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         compatibility).
     grid : triple of numpy.ndarray
         The grid that is used for the sound field calculations.
+        See :func:`sfs.util.xyz_grid`.
     L : (3,) array_like
         Dimensionons of the rectangular room.
     N : (3,) array_like or int, optional
@@ -157,6 +164,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         compatibility).
     grid : triple of numpy.ndarray
         The grid that is used for the sound field calculations.
+        See :func:`sfs.util.xyz_grid`.
     L : (3,) array_like
         Dimensionons of the rectangular room.
     N : (3,) array_like or int, optional
@@ -172,8 +180,9 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
 
     Returns
     -------
-    numpy.ndarray
+    XyzComponents
         Particle velocity at positions given by `grid`.
+        See :class:`sfs.util.XyzComponents`.
 
     """
     k = util.wavenumber(omega, c)
@@ -214,9 +223,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         vx = vx - 8*1j / (ksquared - km) * p0
         vy = vy - 8*1j / (ksquared - km) * p1
         vz = vz - 8*1j / (ksquared - km) * p2
-        
-    
-    return vx, vy, vz
+    return util.XyzComponents([vx, vy, vz])
 
 
 def line(omega, x0, n0, grid, c=None):
@@ -261,6 +268,12 @@ def line(omega, x0, n0, grid, c=None):
 def line_velocity(omega, x0, n0, grid, c=None):
     """Velocity of line source parallel to the z-axis.
 
+    Returns
+    -------
+    XyzComponents
+        Particle velocity at positions given by `grid`.
+        See :class:`sfs.util.XyzComponents`.
+
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
@@ -277,7 +290,7 @@ def line_velocity(omega, x0, n0, grid, c=None):
     if len(grid) > 2:
         v.append(np.zeros_like(v[0]))
 
-    return [_duplicate_zdirection(vi, grid) for vi in v]
+    return util.XyzComponents([_duplicate_zdirection(vi, grid) for vi in v])
 
 
 def line_dipole(omega, x0, n0, grid, c=None):
@@ -330,15 +343,21 @@ def plane(omega, x0, n0, grid, c=None):
 
 
 def plane_velocity(omega, x0, n0, grid, c=None):
-    """Vecolity of a plane wave.
+    """Velocity of a plane wave.
 
     ::
 
         V(x, w) = 1/(rho c) e^(-i w/c n x) n
 
+    Returns
+    -------
+    XyzComponents
+        Particle velocity at positions given by `grid`.
+        See :class:`sfs.util.XyzComponents`.
+
     """
     v = plane(omega, x0, n0, grid, c=c) / (defs.rho0 * defs.c)
-    return [v * n for n in n0]
+    return util.XyzComponents([v * n for n in n0])
 
 
 def _duplicate_zdirection(p, grid):

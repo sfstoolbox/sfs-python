@@ -150,14 +150,16 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
     endpoint : bool, optional
         If ``True`` (the default), the endpoint of each range is
         included in the grid.  Use ``False`` to get a result similar to
-        :func:`numpy.arange`.  See :func:`strict_arange`.
+        :func:`numpy.arange`.  See :func:`sfs.util.strict_arange`.
     **kwargs
-        All further arguments are forwarded to :func:`strict_arange`.
+        All further arguments are forwarded to
+        :func:`sfs.util.strict_arange`.
 
     Returns
     -------
-    list of numpy.ndarrays
+    XyzComponents
         A grid that can be used for sound field calculations.
+        See :class:`sfs.util.XyzComponents`.
 
     See Also
     --------
@@ -178,7 +180,7 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
     grid = np.meshgrid(*ranges, sparse=True, copy=False)
     for i, s in scalars:
         grid.insert(i, s)
-    return grid
+    return XyzComponents(grid)
 
 
 def normalize(p, grid, xnorm):
@@ -237,7 +239,7 @@ def db(x, power=False):
 class XyzComponents(np.ndarray):
     """See __init__()."""
 
-    def __init__(self, arg, **kwargs):
+    def __init__(self, components, **kwargs):
         """Triple (or pair) of arrays: x, y, and optionally z.
 
         Instances of this class can be used to store coordinate grids
@@ -260,19 +262,20 @@ class XyzComponents(np.ndarray):
 
         Parameters
         ----------
-        arg : triple or pair of array_like
+        components : triple or pair of array_like
             The values to be used as X, Y and Z arrays.  Z is optional.
         **kwargs
             All further arguments are forwarded to
-            :func:`numpy.asarray`.
+            :func:`numpy.asarray`, which is applied to the elements of
+            `components`.
 
         """
         # This method does nothing, it's only here for the documentation!
 
-    def __new__(cls, arg, **kwargs):
+    def __new__(cls, components, **kwargs):
         # object arrays cannot be created and populated in a single step:
-        obj = np.ndarray.__new__(cls, len(arg), dtype=object)
-        for i, component in enumerate(arg):
+        obj = np.ndarray.__new__(cls, len(components), dtype=object)
+        for i, component in enumerate(components):
             obj[i] = np.asarray(component, **kwargs)
         return obj
 
