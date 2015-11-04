@@ -36,6 +36,11 @@ class ArrayData(namedtuple('ArrayData', 'x n a')):
 
     __slots__ = ()
 
+    def __repr__(self):
+        return 'ArrayData(\n' + ',\n'.join(
+            '    {0}={1}'.format(name, repr(data).replace('\n', '\n      '))
+            for name, data in zip('xna', self)) + ')'
+
     def take(self, indices):
         """Return a sub-array given by `indices`."""
         return ArrayData(self.x[indices], self.n[indices], self.a[indices])
