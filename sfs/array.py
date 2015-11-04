@@ -5,7 +5,7 @@
 
     import sfs
     import matplotlib.pyplot as plt
-    plt.rcParams['figure.figsize'] = 8, 4  # inch
+    plt.rcParams['figure.figsize'] = 8, 4.5  # inch
     plt.rcParams['axes.grid'] = True
 
 .. autoclass:: ArrayData

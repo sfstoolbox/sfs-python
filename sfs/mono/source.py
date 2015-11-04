@@ -6,7 +6,7 @@
     import sfs
     import numpy as np
     import matplotlib.pyplot as plt
-    plt.rcParams['figure.figsize'] = 8, 4  # inch
+    plt.rcParams['figure.figsize'] = 8, 4.5  # inch
 
     x0 = 1.5, 1, 0
     f = 500  # Hz
