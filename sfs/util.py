@@ -323,3 +323,14 @@ class XyzComponents(np.ndarray):
     z = make_property(2, doc='z-component (optional).')
 
     del make_property
+
+    def apply(self, func, *args, **kwargs):
+        """Apply a function to each component.
+
+        The function `func` will be called once for each component,
+        passing the current component as first argument.  All further
+        arguments are passed after that.
+        The results are returned as a new :class:`XyzComponents` object.
+
+        """
+        return XyzComponents([func(i, *args, **kwargs) for i in self])
