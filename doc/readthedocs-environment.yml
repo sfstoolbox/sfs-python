@@ -7,3 +7,7 @@ dependencies:
   - numpy
   - scipy
   - matplotlib>=1.5
+  - ipykernel
+  - pandoc
+  - pip:
+    - nbsphinx
