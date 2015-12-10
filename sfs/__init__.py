@@ -1,6 +1,9 @@
-"""Sound Field Synthesis Toolbox."""
+"""Sound Field Synthesis Toolbox.
 
-from ._version import __version__
+http://sfs.rtfd.org/
+
+"""
+__version__ = "0.1.1"
 
 from . import tapering
 from . import array

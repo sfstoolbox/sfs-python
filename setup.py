@@ -2,6 +2,14 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
+__version__ = "unknown"
+
+# "import" __version__
+for line in open("sfs/__init__.py"):
+    if line.startswith("__version__"):
+        exec(line)
+        break
+
 
 # See http://pytest.org/latest/goodpractises.html
 class PyTest(TestCommand):
@@ -22,8 +30,6 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
-
-exec(open('sfs/_version.py').read())  # "import" __version__
 
 setup(
     name="sfs",
