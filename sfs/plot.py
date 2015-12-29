@@ -25,6 +25,20 @@ def _register_cmap_clip(name, original_cmap, alpha):
 _register_cmap_clip('coolwarm_clip', 'coolwarm', 0.7)
 
 
+def _register_cmap_transparent(name, color):
+    """Create a color map from a given color to transparent."""
+    from matplotlib.colors import colorConverter, LinearSegmentedColormap
+    red, green, blue = colorConverter.to_rgb(color)
+    cdict = {'red': ((0, red, red), (1, red, red)),
+             'green': ((0, green, green), (1, green, green)),
+             'blue': ((0, blue, blue), (1, blue, blue)),
+             'alpha': ((0, 0, 0), (1, 1, 1))}
+    cmap = LinearSegmentedColormap(name, cdict)
+    plt.cm.register_cmap(cmap=cmap)
+
+_register_cmap_transparent('blacktransparent', 'black')
+
+
 def virtualsource_2d(xs, ns=None, type='point', ax=None):
     """Draw position/orientation of virtual source."""
     xs = np.asarray(xs)
