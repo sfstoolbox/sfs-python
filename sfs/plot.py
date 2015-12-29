@@ -10,23 +10,19 @@ import numpy as np
 from . import util
 
 
-def _register_coolwarm_clip(alpha):
-    """Create color map with "over" and "under" values.
-
-    The 'coolwarm' colormap is based on the paper
-    "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
-    http://www.sandia.gov/~kmorel/documents/ColorMaps/
-
-    """
+def _register_cmap_clip(name, original_cmap, alpha):
+    """Create a color map with "over" and "under" values."""
     from matplotlib.colors import LinearSegmentedColormap
-    cdict = plt.cm.datad['coolwarm']
-    cmap = LinearSegmentedColormap('coolwarm_clip', cdict)
+    cdict = plt.cm.datad[original_cmap]
+    cmap = LinearSegmentedColormap(name, cdict)
     cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
     cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
     plt.cm.register_cmap(cmap=cmap)
 
-_register_coolwarm_clip(0.7)
-del _register_coolwarm_clip
+# The 'coolwarm' colormap is based on the paper
+# "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
+# http://www.sandia.gov/~kmorel/documents/ColorMaps/
+_register_cmap_clip('coolwarm_clip', 'coolwarm', 0.7)
 
 
 def virtualsource_2d(xs, ns=None, type='point', ax=None):
