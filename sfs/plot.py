@@ -8,6 +8,7 @@ from mpl_toolkits import axes_grid1
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from . import util
+from . import defs
 
 
 def _register_cmap_clip(name, original_cmap, alpha):
@@ -340,6 +341,53 @@ def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
         ax.set_xlabel(xlabel)
     if ylabel:
         ax.set_ylabel(ylabel)
+
+
+def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
+            ax=None, clim=None, **kwargs):
+    """Plot a vector field in the xy plane.
+
+    Parameters
+    ----------
+    v : triple or pair of array_like
+        x, y and optionally z components of vector field.  The z
+        components are ignored.
+        If the values are complex, the imaginary parts are ignored.
+    grid : triple or pair of array_like
+        The grid that was used to calculate `v`, see
+        :func:`sfs.util.xyz_grid`.  Any z components are ignored.
+
+    Returns
+    -------
+    Quiver
+        See :func:`matplotlib.pyplot.quiver`.
+
+    Other Parameters
+    ----------------
+    ax : Axes, optional
+        If given, the plot is created on `ax` instead of the current
+        axis (see :func:`matplotlib.pyplot.gca`).
+    clim : pair of float, optional
+        Limits for the scaling of arrow colors.
+        See :func:`matplotlib.pyplot.quiver`.
+    cmap, headlength, headaxislength, **kwargs
+        All further parameters are forwarded to
+        :func:`matplotlib.pyplot.quiver`.
+
+    """
+    v = util.XyzComponents(v[:2]).apply(np.real)
+    X, Y = util.XyzComponents(grid[:2])
+    speed = np.linalg.norm(v)
+    with np.errstate(invalid='ignore'):
+        U, V = v.apply(np.true_divide, speed)
+    if ax is None:
+        ax = plt.gca()
+    if clim is None:
+        v_ref = 1 / (defs.rho0 * defs.c)  # reference particle velocity
+        clim = 0, 2 * v_ref
+    return ax.quiver(X, Y, U, V, speed, cmap=cmap, pivot='mid', units='xy',
+                     angles='xy', headlength=headlength,
+                     headaxislength=headaxislength, clim=clim, **kwargs)
 
 
 def add_colorbar(im, aspect=20, pad=0.5, **kwargs):

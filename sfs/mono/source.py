@@ -18,6 +18,9 @@
 
     grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
+    # Grid for vector fields:
+    vgrid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.1)
+
 """
 
 import itertools
@@ -72,6 +75,18 @@ def point_velocity(omega, x0, n0, grid, c=None):
     XyzComponents
         Particle velocity at positions given by `grid`.
         See :class:`sfs.util.XyzComponents`.
+
+    Examples
+    --------
+    The particle velocity can be plotted on top of the sound pressure:
+
+    .. plot::
+        :context: close-figs
+
+        v = sfs.mono.source.point_velocity(omega, x0, None, vgrid)
+        sfs.plot.soundfield(p * normalization_point, grid)
+        sfs.plot.vectors(v * normalization_point, vgrid)
+        plt.title("Sound Pressure and Particle Velocity")
 
     """
     k = util.wavenumber(omega, c)
@@ -332,6 +347,18 @@ def line_velocity(omega, x0, n0, grid, c=None):
         Particle velocity at positions given by `grid`.
         See :class:`sfs.util.XyzComponents`.
 
+    Examples
+    --------
+    The particle velocity can be plotted on top of the sound pressure:
+
+    .. plot::
+        :context: close-figs
+
+        v = sfs.mono.source.line_velocity(omega, x0, None, vgrid)
+        sfs.plot.soundfield(p * normalization_line, grid)
+        sfs.plot.vectors(v * normalization_line, vgrid)
+        plt.title("Sound Pressure and Particle Velocity")
+
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
@@ -392,8 +419,8 @@ def plane(omega, x0, n0, grid, c=None):
 
         direction = 45  # degree
         n0 = sfs.util.direction_vector(np.radians(direction))
-        p_plane = sfs.mono.source.plane(omega, x0, n0, grid)
-        sfs.plot.soundfield(p_plane, grid);
+        p = sfs.mono.source.plane(omega, x0, n0, grid)
+        sfs.plot.soundfield(p, grid);
         plt.title("Plane wave with direction {} degree".format(direction))
 
     """
@@ -418,6 +445,18 @@ def plane_velocity(omega, x0, n0, grid, c=None):
     XyzComponents
         Particle velocity at positions given by `grid`.
         See :class:`sfs.util.XyzComponents`.
+
+    Examples
+    --------
+    The particle velocity can be plotted on top of the sound pressure:
+
+    .. plot::
+        :context: close-figs
+
+        v = sfs.mono.source.plane_velocity(omega, x0, n0, vgrid)
+        sfs.plot.soundfield(p, grid)
+        sfs.plot.vectors(v, vgrid)
+        plt.title("Sound Pressure and Particle Velocity")
 
     """
     v = plane(omega, x0, n0, grid, c=c) / (defs.rho0 * defs.c)
