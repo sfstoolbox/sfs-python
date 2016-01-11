@@ -12,6 +12,10 @@
     f = 500  # Hz
     omega = 2 * np.pi * f
 
+    normalization_point = 4 * np.pi
+    normalization_line = \\
+        np.sqrt(8 * np.pi * omega / sfs.defs.c) * np.exp(1j * np.pi / 4)
+
     grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
 """
@@ -43,13 +47,12 @@ def point(omega, x0, n0, grid, c=None):
         sfs.plot.soundfield(p, grid)
         plt.title("Point Source at {} m".format(x0))
 
-    Normalization ... multiply by :math:`4\pi` ...
+    Normalization ...
 
     .. plot::
         :context: close-figs
 
-        p *= 4 * np.pi
-        sfs.plot.soundfield(p, grid)
+        sfs.plot.soundfield(p * normalization_point, grid)
         plt.title("Point Source at {} m (normalized)".format(x0))
 
     """
@@ -306,8 +309,7 @@ def line(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p *= np.sqrt(8 * np.pi * omega / sfs.defs.c) * np.exp(1j * np.pi / 4)
-        sfs.plot.soundfield(p, grid)
+        sfs.plot.soundfield(p * normalization_line, grid)
         plt.title("Line Source at {} m (normalized)".format(x0[:2]))
 
     """
