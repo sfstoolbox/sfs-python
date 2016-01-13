@@ -155,8 +155,16 @@ def source_selection_point(n0, x0, xs):
     ds = x0 - xs
     return inner1d(ds, n0) >= defs.selection_tolerance
 
+def source_selection_line(n0, x0, xs):
+    """Secondary source selection for a line source.
 
-def source_selection_all(N):
+    compare Eq.(15) from [Spors et al, 2008]
+
+    """
+    return source_selection_point(n0, x0, xs)
+
+
+def source_selection_focused(ns, xdef source_selection_all(N):
     """Select all secondary sources."""
     return np.ones(N) >= 0
 
