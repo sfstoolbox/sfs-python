@@ -164,7 +164,20 @@ def source_selection_line(n0, x0, xs):
     return source_selection_point(n0, x0, xs)
 
 
-def source_selection_focused(ns, xdef source_selection_all(N):
+def source_selection_focused(ns, x0, xs):
+    """Secondary source selection for a focused source.
+
+    Eq.(2.78) from [Wierstorf, 2014]
+
+    """
+    x0 = np.asarray(x0)
+    xs = np.squeeze(np.asarray(xs))
+    ns = np.squeeze(np.asarray(ns))
+    ds = xs - x0
+    return inner1d(ns, ds) >= defs.selection_tolerance
+
+
+def source_selection_all(N):
     """Select all secondary sources."""
     return np.ones(N) >= 0
 
