@@ -92,7 +92,7 @@ def point_dipole(omega, x0, n0, grid, c=None):
         Position of source.
     n0 : (3,) array_like
         Normal vector (direction) of dipole.
-    grid : triple of numpy.ndarray
+    grid : triple of array_like
         The grid that is used for the sound field calculations.
         See :func:`sfs.util.xyz_grid`.
     c : float, optional
@@ -145,7 +145,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     n0 : (3,) array_like
         Normal vector (direction) of source (only required for
         compatibility).
-    grid : triple of numpy.ndarray
+    grid : triple of array_like
         The grid that is used for the sound field calculations.
         See :func:`sfs.util.xyz_grid`.
     L : (3,) array_like
@@ -216,7 +216,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     n0 : (3,) array_like
         Normal vector (direction) of source (only required for
         compatibility).
-    grid : triple of numpy.ndarray
+    grid : triple of array_like
         The grid that is used for the sound field calculations.
         See :func:`sfs.util.xyz_grid`.
     L : (3,) array_like
