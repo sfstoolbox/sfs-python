@@ -55,7 +55,8 @@ def point(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        sfs.plot.soundfield(p * normalization_point, grid)
+        sfs.plot.soundfield(p * normalization_point, grid,
+                            colorbar_kwargs=dict(label="p / Pa"))
         plt.title("Point Source at {} m (normalized)".format(x0))
 
     """
@@ -324,7 +325,8 @@ def line(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        sfs.plot.soundfield(p * normalization_line, grid)
+        sfs.plot.soundfield(p * normalization_line, grid,
+                            colorbar_kwargs=dict(label="p / Pa"))
         plt.title("Line Source at {} m (normalized)".format(x0[:2]))
 
     """
@@ -420,7 +422,7 @@ def plane(omega, x0, n0, grid, c=None):
         direction = 45  # degree
         n0 = sfs.util.direction_vector(np.radians(direction))
         p = sfs.mono.source.plane(omega, x0, n0, grid)
-        sfs.plot.soundfield(p, grid);
+        sfs.plot.soundfield(p, grid, colorbar_kwargs=dict(label="p / Pa"))
         plt.title("Plane wave with direction {} degree".format(direction))
 
     """
