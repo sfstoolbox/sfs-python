@@ -203,6 +203,7 @@ def source_selection_point(n0, x0, xs):
     ds = x0 - xs
     return inner1d(ds, n0) >= defs.selection_tolerance
 
+
 def source_selection_line(n0, x0, xs):
     """Secondary source selection for a line source.
 
