@@ -113,6 +113,54 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
 wfs_3d_plane = _wfs_plane
 
 
+def _wfs_focused(omega, x0, n0, xs, ns, c=None):
+    """Focused source by two- or three-dimensional WFS.
+
+    ::
+
+                       (x0-xs) n0
+        D(x0,k) = j k ------------- e^(j k |x0-xs|)
+                      |x0-xs|^(3/2)
+
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    xs = np.squeeze(np.asarray(xs))
+    k = util.wavenumber(omega, c)
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+    return 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(1j * k * r)
+
+
+wfs_2d_focused = _wfs_focused
+
+
+def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
+    """Focused source by 2.5-dimensional WFS.
+
+    ::
+
+                    ____________   (x0-xs) n0
+        D(x0,w) = \|j k |xref-x0| ------------- e^(j k |x0-xs|)
+                                  |x0-xs|^(3/2)
+
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    xs = np.squeeze(np.asarray(xs))
+    xref = np.squeeze(np.asarray(xref))
+    k = util.wavenumber(omega, c)
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+
+    return wfs_25d_preeq(omega, omalias, c) * \
+        np.sqrt(np.linalg.norm(xref - x0)) * inner1d(ds, n0) / \
+        r ** (3 / 2) * np.exp(1j * k * r)
+
+
+wfs_3d_focused = _wfs_focused
+
+
 def wfs_25d_preeq(omega, omalias, c):
     """Preqeualization for 2.5D WFS."""
     if omalias is None:
