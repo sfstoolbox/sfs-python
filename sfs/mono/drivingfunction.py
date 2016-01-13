@@ -162,7 +162,15 @@ def source_selection_all(N):
 
 
 def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
-    """Point source by 2.5-dimensional WFS."""
+    """Plane wave by two-dimensional NFC-HOA.
+
+    ::
+                               __
+                       2i     \        i^-m
+        D(phi0,w) = - -----   /__   ----------  e^(i m (phi0-phi_pw))
+                      pi r0 m=-N..N  (2)
+                                    Hm  (w/c r0)
+    """
     x0 = np.asarray(x0)
     k = util.wavenumber(omega, c)
     alpha, beta, r = util.cart2sph(n[0], n[1], n[2])
@@ -179,7 +187,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
 
 
 def nfchoa_25d_point(omega, x0, r0, xs, c=None):
-    """Point source by 2.5-dimensional WFS.
+    """Point source by 2.5-dimensional NFC-HOA.
 
     ::
 
@@ -206,7 +214,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
 
 
 def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
-    """Plane wave by 2.5-dimensional WFS.
+    """Plane wave by 2.5-dimensional NFC-HOA.
 
     ::
 
