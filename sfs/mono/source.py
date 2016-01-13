@@ -26,6 +26,8 @@ from .. import defs
 def point(omega, x0, n0, grid, c=None):
     """Point source.
 
+    Notes
+    -----
     ::
 
                       1  e^(-j w/c |x-x0|)
@@ -283,6 +285,8 @@ def line(omega, x0, n0, grid, c=None):
 
     Note: third component of x0 is ignored.
 
+    Notes
+    -----
     ::
 
                            (2)
@@ -350,6 +354,8 @@ def line_dipole(omega, x0, n0, grid, c=None):
 
     Note: third component of x0 is ignored.
 
+    Notes
+    -----
     ::
 
                            (2)
@@ -371,6 +377,8 @@ def line_dipole(omega, x0, n0, grid, c=None):
 def plane(omega, x0, n0, grid, c=None):
     """Plane wave.
 
+    Notes
+    -----
     ::
 
         G(x, w) = e^(-i w/c n x)
@@ -397,6 +405,8 @@ def plane(omega, x0, n0, grid, c=None):
 def plane_velocity(omega, x0, n0, grid, c=None):
     """Velocity of a plane wave.
 
+    Notes
+    -----
     ::
 
         V(x, w) = 1/(rho c) e^(-i w/c n x) n
