@@ -79,6 +79,58 @@ def point_velocity(omega, x0, n0, grid, c=None):
     return util.XyzComponents([v * o / r for o in offset])
 
 
+def point_dipole(omega, x0, n0, grid, c=None):
+    """Point source with dipole characteristics.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of dipole.
+    grid : triple of numpy.ndarray
+        The grid that is used for the sound field calculations.
+        See :func:`sfs.util.xyz_grid`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by `grid`.
+
+    Notes
+    -----
+    ::
+
+         d                1   / iw       1    \   (x-x0) n0
+        ---- G(x-x0,w) = --- | ----- + ------- | ----------- e^(-i w/c |x-x0|)
+        d ns             4pi  \  c     |x-x0| /   |x-x0|^2
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        n0 = 0, 1, 0
+        p = sfs.mono.source.point_dipole(omega, x0, n0, grid)
+        sfs.plot.soundfield(p, grid)
+        plt.title("Dipole Point Source at {} m".format(x0))
+
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    n0 = util.asarray_1d(n0)
+    grid = util.XyzComponents(grid)
+
+    offset = grid - x0
+    r = np.linalg.norm(offset)
+    return 1 / (4*np.pi) * (1j * k + 1 / r) * np.inner(offset, n0) / \
+        np.power(r, 2) * np.exp(-1j * k * r)
+
+
 def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
 
