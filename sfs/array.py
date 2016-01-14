@@ -67,8 +67,8 @@ def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         Positions, orientations and weights of secondary sources.
         See :class:`ArrayData`.
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 
@@ -96,8 +96,8 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
         Positions, orientations and weights of secondary sources.
         See :class:`ArrayData`.
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 
@@ -134,8 +134,8 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
         Positions, orientations and weights of secondary sources.
         See :class:`ArrayData`.
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 
@@ -167,8 +167,8 @@ def circular(N, R, center=[0, 0, 0]):
         Positions, orientations and weights of secondary sources.
         See :class:`ArrayData`.
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 
@@ -212,8 +212,8 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         Positions, orientations and weights of secondary sources.
         See :class:`ArrayData`.
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 
@@ -258,8 +258,8 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
         Positions, orientations and weights of secondary sources.
         See :class:`ArrayData`.
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 

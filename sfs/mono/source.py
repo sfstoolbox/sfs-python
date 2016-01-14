@@ -383,8 +383,8 @@ def plane(omega, x0, n0, grid, c=None):
 
         G(x, w) = e^(-i w/c n x)
 
-    Example
-    -------
+    Examples
+    --------
     .. plot::
         :context: close-figs
 
