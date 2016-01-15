@@ -15,9 +15,9 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
         D(x0,k) = j/2 k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
@@ -34,9 +34,9 @@ def _wfs_point(omega, x0, n0, xs, c=None):
                       |x0-xs|^(3/2)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
@@ -56,10 +56,10 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
                                   |x0-xs|^(3/2)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
-    xref = np.squeeze(np.asarray(xref))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
@@ -80,9 +80,9 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
         D(x0,k) =  j k n n0  e^(-j k n x0)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    n = np.squeeze(np.asarray(n))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    n = util.asarray_1d(n)
     k = util.wavenumber(omega, c)
     return 2j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
@@ -100,10 +100,10 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
         D_2.5D(x0,w) = \|j k |xref-x0| n n0 e^(-j k n x0)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    n = np.squeeze(np.asarray(n))
-    xref = np.squeeze(np.asarray(xref))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    n = util.asarray_1d(n)
+    xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     return wfs_25d_preeq(omega, omalias, c) * \
         np.sqrt(2*np.pi * np.linalg.norm(xref - x0)) * \
@@ -113,7 +113,7 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
 wfs_3d_plane = _wfs_plane
 
 
-def _wfs_focused(omega, x0, n0, xs, ns, c=None):
+def _wfs_focused(omega, x0, n0, xs, c=None):
     """Focused source by two- or three-dimensional WFS.
 
     ::
@@ -123,9 +123,9 @@ def _wfs_focused(omega, x0, n0, xs, ns, c=None):
                       |x0-xs|^(3/2)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
@@ -145,10 +145,10 @@ def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
                                   |x0-xs|^(3/2)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
-    xref = np.squeeze(np.asarray(xref))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
@@ -174,8 +174,8 @@ def wfs_25d_preeq(omega, omalias, c):
 
 def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by simple delay of secondary sources."""
-    x0 = np.asarray(x0)
-    n = np.squeeze(np.asarray(n))
+    x0 = util.asarray_of_rows(x0)
+    n = util.asarray_1d(n)
     k = util.wavenumber(omega, c)
     return np.exp(-1j * k * np.inner(n, x0))
 
@@ -186,8 +186,8 @@ def source_selection_plane(n0, n):
     Eq.(13) from [Spors et al, 2008]
 
     """
-    n0 = np.asarray(n0)
-    n = np.squeeze(np.asarray(n))
+    n0 = util.asarray_of_rows(n0)
+    n = util.asarray_1d(n)
     return np.inner(n, n0) >= defs.selection_tolerance
 
 
@@ -197,9 +197,9 @@ def source_selection_point(n0, x0, xs):
     Eq.(15) from [Spors et al, 2008]
 
     """
-    n0 = np.asarray(n0)
-    x0 = np.asarray(x0)
-    xs = np.squeeze(np.asarray(xs))
+    n0 = util.asarray_of_rows(n0)
+    x0 = util.asarray_of_rows(x0)
+    xs = util.asarray_1d(xs)
     ds = x0 - xs
     return inner1d(ds, n0) >= defs.selection_tolerance
 
@@ -219,9 +219,9 @@ def source_selection_focused(ns, x0, xs):
     Eq.(2.78) from [Wierstorf, 2014]
 
     """
-    x0 = np.asarray(x0)
-    xs = np.squeeze(np.asarray(xs))
-    ns = np.squeeze(np.asarray(ns))
+    x0 = util.asarray_of_rows(x0)
+    xs = util.asarray_1d(xs)
+    ns = util.asarray_1d(ns)
     ds = xs - x0
     return inner1d(ns, ds) >= defs.selection_tolerance
 
@@ -235,13 +235,15 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     """Plane wave by two-dimensional NFC-HOA.
 
     ::
+
                                __
                        2i     \        i^-m
         D(phi0,w) = - -----   /__   ----------  e^(i m (phi0-phi_pw))
                       pi r0 m=-N..N  (2)
                                     Hm  (w/c r0)
+
     """
-    x0 = np.asarray(x0)
+    x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
     alpha, beta, r = util.cart2sph(n[0], n[1], n[2])
     alpha0, beta0, tmp = util.cart2sph(x0[:, 0], x0[:, 1], x0[:, 2])
@@ -268,7 +270,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
                                     h|m| (w/c r0)
 
     """
-    x0 = np.asarray(x0)
+    x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
     alpha, beta, r = util.cart2sph(xs[0], xs[1], xs[2])
     alpha0, beta0, tmp = util.cart2sph(x0[:, 0], x0[:, 1], x0[:, 2])
@@ -295,7 +297,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
                                     w/c h|m| (w/c r0)
 
     """
-    x0 = np.asarray(x0)
+    x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
     alpha, beta, r = util.cart2sph(n[0], n[1], n[2])
     alpha0, beta0, tmp = util.cart2sph(x0[:, 0], x0[:, 1], x0[:, 2])
@@ -320,9 +322,9 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
         D(x0,k) =
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
@@ -338,9 +340,9 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
         D(x0,k) = kpw,y * e^(-j*kpw,x*x)
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    n = np.squeeze(np.asarray(n))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    n = util.asarray_1d(n)
     k = util.wavenumber(omega, c)
     return k * n[1] * np.exp(-1j * k * n[0] * x0[:, 0])
 
@@ -354,10 +356,10 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         D_2.5D(x0,w) =
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    n = np.squeeze(np.asarray(n))
-    xref = np.squeeze(np.asarray(xref))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    n = util.asarray_1d(n)
+    xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     return 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
         np.exp(-1j*k*n[0]*x0[:, 0])
@@ -372,10 +374,10 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
         D(x0,k) =
 
     """
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    xs = np.squeeze(np.asarray(xs))
-    xref = np.squeeze(np.asarray(xref))
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
