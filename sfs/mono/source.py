@@ -396,10 +396,12 @@ def line_dipole(omega, x0, n0, grid, c=None):
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    x0 = x0[:2]  # ignore z-component
+    n0 = util.asarray_1d(n0)
+    x0 = x0[:2]  # ignore z-components
     n0 = n0[:2]
     grid = util.XyzComponents(grid)
     dx = grid[:2] - x0
+
     r = np.linalg.norm(dx)
     p = 1j*k/4 * special.hankel2(1, k * r) * np.inner(dx, n0) / r
     return _duplicate_zdirection(p, grid)
