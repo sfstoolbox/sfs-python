@@ -156,8 +156,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
 
 def _visible_secondarysources_2d(x0, n0, grid):
     """Determine secondary sources which lie within `grid`."""
-    grid = util.as_xyz_components(grid)
-    x, y = grid[:2]
+    x, y = util.as_xyz_components(grid[:2])
     idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
     idx = np.squeeze(idx)

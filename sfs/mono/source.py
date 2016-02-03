@@ -331,8 +331,7 @@ def line(omega, x0, n0, grid, c=None):
 
     """
     k = util.wavenumber(omega, c)
-    x0 = util.asarray_1d(x0)
-    x0 = x0[:2]  # ignore z-component
+    x0 = util.asarray_1d(x0)[:2]  # ignore z-component
     grid = util.as_xyz_components(grid)
 
     r = np.linalg.norm(grid[:2] - x0)
@@ -363,8 +362,7 @@ def line_velocity(omega, x0, n0, grid, c=None):
 
     """
     k = util.wavenumber(omega, c)
-    x0 = util.asarray_1d(x0)
-    x0 = x0[:2]  # ignore z-component
+    x0 = util.asarray_1d(x0)[:2]  # ignore z-component
     grid = util.as_xyz_components(grid)
 
     offset = grid[:2] - x0
@@ -395,10 +393,8 @@ def line_dipole(omega, x0, n0, grid, c=None):
 
     """
     k = util.wavenumber(omega, c)
-    x0 = util.asarray_1d(x0)
-    n0 = util.asarray_1d(n0)
-    x0 = x0[:2]  # ignore z-components
-    n0 = n0[:2]
+    x0 = util.asarray_1d(x0)[:2]  # ignore z-components
+    n0 = util.asarray_1d(n0)[:2]
     grid = util.as_xyz_components(grid)
     dx = grid[:2] - x0
 

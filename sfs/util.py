@@ -236,8 +236,7 @@ def displacement(v, omega):
         d(x, t) = \int_0^t v(x, t) dt
 
     """
-    v = as_xyz_components(v)
-    return v / (1j * omega)
+    return as_xyz_components(v) / (1j * omega)
 
 
 def db(x, power=False):
