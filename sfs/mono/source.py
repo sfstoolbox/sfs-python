@@ -62,7 +62,7 @@ def point(omega, x0, n0, grid, c=None):
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
 
     r = np.linalg.norm(grid - x0)
     return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
@@ -92,7 +92,7 @@ def point_velocity(omega, x0, n0, grid, c=None):
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
     v = point(omega, x0, n0, grid, c=c)
@@ -144,7 +144,7 @@ def point_dipole(omega, x0, n0, grid, c=None):
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     n0 = util.asarray_1d(n0)
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
 
     offset = grid - x0
     r = np.linalg.norm(offset)
@@ -188,7 +188,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    x, y, z = util.XyzComponents(grid)
+    x, y, z = util.as_xyz_components(grid)
 
     if N is None:
         # determine maximum modal order per dimension
@@ -260,7 +260,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    x, y, z = util.XyzComponents(grid)
+    x, y, z = util.as_xyz_components(grid)
 
     if N is None:
         # determine maximum modal order per dimension
@@ -333,7 +333,7 @@ def line(omega, x0, n0, grid, c=None):
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     x0 = x0[:2]  # ignore z-component
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
 
     r = np.linalg.norm(grid[:2] - x0)
     p = -1j/4 * special.hankel2(0, k * r)
@@ -365,7 +365,7 @@ def line_velocity(omega, x0, n0, grid, c=None):
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     x0 = x0[:2]  # ignore z-component
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
 
     offset = grid[:2] - x0
     r = np.linalg.norm(offset)
@@ -399,7 +399,7 @@ def line_dipole(omega, x0, n0, grid, c=None):
     n0 = util.asarray_1d(n0)
     x0 = x0[:2]  # ignore z-components
     n0 = n0[:2]
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
     dx = grid[:2] - x0
 
     r = np.linalg.norm(dx)
@@ -431,7 +431,7 @@ def plane(omega, x0, n0, grid, c=None):
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     n0 = util.asarray_1d(n0)
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
     return np.exp(-1j * k * np.inner(grid - x0, n0))
 
 

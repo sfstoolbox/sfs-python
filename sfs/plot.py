@@ -156,7 +156,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
 
 def _visible_secondarysources_2d(x0, n0, grid):
     """Determine secondary sources which lie within `grid`."""
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
     x, y = grid[:2]
     idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
@@ -244,7 +244,7 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
 
     """
     p = np.asarray(p)
-    grid = util.XyzComponents(grid)
+    grid = util.as_xyz_components(grid)
 
     # normalize sound field wrt xnorm
     if xnorm is not None:
@@ -375,8 +375,8 @@ def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
         :func:`matplotlib.pyplot.quiver`.
 
     """
-    v = util.XyzComponents(v[:2]).apply(np.real)
-    X, Y = util.XyzComponents(grid[:2])
+    v = util.as_xyz_components(v[:2]).apply(np.real)
+    X, Y = util.as_xyz_components(grid[:2])
     speed = np.linalg.norm(v)
     with np.errstate(invalid='ignore'):
         U, V = v.apply(np.true_divide, speed)
