@@ -399,6 +399,8 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     x0 = np.asarray(x0)
     k = util.wavenumber(omega, c)
     phi_s = np.arctan2(xs[1], xs[0])
+    if phi_s < 0:
+        phi_s = phi_s + 2*np.pi
     r_s = np.linalg.norm(xs)
     L = x0.shape[0]
 
