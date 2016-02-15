@@ -307,7 +307,7 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
 
 
 def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
-    """Plane wave by two-dimensional SDM for an edge-shaped secondary source
+    """Plane wave by two-dimensional ESA for an edge-shaped secondary source
        distribution.
 
     One leg of the secondary sources have to be located on the x-axis (y0=0),
@@ -366,7 +366,7 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
 
 
 def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
-    """Line source by two-dimensional SDM for an edge-shaped secondary source
+    """Line source by two-dimensional ESA for an edge-shaped secondary source
        distribution.
 
     One leg of the secondary sources have to be located on the x-axis (y0=0),
