@@ -3,7 +3,7 @@
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import hankel2
-from scipy.special import sph_jn, sph_yn
+from scipy.special import sph_jn, sph_yn, jn
 from .. import util
 from .. import defs
 
@@ -304,6 +304,63 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     r = np.linalg.norm(ds, axis=1)
     return 1/2 * 1j * k * np.sqrt(xref[1] / (xref[1] - xs[1])) * \
         xs[1] / r * hankel2(1, k * r)
+
+
+def sdm_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3*np.pi/2, Nc=None, c=None):
+    """Plane wave by two-dimensional SDM for an edge-shaped secondary source
+       distribution.
+
+    One leg of the secondary sources have to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    x0 : int(N, 3) array_like
+        Sequence of secondary source positions.
+    n : (3,) array_like, optional
+        Normal vector of synthesized plane wave.
+    alpha : float, optional
+        Outer angle of edge.
+    Nc : int, optional
+        Number of elements for series expansion of driving function. Estimated
+        if not given.
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    (N,) numpy.ndarray
+        Complex weights of secondary sources.
+
+    """
+    x0 = np.asarray(x0)
+    k = util.wavenumber(omega, c)
+    phi_0 = np.arctan2(n[1], n[0]) + np.pi
+    L = x0.shape[0]
+
+    r = np.linalg.norm(x0, axis=1)
+    phi = np.arctan2(x0[:, 1], x0[:, 0])
+    phi = np.where(phi < 0, phi+2*np.pi, phi)
+
+    if Nc is None:
+        Nc = np.ceil(k * np.max(r))
+
+    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon[0] = 2
+
+    d = np.zeros(L, dtype=complex)
+    for l in range(L):
+        for m in np.arange(Nc):
+            nu = m*np.pi/alpha
+            d[l] = d[l] + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.sin(nu*phi_0) \
+                * np.cos(nu*phi[l]) * nu/r[l] * jn(nu, k*r[l])
+
+        if(phi[l] > 0):
+            d[l] = -d[l]
+
+    return 4*np.pi/alpha * d
 
 
 def _sph_hn2(n, z):
