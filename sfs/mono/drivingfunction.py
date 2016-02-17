@@ -308,9 +308,9 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
 
 def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
     """Plane wave by two-dimensional ESA for an edge-shaped secondary source
-       distribution.
+       distribution consisting of monopole line sources.
 
-    One leg of the secondary sources have to be located on the x-axis (y0=0),
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
     the edge at the origin.
 
     Derived from [Spors 2016, DAGA]
@@ -365,9 +365,65 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
     return 4*np.pi/alpha * d
 
 
+def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
+    """Plane wave by two-dimensional ESA for an edge-shaped secondary source
+       distribution consisting of dipole line sources.
+
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from [Spors 2016, DAGA]
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    x0 : int(N, 3) array_like
+        Sequence of secondary source positions.
+    n : (3,) array_like, optional
+        Normal vector of synthesized plane wave.
+    alpha : float, optional
+        Outer angle of edge.
+    Nc : int, optional
+        Number of elements for series expansion of driving function. Estimated
+        if not given.
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    (N,) numpy.ndarray
+        Complex weights of secondary sources.
+
+    """
+    x0 = np.asarray(x0)
+    k = util.wavenumber(omega, c)
+    phi_s = np.arctan2(n[1], n[0]) + np.pi
+    L = x0.shape[0]
+
+    r = np.linalg.norm(x0, axis=1)
+    phi = np.arctan2(x0[:, 1], x0[:, 0])
+    phi = np.where(phi < 0, phi+2*np.pi, phi)
+
+    if Nc is None:
+        Nc = 2*np.ceil(k * np.max(r))
+
+    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon[0] = 2
+
+    d = np.zeros(L, dtype=complex)
+    for l in range(L):
+        for m in np.arange(Nc):
+            nu = m*np.pi/alpha
+            d[l] = d[l] + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.cos(nu*phi_s) \
+                * np.cos(nu*phi[l]) * jn(nu, k*r[l])
+
+    return 4*np.pi/alpha * d
+
+
 def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     """Line source by two-dimensional ESA for an edge-shaped secondary source
-       distribution.
+       distribution constisting of monopole line sources.
 
     One leg of the secondary sources have to be located on the x-axis (y0=0),
     the edge at the origin.
@@ -428,6 +484,70 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
 
         if(phi[l] > 0):
             d[l] = -d[l]
+
+    return 4*np.pi/alpha * d
+
+
+def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
+    """Line source by two-dimensional ESA for an edge-shaped secondary source
+       distribution constisting of dipole line sources.
+
+    One leg of the secondary sources have to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from [Spors 2016, DAGA]
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    x0 : int(N, 3) array_like
+        Sequence of secondary source positions.
+    xs : (3,) array_like
+        Position of synthesized line source.
+    alpha : float, optional
+        Outer angle of edge.
+    Nc : int, optional
+        Number of elements for series expansion of driving function. Estimated
+        if not given.
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    (N,) numpy.ndarray
+        Complex weights of secondary sources.
+
+    """
+    x0 = np.asarray(x0)
+    k = util.wavenumber(omega, c)
+    phi_s = np.arctan2(xs[1], xs[0])
+    if phi_s < 0:
+        phi_s = phi_s + 2*np.pi
+    r_s = np.linalg.norm(xs)
+    L = x0.shape[0]
+
+    r = np.linalg.norm(x0, axis=1)
+    phi = np.arctan2(x0[:, 1], x0[:, 0])
+    phi = np.where(phi < 0, phi+2*np.pi, phi)
+
+    if Nc is None:
+        Nc = 2*np.ceil(k * np.max(r))
+
+    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon[0] = 2
+
+    d = np.zeros(L, dtype=complex)
+    for l in range(L):
+        for m in np.arange(Nc):
+            nu = m*np.pi/alpha
+            f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi[l]) \
+                / hankel2(0, k*r_s)
+
+            if r[l] <= r_s:
+                d[l] = d[l] + f * jn(nu, k*r[l]) * hankel2(nu, k*r_s)
+            else:
+                d[l] = d[l] + f * jn(nu, k*r_s) * hankel2(nu, k*r[l])
 
     return 4*np.pi/alpha * d
 
