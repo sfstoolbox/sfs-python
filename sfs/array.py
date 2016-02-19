@@ -310,6 +310,57 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
     return ArrayData(positions, directions, weights)
 
 
+def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
+    """Array along the xy-axis with edge at the origin.
+
+    Parameters
+    ----------
+    Nxy : int
+        Number of secondary sources along x- and y-axis.
+    center : (3,) array_like, optional
+        Position of edge.
+    orientation : (3,) array_like, optional
+        Normal vector of array.  Default orientation is along xy-axis.
+
+    Returns
+    -------
+    ArrayData
+        Positions, orientations and weights of secondary sources.
+        See :class:`ArrayData`.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.edge(8, 0.2)
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+
+    """
+    # array along y-axis
+    x00, n00, a00 = linear(Nxy, dx, center=[0, Nxy//2*dx+dx/2, 0])
+    x00 = np.flipud(x00)
+    positions = x00
+    directions = n00
+    weights = a00
+
+    # array along x-axis
+    x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2, 0, 0],
+                           orientation=[0, 1, 0])
+    x00 = np.flipud(x00)
+    positions = np.concatenate((positions, x00))
+    directions = np.concatenate((directions, n00))
+    weights = np.concatenate((weights, a00))
+
+    # rotate array
+    positions, directions = _rotate_array(positions, directions,
+                                          [1, 0, 0], orientation)
+    # shift array to desired position
+    positions += center
+    return ArrayData(positions, directions, weights)
+
+
 def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Planar secondary source distribtion.
 
