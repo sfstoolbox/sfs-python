@@ -13,7 +13,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
 
     ::
 
-        D(x0,k) = j k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
+        D(x0,k) = j/2 k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
 
     """
     x0 = np.asarray(x0)
@@ -22,7 +22,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return 1j * k * inner1d(ds, n0) / r * hankel2(1, k * r)
+    return 1j/2 * k * inner1d(ds, n0) / r * hankel2(1, k * r)
 
 
 def _wfs_point(omega, x0, n0, xs, c=None):
@@ -474,8 +474,7 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     for l in range(L):
         for m in np.arange(Nc):
             nu = m*np.pi/alpha
-            f = 1/epsilon[m] * np.sin(nu*phi_s) * np.cos(nu*phi[l]) * nu/r[l] \
-                / hankel2(0, k*r_s)
+            f = 1/epsilon[m] * np.sin(nu*phi_s) * np.cos(nu*phi[l]) * nu/r[l]
 
             if r[l] <= r_s:
                 d[l] = d[l] + f * jn(nu, k*r[l]) * hankel2(nu, k*r_s)
@@ -485,7 +484,7 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
         if(phi[l] > 0):
             d[l] = -d[l]
 
-    return 4*np.pi/alpha * d
+    return -1j*np.pi/alpha * d
 
 
 def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
@@ -541,15 +540,14 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     for l in range(L):
         for m in np.arange(Nc):
             nu = m*np.pi/alpha
-            f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi[l]) \
-                / hankel2(0, k*r_s)
+            f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi[l])
 
             if r[l] <= r_s:
                 d[l] = d[l] + f * jn(nu, k*r[l]) * hankel2(nu, k*r_s)
             else:
                 d[l] = d[l] + f * jn(nu, k*r_s) * hankel2(nu, k*r[l])
 
-    return 4*np.pi/alpha * d
+    return -1j*np.pi/alpha * d
 
 
 def _sph_hn2(n, z):
