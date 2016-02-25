@@ -499,7 +499,7 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     ----------
     omega : float
         Angular frequency.
-    x0 : int(N, 3) array_like
+    x0 : (N, 3) array_like
         Sequence of secondary source positions.
     xs : (3,) array_like
         Position of synthesized line source.
