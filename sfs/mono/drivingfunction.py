@@ -1,9 +1,8 @@
 """Compute driving functions for various systems."""
 
 import numpy as np
-from numpy.core.umath_tests import inner1d  # element-wise inner product
-from scipy.special import hankel2
-from scipy.special import sph_jn, sph_yn, jn
+from numpy.core.umath_tests import inner1d  # element-wise inner product 
+from scipy.special import sph_jn, sph_yn, jn, hankel2
 from .. import util
 from .. import defs
 
@@ -22,7 +21,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return 1j/2 * k * inner1d(ds, n0) / r * hankel2(1, k * r)
+    return -1j/2 * k * inner1d(ds, n0) / r * hankel2(1, k * r)
 
 
 def _wfs_point(omega, x0, n0, xs, c=None):
@@ -542,7 +541,7 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
             nu = m*np.pi/alpha
             f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi[l])
 
-            if r[l] <= r_s:
+            if r[l] < r_s:
                 d[l] = d[l] + f * jn(nu, k*r[l]) * hankel2(nu, k*r_s)
             else:
                 d[l] = d[l] + f * jn(nu, k*r_s) * hankel2(nu, k*r[l])
