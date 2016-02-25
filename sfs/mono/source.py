@@ -453,16 +453,22 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    idx1 = np.where(r <= r_s)
-    idx2 = np.where(r > r_s)
+    idx1 = np.where((r <= r_s) & (phi<=alpha))
+    idx2 = np.where((r > r_s) & (phi<=alpha))
     p = np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
     for m in np.arange(Nc):
         nu = m*np.pi/alpha
         f = 1/epsilon[m] * np.sin(nu*phi_s) * np.sin(nu*phi)
         p[idx1] = p[idx1] + f[idx1] * special.jn(nu, k*r[idx1]) * special.hankel2(nu, k*r_s)
         p[idx2] = p[idx2] + f[idx2] * special.jn(nu, k*r_s) * special.hankel2(nu, k*r[idx2])
+    p = p * -1j*np.pi/alpha
+    
+    idx = np.where(phi>alpha)
+    pl = line(omega, x0, None, grid, c=c)
+    p[idx] = pl[idx]
+    
 
-    return -1j*np.pi/alpha * p
+    return  p
 
 
 def plane(omega, x0, n0, grid, c=None):
