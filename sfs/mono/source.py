@@ -407,6 +407,64 @@ def line_dipole(omega, x0, n0, grid, c=None):
     return _duplicate_zdirection(p, grid)
 
 
+def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
+    """ Sound field of an line source scattered at an edge with Dirichlet 
+        boundary conditions.
+        
+        [Michael Möser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
+        
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    x0 : (3,) array_like
+        Position of line source.
+    XyzComponents
+        A grid that is used for calculations of the sound field.
+    alpha : float, optional
+        Outer angle of edge.
+    Nc : int, optional
+        Number of elements for series expansion of driving function. Estimated
+        if not given.
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    () numpy.ndarray
+        Complex pressure at grid positions.
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    phi_s = np.arctan2(x0[1], x0[0])
+    if phi_s < 0:
+        phi_s = phi_s + 2*np.pi
+    r_s = np.linalg.norm(x0)
+    
+    grid = util.XyzComponents(grid)
+    
+    r = np.linalg.norm(grid[:2])
+    phi = np.arctan2(grid[1], grid[0])
+    phi = np.where(phi < 0, phi+2*np.pi, phi)
+
+    if Nc is None:
+        Nc = 2*np.ceil(k * np.max(r))
+
+    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon[0] = 2
+
+    idx1 = np.where(r <= r_s)
+    idx2 = np.where(r > r_s)
+    p = np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
+    for m in np.arange(Nc):
+        nu = m*np.pi/alpha
+        f = 1/epsilon[m] * np.sin(nu*phi_s) * np.sin(nu*phi)
+        p[idx1] = p[idx1] + f[idx1] * special.jn(nu, k*r[idx1]) * special.hankel2(nu, k*r_s)
+        p[idx2] = p[idx2] + f[idx2] * special.jn(nu, k*r_s) * special.hankel2(nu, k*r[idx2])
+
+    return -1j*np.pi/alpha * p
+
+
 def plane(omega, x0, n0, grid, c=None):
     """Plane wave.
 
