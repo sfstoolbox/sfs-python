@@ -352,14 +352,12 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
     epsilon[0] = 2
 
     d = np.zeros(L, dtype=complex)
-    for l in range(L):
-        for m in np.arange(Nc):
-            nu = m*np.pi/alpha
-            d[l] = d[l] + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.sin(nu*phi_s) \
-                * np.cos(nu*phi[l]) * nu/r[l] * jn(nu, k*r[l])
+    for m in np.arange(Nc):
+        nu = m*np.pi/alpha
+        d = d + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.sin(nu*phi_s) \
+            * np.cos(nu*phi) * nu/r * jn(nu, k*r)
 
-        if(phi[l] > 0):
-            d[l] = -d[l]
+    d[phi>0] = -d[phi>0]
 
     return 4*np.pi/alpha * d
 
@@ -411,11 +409,10 @@ def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c
     epsilon[0] = 2
 
     d = np.zeros(L, dtype=complex)
-    for l in range(L):
-        for m in np.arange(Nc):
-            nu = m*np.pi/alpha
-            d[l] = d[l] + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.cos(nu*phi_s) \
-                * np.cos(nu*phi[l]) * jn(nu, k*r[l])
+    for m in np.arange(Nc):
+        nu = m*np.pi/alpha
+        d = d + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.cos(nu*phi_s) \
+            * np.cos(nu*phi) * jn(nu, k*r)
 
     return 4*np.pi/alpha * d
 
@@ -470,15 +467,12 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     epsilon[0] = 2
 
     d = np.zeros(L, dtype=complex)
-    idx1 = (r <= r_s)
-    idx2 = r>r_s
-    
+    idx = (r <= r_s)
     for m in np.arange(Nc):
         nu = m*np.pi/alpha
         f = 1/epsilon[m] * np.sin(nu*phi_s) * np.cos(nu*phi) * nu/r
-        d[idx1] = d[idx1] + f[idx1] * jn(nu, k*r[idx1]) * hankel2(nu, k*r_s)
-        d[idx2] = d[idx2] + f[idx2] * jn(nu, k*r_s) * hankel2(nu, k*r[idx2])
-
+        d[idx] = d[idx] + f[idx] * jn(nu, k*r[idx]) * hankel2(nu, k*r_s)
+        d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
 
     d[phi>0] = -d[phi>0]
 
@@ -535,15 +529,12 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     epsilon[0] = 2
 
     d = np.zeros(L, dtype=complex)
-    for l in range(L):
-        for m in np.arange(Nc):
-            nu = m*np.pi/alpha
-            f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi[l])
-
-            if r[l] < r_s:
-                d[l] = d[l] + f * jn(nu, k*r[l]) * hankel2(nu, k*r_s)
-            else:
-                d[l] = d[l] + f * jn(nu, k*r_s) * hankel2(nu, k*r[l])
+    idx = (r <= r_s)
+    for m in np.arange(Nc):
+        nu = m*np.pi/alpha
+        f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi)
+        d[idx] = d[idx] + f[idx] * jn(nu, k*r[idx]) * hankel2(nu, k*r_s)
+        d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
 
     return -1j*np.pi/alpha * d
 

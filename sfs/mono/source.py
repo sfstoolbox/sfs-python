@@ -336,7 +336,7 @@ def line(omega, x0, n0, grid, c=None):
     grid = util.XyzComponents(grid)
 
     r = np.linalg.norm(grid[:2] - x0)
-    p = -1j/4 * _h0(k * r)
+    p = -1j/4 * _hankel2_0(k * r)
     return _duplicate_zdirection(p, grid)
 
 
@@ -452,19 +452,14 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
-
-    #idx1 = np.where((r <= r_s) & (phi<=alpha))
-    #idx2 = np.where((r > r_s) & (phi<=alpha))
-    
-    idx1 = np.where(r <= r_s)
-    idx2 = np.where(r > r_s)
     
     p = np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
+    idx = (r <= r_s)
     for m in np.arange(Nc):
         nu = m*np.pi/alpha
         f = 1/epsilon[m] * np.sin(nu*phi_s) * np.sin(nu*phi)
-        p[idx1] = p[idx1] + f[idx1] * special.jn(nu, k*r[idx1]) * special.hankel2(nu, k*r_s)
-        p[idx2] = p[idx2] + f[idx2] * special.jn(nu, k*r_s) * special.hankel2(nu, k*r[idx2])
+        p[idx] = p[idx] + f[idx] * special.jn(nu, k*r[idx]) * special.hankel2(nu, k*r_s)
+        p[~idx] = p[~idx] + f[~idx] * special.jn(nu, k*r_s) * special.hankel2(nu, k*r[~idx])
     p = p * -1j*np.pi/alpha
     
     #idx = np.where(phi>alpha)
@@ -543,6 +538,7 @@ def _duplicate_zdirection(p, grid):
     else:
         return p
 
-def _h0(x):
-    """Wrapper for fast versions of the Bessel functions in scipy"""
+def _hankel2_0(x):
+    """Wrapper for Hankel function of the second type using fast versions 
+       of the Bessel functions of first/second kind in scipy"""
     return special.j0(x)-1j*special.y0(x)
