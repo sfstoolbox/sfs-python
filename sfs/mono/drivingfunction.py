@@ -470,18 +470,17 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     epsilon[0] = 2
 
     d = np.zeros(L, dtype=complex)
-    for l in range(L):
-        for m in np.arange(Nc):
-            nu = m*np.pi/alpha
-            f = 1/epsilon[m] * np.sin(nu*phi_s) * np.cos(nu*phi[l]) * nu/r[l]
+    idx1 = (r <= r_s)
+    idx2 = r>r_s
+    
+    for m in np.arange(Nc):
+        nu = m*np.pi/alpha
+        f = 1/epsilon[m] * np.sin(nu*phi_s) * np.cos(nu*phi) * nu/r
+        d[idx1] = d[idx1] + f[idx1] * jn(nu, k*r[idx1]) * hankel2(nu, k*r_s)
+        d[idx2] = d[idx2] + f[idx2] * jn(nu, k*r_s) * hankel2(nu, k*r[idx2])
 
-            if r[l] <= r_s:
-                d[l] = d[l] + f * jn(nu, k*r[l]) * hankel2(nu, k*r_s)
-            else:
-                d[l] = d[l] + f * jn(nu, k*r_s) * hankel2(nu, k*r[l])
 
-        if(phi[l] > 0):
-            d[l] = -d[l]
+    d[phi>0] = -d[phi>0]
 
     return -1j*np.pi/alpha * d
 

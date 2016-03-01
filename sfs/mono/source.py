@@ -336,7 +336,7 @@ def line(omega, x0, n0, grid, c=None):
     grid = util.XyzComponents(grid)
 
     r = np.linalg.norm(grid[:2] - x0)
-    p = -1j/4 * special.hankel2(0, k * r)
+    p = -1j/4 * _h0(k * r)
     return _duplicate_zdirection(p, grid)
 
 
@@ -453,8 +453,12 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    idx1 = np.where((r <= r_s) & (phi<=alpha))
-    idx2 = np.where((r > r_s) & (phi<=alpha))
+    #idx1 = np.where((r <= r_s) & (phi<=alpha))
+    #idx2 = np.where((r > r_s) & (phi<=alpha))
+    
+    idx1 = np.where(r <= r_s)
+    idx2 = np.where(r > r_s)
+    
     p = np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
     for m in np.arange(Nc):
         nu = m*np.pi/alpha
@@ -463,9 +467,9 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
         p[idx2] = p[idx2] + f[idx2] * special.jn(nu, k*r_s) * special.hankel2(nu, k*r[idx2])
     p = p * -1j*np.pi/alpha
     
-    idx = np.where(phi>alpha)
-    pl = line(omega, x0, None, grid, c=c)
-    p[idx] = pl[idx]
+    #idx = np.where(phi>alpha)
+    #pl = line(omega, x0, None, grid, c=c)
+    #p[idx] = pl[idx]
     
 
     return  p
@@ -538,3 +542,7 @@ def _duplicate_zdirection(p, grid):
         return np.tile(p, [1, 1, gridshape[2]])
     else:
         return p
+
+def _h0(x):
+    """Wrapper for fast versions of the Bessel functions in scipy"""
+    return special.j0(x)-1j*special.y0(x)
