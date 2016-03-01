@@ -477,6 +477,45 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     d[phi>0] = -d[phi>0]
 
     return -1j*np.pi/alpha * d
+    
+def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None, c=None):
+    """Point source by 2.5-dimensional ESA for an edge-shaped secondary source
+       distribution constisting of monopole line sources.
+
+    One leg of the secondary sources have to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from [Spors 2016, DAGA]
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    x0 : int(N, 3) array_like
+        Sequence of secondary source positions.
+    xs : (3,) array_like
+        Position of synthesized line source.
+    xref: (3,) array_like
+        Reference position
+    alpha : float, optional
+        Outer angle of edge.
+    Nc : int, optional
+        Number of elements for series expansion of driving function. Estimated
+        if not given.
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    (N,) numpy.ndarray
+        Complex weights of secondary sources.
+
+    """
+    xs = np.asarray(xs)
+    xref = np.asarray(xref)
+
+    return np.sqrt(np.pi/np.linalg.norm(xs-xref)) * esa_edge_2d_line(omega, x0, xs, 
+        alpha=alpha, Nc=Nc, c=c)
 
 
 def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
