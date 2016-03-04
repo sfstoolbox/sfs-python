@@ -98,6 +98,26 @@ def asarray_of_rows(a, **kwargs):
     return result
 
 
+def as_xyz_components(components, **kwargs):
+    """Convert `components` to :class:`XyzComponents` of NumPy arrays.
+
+    The `components` are first converted to NumPy arrays (using
+    :func:`numpy.asarray`) which are then assembled into an
+    :class:`XyzComponents` object.
+
+    Parameters
+    ----------
+    components : triple or pair of array_like
+        The values to be used as X, Y and Z arrays.  Z is optional.
+    **kwargs
+        All further arguments are forwarded to
+        :func:`numpy.asarray`, which is applied to the elements of
+        `components`.
+
+    """
+    return XyzComponents([np.asarray(c, **kwargs) for c in components])
+
+
 def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
     """Like :func:`numpy.arange`, but compensating numeric errors.
 
@@ -190,7 +210,7 @@ def normalize(p, grid, xnorm):
 
 def probe(p, grid, x):
     """Determine the value at position `x` in the sound field `p`."""
-    grid = XyzComponents(grid)
+    grid = as_xyz_components(grid)
     x = asarray_1d(x)
     r = np.linalg.norm(grid - x)
     idx = np.unravel_index(r.argmin(), r.shape)
@@ -216,8 +236,7 @@ def displacement(v, omega):
         d(x, t) = \int_0^t v(x, t) dt
 
     """
-    v = XyzComponents(v)
-    return v / (1j * omega)
+    return as_xyz_components(v) / (1j * omega)
 
 
 def db(x, power=False):
@@ -239,8 +258,8 @@ def db(x, power=False):
 class XyzComponents(np.ndarray):
     """See __init__()."""
 
-    def __init__(self, components, **kwargs):
-        """Triple (or pair) of arrays: x, y, and optionally z.
+    def __init__(self, components):
+        """Triple (or pair) of components: x, y, and optionally z.
 
         Instances of this class can be used to store coordinate grids
         (either regular grids like in :func:`sfs.util.xyz_grid` or
@@ -260,23 +279,22 @@ class XyzComponents(np.ndarray):
         incompatible shape, a plain `numpy.ndarray` with `dtype=object`
         is returned.
 
+        To make sure the `components` are NumPy arrays themselves, use
+        :func:`sfs.util.as_xyz_components`.
+
         Parameters
         ----------
-        components : triple or pair of array_like
-            The values to be used as X, Y and Z arrays.  Z is optional.
-        **kwargs
-            All further arguments are forwarded to
-            :func:`numpy.asarray`, which is applied to the elements of
-            `components`.
+        components : (3,) or (2,) array_like
+            The values to be used as X, Y and Z data.  Z is optional.
 
         """
         # This method does nothing, it's only here for the documentation!
 
-    def __new__(cls, components, **kwargs):
+    def __new__(cls, components):
         # object arrays cannot be created and populated in a single step:
         obj = np.ndarray.__new__(cls, len(components), dtype=object)
         for i, component in enumerate(components):
-            obj[i] = np.asarray(component, **kwargs)
+            obj[i] = component
         return obj
 
     def __array_finalize__(self, obj):
