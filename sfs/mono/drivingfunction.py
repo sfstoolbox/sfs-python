@@ -496,8 +496,8 @@ def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None,
         Sequence of secondary source positions.
     xs : (3,) array_like
         Position of synthesized line source.
-    xref: (3,) array_like
-        Reference position
+    xref: (3,) array_like or float
+        Reference position or reference distance
     alpha : float, optional
         Outer angle of edge.
     Nc : int, optional
@@ -516,10 +516,12 @@ def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None,
     xs = np.asarray(xs)
     xref = np.asarray(xref)
     
-    a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
-    a = 1j*np.sqrt(a)
+    if np.ndim==1:
+        a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
+    else:
+        a = np.linalg.norm(xref)/np.linalg.norm(xref-xs)
 
-    return a * esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
+    return 1j*np.sqrt(a) * esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
 
 
 def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
