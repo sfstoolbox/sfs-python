@@ -1,7 +1,7 @@
 """Compute driving functions for various systems."""
 
 import numpy as np
-from numpy.core.umath_tests import inner1d  # element-wise inner product 
+from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import sph_jn, sph_yn, jn, hankel2
 from .. import util
 from .. import defs
@@ -357,7 +357,7 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
         d = d + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.sin(nu*phi_s) \
             * np.cos(nu*phi) * nu/r * jn(nu, k*r)
 
-    d[phi>0] = -d[phi>0]
+    d[phi > 0] = -d[phi > 0]
 
     return 4*np.pi/alpha * d
 
@@ -474,7 +474,7 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
         d[idx] = d[idx] + f[idx] * jn(nu, k*r[idx]) * hankel2(nu, k*r_s)
         d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
 
-    d[phi>0] = -d[phi>0]
+    d[phi > 0] = -d[phi > 0]
 
     return -1j*np.pi/alpha * d
 
@@ -512,14 +512,14 @@ def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None,
         Complex weights of secondary sources.
 
     """
-    x0 = np.asarray(x0)    
+    x0 = np.asarray(x0)
     xs = np.asarray(xs)
     xref = np.asarray(xref)
-    
-    if np.ndim==1:
-        a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
-    else:
+
+    if np.isscalar(xref):
         a = np.linalg.norm(xref)/np.linalg.norm(xref-xs)
+    else:
+        a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
 
     return 1j*np.sqrt(a) * esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
 
