@@ -404,11 +404,11 @@ def line_dipole(omega, x0, n0, grid, c=None):
 
 
 def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
-    """ Sound field of an line source scattered at an edge with Dirichlet 
+    """ Sound field of an line source scattered at an edge with Dirichlet
         boundary conditions.
-        
+
         [Michael Möser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
-        
+
     Parameters
     ----------
     omega : float
@@ -436,9 +436,9 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     if phi_s < 0:
         phi_s = phi_s + 2*np.pi
     r_s = np.linalg.norm(x0)
-    
+
     grid = util.XyzComponents(grid)
-    
+
     r = np.linalg.norm(grid[:2])
     phi = np.arctan2(grid[1], grid[0])
     phi = np.where(phi < 0, phi+2*np.pi, phi)
@@ -448,22 +448,24 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
-    
+
     p = np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
-    idx = (r <= r_s)
+    idxr = (r <= r_s)
+    idxa = (phi <= alpha)
     for m in np.arange(Nc):
         nu = m*np.pi/alpha
         f = 1/epsilon[m] * np.sin(nu*phi_s) * np.sin(nu*phi)
-        p[idx] = p[idx] + f[idx] * special.jn(nu, k*r[idx]) * special.hankel2(nu, k*r_s)
-        p[~idx] = p[~idx] + f[~idx] * special.jn(nu, k*r_s) * special.hankel2(nu, k*r[~idx])
-    p = p * -1j*np.pi/alpha
-    
-    #idx = np.where(phi>alpha)
-    #pl = line(omega, x0, None, grid, c=c)
-    #p[idx] = pl[idx]
-    
+        p[idxr & idxa] = p[idxr & idxa] + f[idxr & idxa] * \
+            special.jn(nu, k*r[idxr & idxa]) * special.hankel2(nu, k*r_s)
+        p[~idxr & idxa] = p[~idxr & idxa] + f[~idxr & idxa] * \
+            special.jn(nu, k*r_s) * special.hankel2(nu, k*r[~idxr & idxa])
 
-    return  p
+    p = p * -1j*np.pi/alpha
+
+    pl = line(omega, x0, None, grid, c=c)
+    p[~idxa] = pl[~idxa]
+
+    return p
 
 
 def plane(omega, x0, n0, grid, c=None):
