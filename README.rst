@@ -22,7 +22,7 @@ Requirements
 
 Obviously, you'll need Python_.
 We normally use Python 3.x, but it *should* also work with Python 2.x.
-NumPy_ and SciPy_ are needed for the calcuations.
+NumPy_ and SciPy_ are needed for the calculations.
 If you also want to plot the resulting sound fields, you'll need matplotlib_.
 
 Instead of installing all of them separately, you should probably get a Python
