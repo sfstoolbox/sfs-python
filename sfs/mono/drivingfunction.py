@@ -346,7 +346,7 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
     phi = np.where(phi < 0, phi+2*np.pi, phi)
 
     if Nc is None:
-        Nc = 2*np.ceil(k * np.max(r))
+        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -403,7 +403,7 @@ def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c
     phi = np.where(phi < 0, phi+2*np.pi, phi)
 
     if Nc is None:
-        Nc = 2*np.ceil(k * np.max(r))
+        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -461,7 +461,7 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     phi = np.where(phi < 0, phi+2*np.pi, phi)
 
     if Nc is None:
-        Nc = 2*np.ceil(k * np.max(r))
+        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -568,7 +568,7 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     phi = np.where(phi < 0, phi+2*np.pi, phi)
 
     if Nc is None:
-        Nc = 2*np.ceil(k * np.max(r))
+        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2

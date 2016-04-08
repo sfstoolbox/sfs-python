@@ -444,7 +444,7 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     phi = np.where(phi < 0, phi+2*np.pi, phi)
 
     if Nc is None:
-        Nc = 2*np.ceil(k * np.max(r))
+        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
 
     epsilon = np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
