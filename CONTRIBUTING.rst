@@ -37,3 +37,23 @@ To create the HTML pages, use::
 The generated files will be available in the directory ``build/sphinx/html/``.
 
 .. _Sphinx: http://sphinx-doc.org/
+
+New releases are made using the following steps:
+
+#. Bump version number in ``sfs/__init__.py``
+#. Update ``NEWS.rst``
+#. Commit those changes as "Release x.y.z"
+#. Create an (annotated) tag with ``git tag -a x.y.z``
+#. Clear the ``dist/`` directory
+#. Create a source distribution with ``python3 setup.py sdist``
+#. Create a wheel distribution with ``python3 setup.py bdist_wheel --universal``
+#. Check that both files have the correct content
+#. Upload them to PyPI with twine_: ``twine upload dist/*``
+#. Push the commit and the tag to Github and `add release notes`_ containing a
+   link to PyPI and the bullet points from ``NEWS.rst``
+#. Check that the new release was built correctly on RTD_, delete the "stable"
+   version and select the new release as default version
+
+.. _twine: https://pypi.python.org/pypi/twine
+.. _add release notes: https://github.com/sfstoolbox/sfs-python/tags
+.. _RTD: http://readthedocs.org/projects/sfs/builds/
