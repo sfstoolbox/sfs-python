@@ -31,6 +31,13 @@ Monochromatic Sources
    :members:
    :undoc-members:
 
+Time Domain Sources
+-------------------
+
+.. automodule:: sfs.time.source
+   :members:
+   :undoc-members:
+
 Monochromatic Driving Functions
 -------------------------------
 
@@ -42,6 +49,19 @@ Monochromatic Sound Fields
 --------------------------
 
 .. automodule:: sfs.mono.synthesized
+   :members:
+   :undoc-members:
+   
+Time Domain Driving Functions
+-----------------------------
+
+.. automodule:: sfs.time.drivingfunction
+   :members:
+   :undoc-members:
+   
+Time Domain Sound Fields
+------------------------
+.. automodule:: sfs.time.soundfield
    :members:
    :undoc-members:
 

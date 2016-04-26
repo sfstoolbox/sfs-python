@@ -15,3 +15,4 @@ except ImportError:
     pass
 
 from . import mono
+from . import time
