@@ -407,7 +407,7 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     """ Sound field of an line source scattered at an edge with Dirichlet
         boundary conditions.
 
-        [Michael Möser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
+        [Michael M"oser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
 
     Parameters
     ----------
