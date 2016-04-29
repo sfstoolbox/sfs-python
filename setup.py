@@ -36,7 +36,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     install_requires=[
-        'numpy',
+        'numpy!=1.11.0',  # https://github.com/sfstoolbox/sfs-python/issues/11
         'scipy',
     ],
 
