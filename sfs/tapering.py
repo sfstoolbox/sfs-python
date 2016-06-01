@@ -41,37 +41,6 @@ def none(active):
     return active
 
 
-def kaiser(active, beta):
-    """Kaiser tapering window.
-
-    This uses :func:`numpy.kaiser`.
-
-    Examples
-    --------
-    .. plot::
-        :context: close-figs
-
-        plt.plot(sfs.tapering.kaiser(active1, 0), label='β = 0')
-        plt.plot(sfs.tapering.kaiser(active1, 2), label='β = 2')
-        plt.plot(sfs.tapering.kaiser(active1, 6), label='β = 6')
-        plt.plot(sfs.tapering.kaiser(active1, 8.6), label='β = 8.6')
-        plt.plot(sfs.tapering.kaiser(active1, 14), label='β = 14')
-        plt.axis([-3, 103, -0.1, 1.1])
-        plt.legend(loc='lower center')
-
-    .. plot::
-        :context: close-figs
-
-        plt.plot(sfs.tapering.kaiser(active2, 7))
-        plt.axis([-3, 103, -0.1, 1.1])
-
-    """
-    idx = _windowidx(active)
-    window = np.zeros(len(active))
-    window[idx] = np.kaiser(len(idx), beta)
-    return window
-
-
 def tukey(active, alpha):
     """Tukey tapering window.
 
@@ -115,6 +84,37 @@ def tukey(active, alpha):
     result = np.zeros(len(active))
     result[idx] = tukey[1:-1]
     return result
+
+
+def kaiser(active, beta):
+    """Kaiser tapering window.
+
+    This uses :func:`numpy.kaiser`.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.kaiser(active1, 0), label='β = 0')
+        plt.plot(sfs.tapering.kaiser(active1, 2), label='β = 2')
+        plt.plot(sfs.tapering.kaiser(active1, 6), label='β = 6')
+        plt.plot(sfs.tapering.kaiser(active1, 8.6), label='β = 8.6')
+        plt.plot(sfs.tapering.kaiser(active1, 14), label='β = 14')
+        plt.axis([-3, 103, -0.1, 1.1])
+        plt.legend(loc='lower center')
+
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.kaiser(active2, 7))
+        plt.axis([-3, 103, -0.1, 1.1])
+
+    """
+    idx = _windowidx(active)
+    window = np.zeros(len(active))
+    window[idx] = np.kaiser(len(idx), beta)
+    return window
 
 
 def _windowidx(active):
