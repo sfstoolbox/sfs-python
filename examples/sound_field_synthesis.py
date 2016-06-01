@@ -67,7 +67,7 @@ a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
 
 # === compute tapering window ===
 #twin = sfs.tapering.none(a)
-#twin = sfs.tapering.kaiser(a)
+#twin = sfs.tapering.kaiser(a, 8.6)
 twin = sfs.tapering.tukey(a,.3)
 
 # === compute synthesized sound field ===
