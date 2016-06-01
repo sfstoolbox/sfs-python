@@ -1,16 +1,65 @@
-"""Weights (tapering) for the driving function."""
+"""Weights (tapering) for the driving function.
 
+.. plot::
+    :context: reset
+
+    import sfs
+    import matplotlib.pyplot as plt
+    import numpy as np
+    plt.rcParams['figure.figsize'] = 8, 3  # inch
+    plt.rcParams['axes.grid'] = True
+
+    active1 = np.zeros(101, dtype=bool)
+    active1[5:-5] = True
+
+    # The active part can wrap around from the end to the beginning:
+    active2 = np.ones(101, dtype=bool)
+    active2[30:-10] = False
+
+"""
 # from scipy import signal
 import numpy as np
 
 
 def none(active):
-    """No tapering window."""
+    """No tapering window.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.none(active1))
+        plt.axis([-3, 103, -0.1, 1.1])
+
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.none(active2))
+        plt.axis([-3, 103, -0.1, 1.1])
+
+    """
     return np.asarray(active, dtype=np.float64)
 
 
 def kaiser(active):
-    """Kaiser tapering window."""
+    """Kaiser tapering window.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.kaiser(active1))
+        plt.axis([-3, 103, -0.1, 1.1])
+
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.kaiser(active2))
+        plt.axis([-3, 103, -0.1, 1.1])
+
+    """
     idx = _windowidx(active)
     # compute coefficients
     window = np.zeros(active.shape)
@@ -19,7 +68,27 @@ def kaiser(active):
 
 
 def tukey(active, alpha):
-    """Tukey tapering window."""
+    """Tukey tapering window.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.tukey(active1, 0.1), label='α = 0.1')
+        plt.plot(sfs.tapering.tukey(active1, 0.5), label='α = 0.5')
+        plt.plot(sfs.tapering.tukey(active1, 0.75), label='α = 0.75')
+        plt.plot(sfs.tapering.tukey(active1, 0.9), label='α = 0.9')
+        plt.axis([-3, 103, -0.1, 1.1])
+        plt.legend(loc='lower center')
+
+    .. plot::
+        :context: close-figs
+
+        plt.plot(sfs.tapering.tukey(active2, 0.75))
+        plt.axis([-3, 103, -0.1, 1.1])
+
+    """
     idx = _windowidx(active)
     # alpha out of limits
     if alpha <= 0 or alpha >= 1:
@@ -43,9 +112,13 @@ def tukey(active, alpha):
 
 
 def _windowidx(active):
-    """Returns list of connected indices for window function."""
+    """Return list of connected indices for window function.
+
+    Note: Gaps within the active part are not allowed.
+
+    """
     active = np.asarray(active, dtype=np.float64)
-    # find index were active loudspeakers begin (works for connected contours)
+    # find index where active loudspeakers begin (works for connected contours)
     if (active[0] == 1 and active[-1] == 0) or np.all(active):
         a0 = 0
     else:
