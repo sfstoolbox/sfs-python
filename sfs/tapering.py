@@ -75,44 +75,46 @@ def kaiser(active, beta):
 def tukey(active, alpha):
     """Tukey tapering window.
 
+    This uses a function similar to :func:`scipy.signal.tukey` except
+    that the first and last value are not zero.
+
     Examples
     --------
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.tukey(active1, 0.1), label='α = 0.1')
+        plt.plot(sfs.tapering.tukey(active1, 0), label='α = 0')
+        plt.plot(sfs.tapering.tukey(active1, 0.25), label='α = 0.25')
         plt.plot(sfs.tapering.tukey(active1, 0.5), label='α = 0.5')
         plt.plot(sfs.tapering.tukey(active1, 0.75), label='α = 0.75')
-        plt.plot(sfs.tapering.tukey(active1, 0.9), label='α = 0.9')
+        plt.plot(sfs.tapering.tukey(active1, 1), label='α = 1')
         plt.axis([-3, 103, -0.1, 1.1])
         plt.legend(loc='lower center')
 
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.tukey(active2, 0.75))
+        plt.plot(sfs.tapering.tukey(active2, 0.3))
         plt.axis([-3, 103, -0.1, 1.1])
 
     """
     idx = _windowidx(active)
-    # alpha out of limits
-    if alpha <= 0 or alpha >= 1:
+    alpha = np.clip(alpha, 0, 1)
+    if alpha == 0:
         return none(active)
     # design Tukey window
-    x = np.linspace(0, 1, len(idx)+2)
-    w = np.ones_like(x)
-
-    first_condition = x < alpha/2
-    w[first_condition] = 0.5 * (1 + np.cos(2*np.pi/alpha *
-                                (x[first_condition] - alpha/2)))
-
-    third_condition = x >= (1 - alpha/2)
-    w[third_condition] = 0.5 * (1 + np.cos(2*np.pi/alpha *
-                                (x[third_condition] - 1 + alpha/2)))
+    x = np.linspace(0, 1, len(idx) + 2)
+    tukey = np.ones_like(x)
+    first_part = x < alpha / 2
+    tukey[first_part] = 0.5 * (
+        1 + np.cos(2 * np.pi / alpha * (x[first_part] - alpha / 2)))
+    third_part = x >= (1 - alpha / 2)
+    tukey[third_part] = 0.5 * (
+        1 + np.cos(2 * np.pi / alpha * (x[third_part] - 1 + alpha / 2)))
     # fit window into tapering function
-    window = np.zeros(len(active))
-    window[idx] = w[1:-1]
-    return window
+    result = np.zeros(len(active))
+    result[idx] = tukey[1:-1]
+    return result
 
 
 def _windowidx(active):

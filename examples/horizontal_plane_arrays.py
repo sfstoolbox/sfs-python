@@ -131,7 +131,7 @@ compute_and_plot_soundfield('circular_ps_wfs_25d_plane')
 # circular array, secondary line sources, NFC-HOA
 x0, n0, a0 = sfs.array.circular(N, 1)
 xnorm = [0, 0, 0]
-talpha = 1  # switches off tapering
+talpha = 0  # switches off tapering
 sourcetype = sfs.mono.source.line
 
 d = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, x0, 1, npw)
@@ -142,7 +142,7 @@ compute_and_plot_soundfield('circular_ls_nfchoa_2d_plane')
 # circular array, secondary point sources, NFC-HOA
 x0, n0, a0 = sfs.array.circular(N, 1)
 xnorm = [0, 0, 0]
-talpha = 1  # switches off tapering
+talpha = 0  # switches off tapering
 sourcetype = sfs.mono.source.point
 
 d = sfs.mono.drivingfunction.nfchoa_25d_point(omega, x0, 1, xs)
