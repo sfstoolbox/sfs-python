@@ -17,7 +17,6 @@
     active2[30:-10] = False
 
 """
-# from scipy import signal
 import numpy as np
 
 
@@ -39,7 +38,7 @@ def none(active):
         plt.axis([-3, 103, -0.1, 1.1])
 
     """
-    return np.asarray(active, dtype=np.float64)
+    return active
 
 
 def kaiser(active):
@@ -61,8 +60,7 @@ def kaiser(active):
 
     """
     idx = _windowidx(active)
-    # compute coefficients
-    window = np.zeros(active.shape)
+    window = np.zeros(len(active))
     window[idx] = np.kaiser(len(idx), 2)
     return window
 
@@ -95,7 +93,7 @@ def tukey(active, alpha):
         return none(active)
     # design Tukey window
     x = np.linspace(0, 1, len(idx)+2)
-    w = np.ones(x.shape)
+    w = np.ones_like(x)
 
     first_condition = x < alpha/2
     w[first_condition] = 0.5 * (1 + np.cos(2*np.pi/alpha *
@@ -105,9 +103,8 @@ def tukey(active, alpha):
     w[third_condition] = 0.5 * (1 + np.cos(2*np.pi/alpha *
                                 (x[third_condition] - 1 + alpha/2)))
     # fit window into tapering function
-    window = np.zeros(active.shape)
+    window = np.zeros(len(active))
     window[idx] = w[1:-1]
-
     return window
 
 
@@ -117,14 +114,12 @@ def _windowidx(active):
     Note: Gaps within the active part are not allowed.
 
     """
-    active = np.asarray(active, dtype=np.float64)
     # find index where active loudspeakers begin (works for connected contours)
-    if (active[0] == 1 and active[-1] == 0) or np.all(active):
-        a0 = 0
+    if (active[0] and not active[-1]) or np.all(active):
+        first_idx = 0
     else:
-        a0 = np.argmax(np.diff(active)) + 1
+        first_idx = np.argmax(np.diff(active.astype(int))) + 1
     # shift generic index vector to get a connected list of indices
-    idx = np.roll(np.arange(len(active)), -a0)
+    idx = np.roll(np.arange(len(active)), -first_idx)
     # remove indices of inactive secondary sources
-    idx = idx[0:len(np.squeeze(np.where(active == 1)))]
-    return idx
+    return idx[:np.count_nonzero(active)]

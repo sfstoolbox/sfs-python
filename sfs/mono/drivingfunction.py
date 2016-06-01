@@ -228,7 +228,7 @@ def source_selection_focused(ns, x0, xs):
 
 def source_selection_all(N):
     """Select all secondary sources."""
-    return np.ones(N) >= 0
+    return np.ones(N, dtype=bool)
 
 
 def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
