@@ -23,6 +23,16 @@ import numpy as np
 def none(active):
     """No tapering window.
 
+    Parameters
+    ----------
+    active : array_like, dtype=bool
+        A boolean array containing ``True`` for active loudspeakers.
+
+    Returns
+    -------
+    type(active)
+        The input, unchanged.
+
     Examples
     --------
     .. plot::
@@ -44,8 +54,21 @@ def none(active):
 def tukey(active, alpha):
     """Tukey tapering window.
 
-    This uses a function similar to :func:`scipy.signal.tukey` except
+    This uses a function similar to :func:`scipy.signal.tukey`, except
     that the first and last value are not zero.
+
+    Parameters
+    ----------
+    active : array_like, dtype=bool
+        A boolean array containing ``True`` for active loudspeakers.
+    alpha : float
+        Shape parameter of the Tukey window, see
+        :func:`scipy.signal.tukey`.
+
+    Returns
+    -------
+    (len(active),) numpy.ndarray
+        Tapering weights.
 
     Examples
     --------
@@ -90,6 +113,18 @@ def kaiser(active, beta):
     """Kaiser tapering window.
 
     This uses :func:`numpy.kaiser`.
+
+    Parameters
+    ----------
+    active : array_like, dtype=bool
+        A boolean array containing ``True`` for active loudspeakers.
+    alpha : float
+        Shape parameter of the Kaiser window, see :func:`numpy.kaiser`.
+
+    Returns
+    -------
+    (len(active),) numpy.ndarray
+        Tapering weights.
 
     Examples
     --------
