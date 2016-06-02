@@ -66,9 +66,10 @@ intersphinx_mapping = {
 }
 
 # Definition of variables that are used by the versions.html theme file
-html_context = {'active_tab': 'matlab',
-                'home_url': 'http://matlab.sfstoolbox.org',
-                'github_url': 'http://github.com/sfstoolbox/sfs'}
+html_context = {'active_tab': 'python',
+                'nav_maxdepth': 3,
+                'home_url': 'http://python.sfstoolbox.org',
+                'github_url': 'http://github.com/sfstoolbox/sfs-python'}
 
 plot_include_source = True
 plot_html_show_source_link = False
@@ -85,7 +86,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'contents'
 
 # General information about the project.
 authors = 'SFS Toolbox Developers'
@@ -156,7 +157,7 @@ html_theme = 'sfs'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = [sfsdoc.get_theme_dir()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
