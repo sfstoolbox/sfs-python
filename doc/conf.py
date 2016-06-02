@@ -15,6 +15,7 @@
 
 import sys
 import os
+import sfsdoc
 from subprocess import check_output
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -63,6 +64,11 @@ intersphinx_mapping = {
     'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
     'matplotlib': ('http://matplotlib.sourceforge.net/', None),
 }
+
+# Definition of variables that are used by the versions.html theme file
+html_context = {'active_tab': 'matlab',
+                'home_url': 'http://matlab.sfstoolbox.org',
+                'github_url': 'http://github.com/sfstoolbox/sfs'}
 
 plot_include_source = True
 plot_html_show_source_link = False
@@ -142,7 +148,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'sfs'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
