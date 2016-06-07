@@ -404,10 +404,9 @@ def line_dipole(omega, x0, n0, grid, c=None):
 
 
 def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
-    """ Sound field of an line source scattered at an edge with Dirichlet
-        boundary conditions.
+    """Line source scattered at an edge with Dirichlet boundary conditions.
 
-        [Michael M"oser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
+    [Michael M"oser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
 
     Parameters
     ----------
@@ -415,20 +414,22 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
         Angular frequency.
     x0 : (3,) array_like
         Position of line source.
-    XyzComponents
-        A grid that is used for calculations of the sound field.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See :func:`sfs.util.xyz_grid`.
     alpha : float, optional
         Outer angle of edge.
     Nc : int, optional
-        Number of elements for series expansion of driving function. Estimated
-        if not given.
+        Number of elements for series expansion of driving function.
+        Estimated if not given.
     c : float, optional
         Speed of sound
 
     Returns
     -------
-    () numpy.ndarray
+    numpy.ndarray
         Complex pressure at grid positions.
+
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
@@ -537,6 +538,6 @@ def _duplicate_zdirection(p, grid):
         return p
 
 def _hankel2_0(x):
-    """Wrapper for Hankel function of the second type using fast versions 
+    """Wrapper for Hankel function of the second type using fast versions
        of the Bessel functions of first/second kind in scipy"""
     return special.j0(x)-1j*special.y0(x)
