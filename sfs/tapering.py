@@ -75,11 +75,11 @@ def tukey(active, alpha):
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.tukey(active1, 0), label='α = 0')
-        plt.plot(sfs.tapering.tukey(active1, 0.25), label='α = 0.25')
-        plt.plot(sfs.tapering.tukey(active1, 0.5), label='α = 0.5')
-        plt.plot(sfs.tapering.tukey(active1, 0.75), label='α = 0.75')
-        plt.plot(sfs.tapering.tukey(active1, 1), label='α = 1')
+        plt.plot(sfs.tapering.tukey(active1, 0), label='alpha = 0')
+        plt.plot(sfs.tapering.tukey(active1, 0.25), label='alpha = 0.25')
+        plt.plot(sfs.tapering.tukey(active1, 0.5), label='alpha = 0.5')
+        plt.plot(sfs.tapering.tukey(active1, 0.75), label='alpha = 0.75')
+        plt.plot(sfs.tapering.tukey(active1, 1), label='alpha = 1')
         plt.axis([-3, 103, -0.1, 1.1])
         plt.legend(loc='lower center')
 
@@ -131,11 +131,11 @@ def kaiser(active, beta):
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.kaiser(active1, 0), label='β = 0')
-        plt.plot(sfs.tapering.kaiser(active1, 2), label='β = 2')
-        plt.plot(sfs.tapering.kaiser(active1, 6), label='β = 6')
-        plt.plot(sfs.tapering.kaiser(active1, 8.6), label='β = 8.6')
-        plt.plot(sfs.tapering.kaiser(active1, 14), label='β = 14')
+        plt.plot(sfs.tapering.kaiser(active1, 0), label='beta = 0')
+        plt.plot(sfs.tapering.kaiser(active1, 2), label='beta = 2')
+        plt.plot(sfs.tapering.kaiser(active1, 6), label='beta = 6')
+        plt.plot(sfs.tapering.kaiser(active1, 8.6), label='beta = 8.6')
+        plt.plot(sfs.tapering.kaiser(active1, 14), label='beta = 14')
         plt.axis([-3, 103, -0.1, 1.1])
         plt.legend(loc='lower center')
 
