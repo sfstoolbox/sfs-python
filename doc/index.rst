@@ -1,10 +1,8 @@
-.. default-role:: py:obj
+.. default-role:: any
 
 .. include:: ../README.rst
 
 .. include:: ../CONTRIBUTING.rst
-
-.. default-role::
 
 API Documentation
 =================
@@ -92,5 +90,3 @@ Version History
 .. default-role:: py:obj
 
 .. include:: ../NEWS.rst
-
-.. default-role::

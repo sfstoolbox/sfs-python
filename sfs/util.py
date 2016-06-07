@@ -5,7 +5,7 @@ from . import defs
 
 
 def rotation_matrix(n1, n2):
-    """Compute rotation matrix for rotation from `n1` to `n2`.
+    """Compute rotation matrix for rotation from *n1* to *n2*.
 
     Parameters
     ----------
@@ -70,7 +70,7 @@ def cart2sph(x, y, z):
 def asarray_1d(a, **kwargs):
     """Squeeze the input and check if the result is one-dimensional.
 
-    Returns `a` converted to a :class:`numpy.ndarray` and stripped of
+    Returns *a* converted to a `numpy.ndarray` and stripped of
     all singleton dimensions.  Scalars are "upgraded" to 1D arrays.
     The result must have exactly one dimension.
     If not, an error is raised.
@@ -87,7 +87,7 @@ def asarray_1d(a, **kwargs):
 def asarray_of_rows(a, **kwargs):
     """Convert to 2D array, turn column vector into row vector.
 
-    Returns `a` converted to a :class:`numpy.ndarray` and stripped of
+    Returns *a* converted to a `numpy.ndarray` and stripped of
     all singleton dimensions.  If the result has exactly one dimension,
     it is re-shaped into a 2D row vector.
 
@@ -99,20 +99,19 @@ def asarray_of_rows(a, **kwargs):
 
 
 def as_xyz_components(components, **kwargs):
-    """Convert `components` to :class:`XyzComponents` of NumPy arrays.
+    """Convert *components* to `XyzComponents` of `numpy.ndarray`\s.
 
-    The `components` are first converted to NumPy arrays (using
+    The *components* are first converted to NumPy arrays (using
     :func:`numpy.asarray`) which are then assembled into an
-    :class:`XyzComponents` object.
+    `XyzComponents` object.
 
     Parameters
     ----------
     components : triple or pair of array_like
         The values to be used as X, Y and Z arrays.  Z is optional.
     **kwargs
-        All further arguments are forwarded to
-        :func:`numpy.asarray`, which is applied to the elements of
-        `components`.
+        All further arguments are forwarded to :func:`numpy.asarray`,
+        which is applied to the elements of *components*.
 
     """
     return XyzComponents([np.asarray(c, **kwargs) for c in components])
@@ -122,7 +121,7 @@ def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
     """Like :func:`numpy.arange`, but compensating numeric errors.
 
     Unlike :func:`numpy.arange`, but similar to :func:`numpy.linspace`,
-    providing `endpoint=True` includes both endpoints.
+    providing ``endpoint=True`` includes both endpoints.
 
     Parameters
     ----------
@@ -131,9 +130,9 @@ def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
     endpoint
         See :func:`numpy.linspace`.
 
-        .. note:: With `endpoint=True`, the difference between `start`
-           and `end` value must be an integer multiple of the
-           corresponding `spacing` value!
+        .. note:: With ``endpoint=True``, the difference between *start*
+           and *end* value must be an integer multiple of the
+           corresponding *spacing* value!
     **kwargs
         All further arguments are forwarded to :func:`numpy.isclose`.
 
@@ -165,21 +164,19 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
     spacing : float or triple of float
         Grid spacing.  If a single value is specified, it is used for
         all dimensions, if multiple values are given, one value is used
-        per dimension.  If a dimension (`x`, `y` or `z`) has only a
+        per dimension.  If a dimension (*x*, *y* or *z*) has only a
         single value, the corresponding spacing is ignored.
     endpoint : bool, optional
         If ``True`` (the default), the endpoint of each range is
         included in the grid.  Use ``False`` to get a result similar to
-        :func:`numpy.arange`.  See :func:`sfs.util.strict_arange`.
+        :func:`numpy.arange`.  See `strict_arange()`.
     **kwargs
-        All further arguments are forwarded to
-        :func:`sfs.util.strict_arange`.
+        All further arguments are forwarded to `strict_arange()`.
 
     Returns
     -------
-    XyzComponents
+    `XyzComponents`
         A grid that can be used for sound field calculations.
-        See :class:`sfs.util.XyzComponents`.
 
     See Also
     --------
@@ -204,12 +201,12 @@ def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
 
 
 def normalize(p, grid, xnorm):
-    """Normalize sound field wrt position `xnorm`."""
+    """Normalize sound field wrt position *xnorm*."""
     return p / np.abs(probe(p, grid, xnorm))
 
 
 def probe(p, grid, x):
-    """Determine the value at position `x` in the sound field `p`."""
+    """Determine the value at position *x* in the sound field *p*."""
     grid = as_xyz_components(grid)
     x = asarray_1d(x)
     r = np.linalg.norm(grid - x)
@@ -240,14 +237,14 @@ def displacement(v, omega):
 
 
 def db(x, power=False):
-    """Convert `x` to decibel.
+    """Convert *x* to decibel.
 
     Parameters
     ----------
     x : array_like
         Input data.  Values of 0 lead to negative infinity.
     power : bool, optional
-        If `power=False` (the default), `x` is squared before
+        If ``power=False`` (the default), *x* is squared before
         conversion.
 
     """
@@ -262,25 +259,23 @@ class XyzComponents(np.ndarray):
         """Triple (or pair) of components: x, y, and optionally z.
 
         Instances of this class can be used to store coordinate grids
-        (either regular grids like in :func:`sfs.util.xyz_grid` or
-        arbitrary point clouds) or vector fields (e.g. particle
-        velocity).
+        (either regular grids like in `xyz_grid()` or arbitrary point
+        clouds) or vector fields (e.g. particle velocity).
 
-        This class is a subclass of :class:`numpy.ndarray`.  It is
-        one-dimensional (like a plain :class:`list`) and has a length of
-        3 (or 2, if no z-component is available).  It uses
-        `dtype=object` in order to be able to store other
-        `numpy.ndarray`\s of arbitrary shapes but also scalars, if
-        needed.  Because it is a NumPy array subclass, it can be used in
-        operations with scalars and "normal" NumPy arrays, as long as
-        they have a compatible shape.  Like any NumPy array, instances
-        of this class are iterable and can be used, e.g., in for-loops
-        and tuple unpacking.  If slicing or broadcasting leads to an
-        incompatible shape, a plain `numpy.ndarray` with `dtype=object`
-        is returned.
+        This class is a subclass of `numpy.ndarray`.  It is
+        one-dimensional (like a plain `list`) and has a length of 3 (or
+        2, if no z-component is available).  It uses ``dtype=object`` in
+        order to be able to store other `numpy.ndarray`\s of arbitrary
+        shapes but also scalars, if needed.  Because it is a NumPy array
+        subclass, it can be used in operations with scalars and "normal"
+        NumPy arrays, as long as they have a compatible shape.  Like any
+        NumPy array, instances of this class are iterable and can be
+        used, e.g., in for-loops and tuple unpacking.  If slicing or
+        broadcasting leads to an incompatible shape, a plain
+        `numpy.ndarray` with ``dtype=object`` is returned.
 
-        To make sure the `components` are NumPy arrays themselves, use
-        :func:`sfs.util.as_xyz_components`.
+        To make sure the *components* are NumPy arrays themselves, use
+        `as_xyz_components()`.
 
         Parameters
         ----------
@@ -345,10 +340,10 @@ class XyzComponents(np.ndarray):
     def apply(self, func, *args, **kwargs):
         """Apply a function to each component.
 
-        The function `func` will be called once for each component,
+        The function *func* will be called once for each component,
         passing the current component as first argument.  All further
         arguments are passed after that.
-        The results are returned as a new :class:`XyzComponents` object.
+        The results are returned as a new `XyzComponents` object.
 
         """
         return XyzComponents([func(i, *args, **kwargs) for i in self])

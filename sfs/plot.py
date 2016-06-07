@@ -102,12 +102,11 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
         Size of loudspeakers in metres.
     show_numbers : bool, optional
         If ``True``, loudspeaker numbers are shown.
-    grid : triple of numpy.ndarray, optional
-        If specified, only loudspeakers within the `grid` are shown.
+    grid : triple of array_like, optional
+        If specified, only loudspeakers within the *grid* are shown.
     ax : Axes object, optional
-        The loudspeakers are plotted into this
-        :class:`~matplotlib.axes.Axes` object or -- if not specified --
-        into the current axes.
+        The loudspeakers are plotted into this `matplotlib.axes.Axes`
+        object or -- if not specified -- into the current axes.
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -155,7 +154,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
 
 
 def _visible_secondarysources_2d(x0, n0, grid):
-    """Determine secondary sources which lie within `grid`."""
+    """Determine secondary sources which lie within *grid*."""
     x, y = util.as_xyz_components(grid[:2])
     idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
@@ -187,32 +186,32 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
         Sound pressure values (or any other scalar quantity if you
         like).  If the values are complex, the imaginary part is
         ignored.
-        Typically, `p` is two-dimensional with a shape of `(Ny, Nx)`,
-        `(Nz, Nx)` or `(Nz, Ny)`.  This is the case if
-        :func:`sfs.util.xyz_grid` was used with a single number for `z`,
-        `y` or `x`, respectively.
-        However, `p` can also be three-dimensional with a shape of `(Ny,
-        Nx, 1)`, `(1, Nx, Nz)` or `(Ny, 1, Nz)`.  This is the case if
-        :func:`numpy.meshgrid` was used with a scalar for `z`, `y` or
-        `x`, respectively (and of course with the default
+        Typically, *p* is two-dimensional with a shape of *(Ny, Nx)*,
+        *(Nz, Nx)* or *(Nz, Ny)*.  This is the case if
+        `sfs.util.xyz_grid()` was used with a single number for *z*,
+        *y* or *x*, respectively.
+        However, *p* can also be three-dimensional with a shape of *(Ny,
+        Nx, 1)*, *(1, Nx, Nz)* or *(Ny, 1, Nz)*.  This is the case if
+        :func:`numpy.meshgrid` was used with a scalar for *z*, *y* or
+        *x*, respectively (and of course with the default
         ``indexing='xy'``).
 
         .. note:: If you want to plot a single slice of a pre-computed
                   "full" 3D sound field, make sure that the slice still
                   has three dimensions (including one singleton
-                  dimension).  This way, you can use the original `grid`
+                  dimension).  This way, you can use the original *grid*
                   of the full volume without changes.
                   This works because the grid component corresponding to
                   the singleton dimension is simply ignored.
 
     grid : triple or pair of numpy.ndarray
-        The grid that was used to calculate `p`, see
-        :func:`sfs.util.xyz_grid`.  If `p` is two-dimensional, but
-        `grid` has 3 components, one of them must be scalar.
+        The grid that was used to calculate *p*, see
+        `sfs.util.xyz_grid()`.  If *p* is two-dimensional, but
+        *grid* has 3 components, one of them must be scalar.
     xnorm : array_like, optional
         Coordinates of a point to which the sound field should be
         normalized before plotting.  If not specified, no normalization
-        is used.  See :func:`sfs.util.normalize`.
+        is used.  See `sfs.util.normalize()`.
 
     Returns
     -------
@@ -229,9 +228,9 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
     colorbar : bool, optional
         If ``False``, no colorbar is created.
     colorbar_kwargs : dict, optional
-        Further colorbar arguments, see :func:`add_colorbar`.
+        Further colorbar arguments, see `add_colorbar()`.
     ax : Axes, optional
-        If given, the plot is created on `ax` instead of the current
+        If given, the plot is created on *ax* instead of the current
         axis (see :func:`matplotlib.pyplot.gca`).
     cmap, vmin, vmax, **kwargs
         All further parameters are forwarded to
@@ -303,12 +302,12 @@ def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
           **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
-    Takes the same parameters as :func:`sfs.plot.soundfield`.
+    Takes the same parameters as `sfs.plot.soundfield()`.
 
     Other Parameters
     ----------------
     power : bool, optional
-        See :func:`sfs.util.db`.
+        See `sfs.util.db()`.
 
     """
     # normalize before converting to dB!
@@ -353,8 +352,8 @@ def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
         components are ignored.
         If the values are complex, the imaginary parts are ignored.
     grid : triple or pair of array_like
-        The grid that was used to calculate `v`, see
-        :func:`sfs.util.xyz_grid`.  Any z components are ignored.
+        The grid that was used to calculate *v*, see
+        `sfs.util.xyz_grid()`.  Any z components are ignored.
 
     Returns
     -------
@@ -364,7 +363,7 @@ def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
     Other Parameters
     ----------------
     ax : Axes, optional
-        If given, the plot is created on `ax` instead of the current
+        If given, the plot is created on *ax* instead of the current
         axis (see :func:`matplotlib.pyplot.gca`).
     clim : pair of float, optional
         Limits for the scaling of arrow colors.
@@ -395,9 +394,8 @@ def add_colorbar(im, aspect=20, pad=0.5, **kwargs):
     Parameters
     ----------
     im : ScalarMappable
-        The output of :func:`sfs.plot.soundfield`,
-        :func:`sfs.plot.level` or any other
-        :class:`matplotlib.cm.ScalarMappable`.
+        The output of `sfs.plot.soundfield()`, `sfs.plot.level()` or any
+        other `matplotlib.cm.ScalarMappable`.
     aspect : float, optional
         Aspect ratio of the colorbar.  Strictly speaking, since the
         colorbar is vertical, it's actually the inverse of the aspect
@@ -406,7 +404,7 @@ def add_colorbar(im, aspect=20, pad=0.5, **kwargs):
         Space between image plot and colorbar, as a fraction of the
         width of the colorbar.
 
-        .. note:: The `pad` argument of
+        .. note:: The *pad* argument of
                   :meth:`matplotlib.figure.Figure.colorbar` has a
                   slightly different meaning ("fraction of original
                   axes")!

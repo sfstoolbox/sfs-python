@@ -21,7 +21,7 @@ from . import util
 class ArrayData(namedtuple('ArrayData', 'x n a')):
     """Named tuple returned by array functions.
 
-    See :obj:`collections.namedtuple`.
+    See `collections.namedtuple`.
 
     Attributes
     ----------
@@ -42,7 +42,7 @@ class ArrayData(namedtuple('ArrayData', 'x n a')):
             for name, data in zip('xna', self)) + ')'
 
     def take(self, indices):
-        """Return a sub-array given by `indices`."""
+        """Return a sub-array given by *indices*."""
         return ArrayData(self.x[indices], self.n[indices], self.a[indices])
 
 
@@ -63,9 +63,8 @@ def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -88,13 +87,12 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
     distances : (N-1,) array_like
         Sequence of secondary sources distances in metres.
     center, orientation
-        See :func:`linear`
+        See `linear()`.
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -124,15 +122,14 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
         Minimal and maximal distance (in metres) between secondary
         sources.
     center, orientation
-        See :func:`linear`
+        See `linear()`.
     seed : {None, int, array_like}, optional
-        Random seed.  See :class:`numpy.random.RandomState`.
+        Random seed.  See `numpy.random.RandomState`.
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -159,13 +156,12 @@ def circular(N, R, center=[0, 0, 0]):
     R : float
         Radius in metres.
     center
-        See :func:`linear`.
+        See `linear()`.
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -203,14 +199,13 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     spacing : float
         Distance (in metres) between secondary sources.
     center, orientation
-        See :func:`linear`.  The `orientation` corresponds to the first
+        See `linear()`.  The *orientation* corresponds to the first
         linear segment.
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -254,9 +249,8 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -324,9 +318,8 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     Examples
     --------
@@ -374,13 +367,12 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     spacing : float
         Distance (in metres) between secondary sources.
     center, orientation
-        See :func:`linear`.
+        See `linear()`.
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     """
     N1, N2 = (N, N) if np.isscalar(N) else N
@@ -403,18 +395,17 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     N : int or triple of int
         Number of secondary sources along each edge.  If a triple of
         numbers is given, the first two specify the edges like in
-        :func:`rectangular`, the last one specifies the vertical edge.
+        `rectangular()`, the last one specifies the vertical edge.
     spacing : float
         Distance (in metres) between secondary sources.
     center, orientation
-        See :func:`linear`.  The `orientation` corresponds to the first
+        See `linear()`.  The *orientation* corresponds to the first
         planar segment.
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     """
     N1, N2, N3 = (N, N, N) if np.isscalar(N) else N
@@ -443,9 +434,8 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     """
     data = np.loadtxt(fname)
@@ -464,9 +454,8 @@ def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    ArrayData
+    `ArrayData`
         Positions, orientations and weights of secondary sources.
-        See :class:`ArrayData`.
 
     """
     data = np.loadtxt(fname, delimiter=',')
@@ -532,5 +521,5 @@ def _linear_helper(ycoordinates, center, orientation):
 
 
 def concatenate(*arrays):
-    """Concatenate :class:`ArrayData` objects."""
+    """Concatenate `ArrayData` objects."""
     return ArrayData._make(np.concatenate(i) for i in zip(*arrays))

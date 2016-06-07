@@ -73,9 +73,8 @@ def point_velocity(omega, x0, n0, grid, c=None):
 
     Returns
     -------
-    XyzComponents
-        Particle velocity at positions given by `grid`.
-        See :class:`sfs.util.XyzComponents`.
+    `XyzComponents`
+        Particle velocity at positions given by *grid*.
 
     Examples
     --------
@@ -113,14 +112,14 @@ def point_dipole(omega, x0, n0, grid, c=None):
         Normal vector (direction) of dipole.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
-        See :func:`sfs.util.xyz_grid`.
+        See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
 
     Returns
     -------
     numpy.ndarray
-        Sound pressure at positions given by `grid`.
+        Sound pressure at positions given by *grid*.
 
     Notes
     -----
@@ -166,7 +165,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         compatibility).
     grid : triple of array_like
         The grid that is used for the sound field calculations.
-        See :func:`sfs.util.xyz_grid`.
+        See `sfs.util.xyz_grid()`.
     L : (3,) array_like
         Dimensionons of the rectangular room.
     N : (3,) array_like or int, optional
@@ -183,7 +182,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     Returns
     -------
     numpy.ndarray
-        Sound pressure at positions given by `grid`.
+        Sound pressure at positions given by *grid*.
 
     """
     k = util.wavenumber(omega, c)
@@ -237,7 +236,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         compatibility).
     grid : triple of array_like
         The grid that is used for the sound field calculations.
-        See :func:`sfs.util.xyz_grid`.
+        See `sfs.util.xyz_grid()`.
     L : (3,) array_like
         Dimensionons of the rectangular room.
     N : (3,) array_like or int, optional
@@ -253,9 +252,8 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
 
     Returns
     -------
-    XyzComponents
-        Particle velocity at positions given by `grid`.
-        See :class:`sfs.util.XyzComponents`.
+    `XyzComponents`
+        Particle velocity at positions given by *grid*.
 
     """
     k = util.wavenumber(omega, c)
@@ -344,9 +342,8 @@ def line_velocity(omega, x0, n0, grid, c=None):
 
     Returns
     -------
-    XyzComponents
-        Particle velocity at positions given by `grid`.
-        See :class:`sfs.util.XyzComponents`.
+    `XyzComponents`
+        Particle velocity at positions given by *grid*.
 
     Examples
     --------
@@ -416,7 +413,7 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
         Position of line source.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
-        See :func:`sfs.util.xyz_grid`.
+        See `sfs.util.xyz_grid()`.
     alpha : float, optional
         Outer angle of edge.
     Nc : int, optional
@@ -508,9 +505,8 @@ def plane_velocity(omega, x0, n0, grid, c=None):
 
     Returns
     -------
-    XyzComponents
-        Particle velocity at positions given by `grid`.
-        See :class:`sfs.util.XyzComponents`.
+    `XyzComponents`
+        Particle velocity at positions given by *grid*.
 
     Examples
     --------
