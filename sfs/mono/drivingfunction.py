@@ -1,4 +1,8 @@
-"""Compute driving functions for various systems."""
+"""Compute driving functions for various systems.
+
+.. include:: math-definitions.rst
+
+"""
 
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
@@ -232,15 +236,17 @@ def source_selection_all(N):
 
 
 def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
-    """Plane wave by two-dimensional NFC-HOA.
+    r"""Plane wave by two-dimensional NFC-HOA.
 
-    ::
+    .. math::
 
-                               __
-                       2i     \        i^-m
-        D(phi0,w) = - -----   /__   ----------  e^(i m (phi0-phi_pw))
-                      pi r0 m=-N..N  (2)
-                                    Hm  (w/c r0)
+        D(\phi_0, \omega) =
+        -\frac{2\i}{\pi r_0}
+        \sum_{m=-M}^M
+        \frac{\i^{-m}}{\Hankel{2}{m}{\wc r_0}}
+        \e{\i m (\phi_0 - \phi_\text{pw})}
+
+    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2D.
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -256,15 +262,17 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
 
 
 def nfchoa_25d_point(omega, x0, r0, xs, c=None):
-    """Point source by 2.5-dimensional NFC-HOA.
+    r"""Point source by 2.5-dimensional NFC-HOA.
 
-    ::
+    .. math::
 
-                             __      (2)
-                      1     \       h|m| (w/c r)
-        D(phi0,w) = -----   /__    ------------- e^(i m (phi0-phi))
-                     2pi r0 m=-N..N  (2)
-                                    h|m| (w/c r0)
+        D(\phi_0, \omega) =
+        \frac{1}{2 \pi r_0}
+        \sum_{m=-M}^M
+        \frac{\hankel{2}{|m|}{\wc r}}{\hankel{2}{|m|}{\wc r_0}}
+        \e{\i m (\phi_0 - \phi)}
+
+    See http://sfstoolbox.org/#equation-D.nfchoa.ps.2.5D.
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -282,15 +290,17 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
 
 
 def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
-    """Plane wave by 2.5-dimensional NFC-HOA.
+    r"""Plane wave by 2.5-dimensional NFC-HOA.
 
-    ::
+    .. math::
 
-                             __
-                        2i  \            i^|m|
-        D_25D(phi0,w) = --  /__    ------------------ e^(i m (phi0-phi_pw) )
-                        r0 m=-N..N       (2)
-                                    w/c h|m| (w/c r0)
+        D(\phi_0, \omega) =
+        \frac{2\i}{r_0}
+        \sum_{m=-N}^N
+        \frac{\i^{-|m|}}{\wc \hankel{2}{|m|}{\wc r_0}}
+        \e{\i m (\phi_0 - \phi_\text{pw})}
+
+    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2.5D.
 
     """
     x0 = util.asarray_of_rows(x0)
