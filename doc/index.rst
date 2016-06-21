@@ -2,91 +2,20 @@
 
 .. include:: ../README.rst
 
-.. include:: ../CONTRIBUTING.rst
+All the details:
+    .. toctree::
 
-API Documentation
-=================
-
-Loudspeaker Arrays
-------------------
-
-.. automodule:: sfs.array
-   :members:
-   :undoc-members:
-   :exclude-members: ArrayData
-
-Tapering
---------
-
-.. automodule:: sfs.tapering
-   :members:
-   :undoc-members:
-
-Monochromatic Sources
----------------------
-
-.. automodule:: sfs.mono.source
-   :members:
-   :undoc-members:
-
-Time Domain Sources
--------------------
-
-.. automodule:: sfs.time.source
-   :members:
-   :undoc-members:
-
-Monochromatic Driving Functions
--------------------------------
-
-.. automodule:: sfs.mono.drivingfunction
-   :members:
-   :undoc-members:
-
-Monochromatic Sound Fields
---------------------------
-
-.. automodule:: sfs.mono.synthesized
-   :members:
-   :undoc-members:
-   
-Time Domain Driving Functions
------------------------------
-
-.. automodule:: sfs.time.drivingfunction
-   :members:
-   :undoc-members:
-   
-Time Domain Sound Fields
-------------------------
-.. automodule:: sfs.time.soundfield
-   :members:
-   :undoc-members:
-
-Plotting
---------
-
-.. automodule:: sfs.plot
-   :members:
-   :undoc-members:
-
-Utilities
----------
-
-.. automodule:: sfs.util
-   :members:
-   :undoc-members:
+        usage
+        arrays
+        frequency_domain
+        time_domain
+        plotting
+        utilities
+        CONTRIBUTING
+        NEWS
 
 .. only:: html
 
-   Index
-   -----
- 
-   :ref:`genindex`
+    ..
 
-Version History
----------------
-
-.. default-role:: py:obj
-
-.. include:: ../NEWS.rst
+        * :ref:`genindex`
