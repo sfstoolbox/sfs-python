@@ -2,6 +2,7 @@ jinja2
 pygments
 sphinx
 sphinxcontrib-napoleon
+sphinx-rtd-theme
 
 numpy
 scipy
