@@ -1,9 +1,9 @@
 Sound Field Synthesis Toolbox for Python
 ========================================
 
-Python implementation of the `Sound Field Synthesis Toolbox`_.
-
-.. _Sound Field Synthesis Toolbox: http://github.com/sfstoolbox/sfs/
+The Sound Field Synthesis Toolbox for Python gives you the possibility to create
+numercial simulations of sound field synthesis methods like wave field synthesis
+(WFS) or near-field compensated higher order Ambisonics (NFC-HOA).
 
 Documentation:
     http://python.sfstoolbox.org/
