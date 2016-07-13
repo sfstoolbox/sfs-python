@@ -85,7 +85,7 @@ master_doc = 'index'
 # General information about the project.
 authors = 'SFS Toolbox Developers'
 project = 'Sound Field Synthesis Toolbox'
-copyright = '2014, ' + authors
+copyright = '2016, ' + authors
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
