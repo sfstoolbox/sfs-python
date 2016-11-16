@@ -1,5 +1,6 @@
 """Various utility functions."""
 
+import collections
 import numpy as np
 from . import defs
 
@@ -114,6 +115,59 @@ def as_xyz_components(components, **kwargs):
 
     """
     return XyzComponents([np.asarray(c, **kwargs) for c in components])
+
+
+def as_delayed_signal(arg, **kwargs):
+    """Make sure that the given argument can be used as a signal.
+
+    Parameters
+    ----------
+    arg : sequence of 1 array_like followed by 1 or 2 scalars
+        The first element is converted to a NumPy array, the second
+        element is used a the sampling rate (in Hertz) and the optional
+        third element is used as the starting time of the signal (in
+        seconds).  Default starting time is 0.
+    **kwargs
+        All keyword arguments are forwarded to :func:`numpy.asarray`.
+
+    Returns
+    -------
+    `DelayedSignal`
+        A named tuple consisting of a `numpy.ndarray` containing the
+        audio data, followed by the sampling rate and the starting time
+        of the signal.
+
+    Examples
+    --------
+    Typically, this is used together with tuple unpacking to assign the
+    audio data, the sampling rate and the starting time to separate
+    variables:
+
+    >>> import sfs
+    >>> sig = [1], 44100
+    >>> data, fs, signal_offset = sfs.util.as_delayed_signal(sig)
+    >>> data
+    array([1])
+    >>> fs
+    44100
+    >>> signal_offset
+    0
+
+    """
+    try:
+        # In Python 3, this could be: data, samplerate, *time = arg
+        data, samplerate, time = arg[0], arg[1], arg[2:]
+        time, = time or [0]
+    except (IndexError, TypeError, ValueError):
+        pass
+    else:
+        valid_arguments = (not np.isscalar(data) and
+                           np.isscalar(samplerate) and
+                           np.isscalar(time))
+        if valid_arguments:
+            data = np.asarray(data, **kwargs)
+            return DelayedSignal(data, samplerate, time)
+    raise TypeError('expected audio data, samplerate, optional start time')
 
 
 def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
@@ -346,3 +400,18 @@ class XyzComponents(np.ndarray):
 
         """
         return XyzComponents([func(i, *args, **kwargs) for i in self])
+
+
+DelayedSignal = collections.namedtuple('DelayedSignal', 'data samplerate time')
+"""A tuple of audio data, sampling rate and start time.
+
+This class (a `collections.namedtuple`) is not meant to be instantiated
+by users.
+
+To pass a signal to a function, just use a simple `tuple` or `list`
+containing the audio data and the sampling rate, with an optional
+starting time (in seconds) as a third item.
+If you want to ensure that a given variable contains a valid signal, use
+`sfs.util.as_delayed_signal()`.
+
+"""

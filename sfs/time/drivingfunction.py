@@ -130,7 +130,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     return delays, weights
 
 
-def driving_signals(delays, weights, signal, fs=None):
+def driving_signals(delays, weights, signal):
     """Get driving signals per secondary source.
 
     Returned signals are the delayed and weighted mono input signal
@@ -142,58 +142,52 @@ def driving_signals(delays, weights, signal, fs=None):
         Delay in seconds for each channel, negative values allowed.
     weights : (C,) array_like
         Amplitude weighting factor for each channel.
-    signal : (N,) array_like
-        Excitation signal (mono) which gets weighted and delayed.
-    fs: int, optional
-        Sampling frequency in Hertz.
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
 
     Returns
     -------
-    driving_signals : (N, C) numpy.ndarray
-        Driving signal per channel (column represents channel).
-    t_offset : float
-        Simulation point in time offset (seconds).
+    `DelayedSignal`
+        A tuple containing the driving signals (in a `numpy.ndarray`
+        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
+        and a (possibly negative) time offset (in seconds).
 
     """
     delays = util.asarray_1d(delays)
     weights = util.asarray_1d(weights)
-    d, t_offset = apply_delays(signal, delays, fs)
-    return d * weights, t_offset
+    data, samplerate, signal_offset = apply_delays(signal, delays)
+    return util.DelayedSignal(data * weights, samplerate, signal_offset)
 
 
-def apply_delays(signal, delays, fs=None):
+def apply_delays(signal, delays):
     """Apply delays for every channel.
-
-    A mono input signal gets delayed for each channel individually. The
-    simultation point in time is shifted by the smallest delay provided,
-    which allows negative delays as well.
 
     Parameters
     ----------
-    signal : (N,) array_like
-        Mono excitation signal (with N samples) which gets delayed.
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
     delays : (C,) array_like
         Delay in seconds for each channel (C), negative values allowed.
-    fs: int, optional
-        Sampling frequency in Hertz.
 
     Returns
     -------
-    out : (N, C) numpy.ndarray
-        Output signals (column represents channel).
-    t_offset : float
-        Simulation point in time offset (seconds).
+    `DelayedSignal`
+        A tuple containing the delayed signals (in a `numpy.ndarray`
+        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
+        and a (possibly negative) time offset (in seconds).
 
     """
-    if fs is None:
-        fs = defs.fs
-    signal = util.asarray_1d(signal)
+    data, samplerate, initial_offset = util.as_delayed_signal(signal)
+    data = util.asarray_1d(data)
     delays = util.asarray_1d(delays)
+    delays += initial_offset
 
-    delays_samples = np.rint(fs * delays).astype(int)
+    delays_samples = np.rint(samplerate * delays).astype(int)
     offset_samples = delays_samples.min()
     delays_samples -= offset_samples
-    out = np.zeros((delays_samples.max() + len(signal), len(delays_samples)))
-    for channel, cdelay in enumerate(delays_samples):
-        out[cdelay:cdelay + len(signal), channel] = signal
-    return out, offset_samples / fs
+    out = np.zeros((delays_samples.max() + len(data), len(delays_samples)))
+    for column, row in enumerate(delays_samples):
+        out[row:row + len(data), column] = data
+    return util.DelayedSignal(out, samplerate, offset_samples / samplerate)

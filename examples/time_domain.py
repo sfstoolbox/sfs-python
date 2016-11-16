@@ -15,18 +15,18 @@ my_cmap = 'YlOrRd'
 N = 56  # number of secondary sources
 R = 1.5  # radius of spherical/circular array
 x0, n0, a0 = sfs.array.circular(N, R)  # get secondary source positions
+fs = 44100  # sampling rate
 
-# create dirac
-signal = [1]
+# unit impulse
+signal = [1], fs
 
 # POINT SOURCE
 xs = [2, 2, 0]  # position of virtual source
 t = 0.008
 # compute driving signals
 d_delay, d_weight = sfs.time.drivingfunction.wfs_25d_point(x0, n0, xs)
-d, t_offset = sfs.time.drivingfunction.driving_signals(d_delay, d_weight,
-                                                       signal)
-t -= t_offset
+d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
+
 # test soundfield
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 twin = sfs.tapering.tukey(a, .3)
@@ -48,9 +48,8 @@ t = -0.001
 
 # compute driving signals
 d_delay, d_weight = sfs.time.drivingfunction.wfs_25d_plane(x0, n0, npw)
-d, t_offset = sfs.time.drivingfunction.driving_signals(d_delay,
-                                                       d_weight, signal)
-t -= t_offset
+d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
+
 # test soundfield
 a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
 twin = sfs.tapering.tukey(a, .3)

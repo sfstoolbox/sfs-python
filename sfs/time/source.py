@@ -12,7 +12,7 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, t, grid, fs=None, c=None):
+def point(xs, signal, observation_time, grid, c=None):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -22,15 +22,14 @@ def point(xs, signal, t, grid, fs=None, c=None):
     ----------
     xs : (3,) array_like
         Position of source in cartesian coordinates.
-    signal : (N,) array_like
-        Excitation signal.
-    t : float
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
+    observation_time : float
         Observed point in time.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
-    fs: int, optional
-        Sampling frequency in Hertz.
     c : float, optional
         Speed of sound.
 
@@ -49,16 +48,16 @@ def point(xs, signal, t, grid, fs=None, c=None):
 
     """
     xs = util.asarray_1d(xs)
-    signal = util.asarray_1d(signal)
+    data, samplerate, signal_offset = util.as_delayed_signal(signal)
+    data = util.asarray_1d(data)
     grid = util.as_xyz_components(grid)
-    if fs is None:
-        fs = defs.fs
     if c is None:
         c = defs.c
     r = np.linalg.norm(grid - xs)
     # evaluate g over grid
-    g_amplitude = 1 / (4 * np.pi * r)
-    g_time = r / c
-    p = np.interp(t - g_time, np.arange(len(signal)) / fs, signal,
-                  left=0, right=0)
-    return p * g_amplitude
+    weights = 1 / (4 * np.pi * r)
+    delays = r / c
+    base_time = observation_time - signal_offset
+    return weights * np.interp(base_time - delays,
+                               np.arange(len(data)) / samplerate,
+                               data, left=0, right=0)
