@@ -6,7 +6,7 @@
 
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
-from scipy.special import sph_jnyn, jn, hankel2
+from scipy.special import jn, hankel2, spherical_jn, spherical_yn
 from .. import util
 from .. import defs
 
@@ -281,11 +281,9 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
     phi, _, r = util.cart2sph(*xs)
     phi0 = util.cart2sph(*x0.T)[0]
     M = _max_order_circular_harmonics(len(x0))
-    hr = _sph_hn2(M, k * r)
-    hr0 = _sph_hn2(M, k * r0)
     d = 0
     for m in range(-M, M + 1):
-        d += hr[abs(m)] / hr0[abs(m)] * np.exp(1j * m * (phi0 - phi))
+        d += _spherical_hn2(abs(m), k*r) / _spherical_hn2(abs(m), k*r0)  * np.exp(1j * m * (phi0 - phi))
     return d / (2 * np.pi * r0)
 
 
@@ -309,10 +307,9 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
     M = _max_order_circular_harmonics(len(x0))
-    hn2 = _sph_hn2(M, k * r0)
     d = 0
     for m in range(-M, M + 1):
-        d += 1j**-abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
+        d += 1j**-abs(m) / (k * _spherical_hn2(abs(m), k*r0)) * np.exp(1j * m * (phi0 - phi))
     return -2 / r0 * d
 
 
@@ -667,10 +664,9 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     return -1j*np.pi/alpha * d
 
 
-def _sph_hn2(n, z):
+def _spherical_hn2(n, z):
     """Spherical Hankel function of 2nd kind."""
-    jn, jnp, yn, ynp = sph_jnyn(n, z)
-    return jn - 1j * yn
+    return spherical_jn(n,z) - 1j * spherical_yn(n,z)
 
 
 def _max_order_circular_harmonics(N):
