@@ -235,7 +235,7 @@ def source_selection_all(N):
     return np.ones(N, dtype=bool)
 
 
-def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
+def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], Nmax=None, c=None):
     r"""Plane wave by two-dimensional NFC-HOA.
 
     .. math::
@@ -254,14 +254,14 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     n = util.asarray_1d(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0))
+    M = _max_order_circular_harmonics(len(x0),Nmax)
     d = 0
     for m in range(-M, M + 1):
         d += 1j**-m / hankel2(m, k * r0) * np.exp(1j * m * (phi0 - phi))
     return -2j / (np.pi*r0) * d
 
 
-def nfchoa_25d_point(omega, x0, r0, xs, c=None):
+def nfchoa_25d_point(omega, x0, r0, xs, Nmax=None, c=None):
     r"""Point source by 2.5-dimensional NFC-HOA.
 
     .. math::
@@ -280,14 +280,14 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
     xs = util.asarray_1d(xs)
     phi, _, r = util.cart2sph(*xs)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0))
+    M = _max_order_circular_harmonics(len(x0),Nmax)
     d = 0
     for m in range(-M, M + 1):
         d += _spherical_hn2(abs(m), k*r) / _spherical_hn2(abs(m), k*r0)  * np.exp(1j * m * (phi0 - phi))
     return d / (2 * np.pi * r0)
 
 
-def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
+def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], Nmax=None, c=None):
     r"""Plane wave by 2.5-dimensional NFC-HOA.
 
     .. math::
@@ -306,7 +306,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     n = util.asarray_1d(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0))
+    M = _max_order_circular_harmonics(len(x0),Nmax)
     d = 0
     for m in range(-M, M + 1):
         d += 1j**-abs(m) / (k * _spherical_hn2(abs(m), k*r0)) * np.exp(1j * m * (phi0 - phi))
@@ -669,6 +669,6 @@ def _spherical_hn2(n, z):
     return spherical_jn(n,z) - 1j * spherical_yn(n,z)
 
 
-def _max_order_circular_harmonics(N):
+def _max_order_circular_harmonics(N,Nmax):
     """Compute order of 2D HOA."""
-    return N // 2 if N % 2 == 0 else (N - 1) // 2
+    return Nmax if Nmax else N // 2 if N % 2 == 0 else (N - 1) // 2
