@@ -60,9 +60,9 @@ def sph2cart(alpha, beta, r):
 
 def cart2sph(x, y, z):
     """Cartesian to spherical coordinates."""
-    alpha = np.arctan2(y, x)
-    beta = np.arccos(z / np.sqrt(x**2 + y**2))
     r = np.sqrt(x**2 + y**2 + z**2)
+    alpha = np.arctan2(y, x)
+    beta = np.arccos(z / r)
     return alpha, beta, r
 
 
