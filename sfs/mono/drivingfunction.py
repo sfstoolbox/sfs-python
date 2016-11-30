@@ -235,7 +235,7 @@ def source_selection_all(N):
     return np.ones(N, dtype=bool)
 
 
-def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
+def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     r"""Plane wave by two-dimensional NFC-HOA.
 
     .. math::
@@ -254,14 +254,14 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     n = util.asarray_1d(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0))
+    M = _max_order_circular_harmonics(len(x0), max_order)
     d = 0
     for m in range(-M, M + 1):
         d += 1j**-m / hankel2(m, k * r0) * np.exp(1j * m * (phi0 - phi))
     return -2j / (np.pi*r0) * d
 
 
-def nfchoa_25d_point(omega, x0, r0, xs, c=None):
+def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
     r"""Point source by 2.5-dimensional NFC-HOA.
 
     .. math::
@@ -280,7 +280,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
     xs = util.asarray_1d(xs)
     phi, _, r = util.cart2sph(*xs)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0))
+    M = _max_order_circular_harmonics(len(x0), max_order)
     hr = _sph_hn2(M, k * r)
     hr0 = _sph_hn2(M, k * r0)
     d = 0
@@ -289,7 +289,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, c=None):
     return d / (2 * np.pi * r0)
 
 
-def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
+def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     r"""Plane wave by 2.5-dimensional NFC-HOA.
 
     .. math::
@@ -308,7 +308,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], c=None):
     n = util.asarray_1d(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0))
+    M = _max_order_circular_harmonics(len(x0), max_order)
     hn2 = _sph_hn2(M, k * r0)
     d = 0
     for m in range(-M, M + 1):
@@ -673,6 +673,7 @@ def _sph_hn2(n, z):
     return jn - 1j * yn
 
 
-def _max_order_circular_harmonics(N):
+def _max_order_circular_harmonics(N, max_order):
     """Compute order of 2D HOA."""
-    return N // 2 if N % 2 == 0 else (N - 1) // 2
+    return (max_order if max_order is not None
+            else N // 2 if N % 2 == 0 else (N - 1) // 2)
