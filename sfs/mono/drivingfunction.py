@@ -675,5 +675,4 @@ def _sph_hn2(n, z):
 
 def _max_order_circular_harmonics(N, max_order):
     """Compute order of 2D HOA."""
-    return (max_order if max_order is not None
-            else N // 2 if N % 2 == 0 else (N - 1) // 2)
+    return N // 2 if max_order is None else max_order
