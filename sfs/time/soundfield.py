@@ -1,48 +1,57 @@
 """Compute sound field."""
 
+from __future__ import division
 import numpy as np
-
 from .. import util
-from . import source
 from .. import defs
+from .source import point
 
 
-def synthesize_p(d_line, channel_weight, x0, grid, t, fs=None):
-    """Compute sound field for given time sample.
+def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
+    """Compute sound field for an array of secondary sources for a given time.
 
-    D_line(m x n) specifies the signals m fed into each secondary source n.
-    Channel_weight is applied during integration, e.g. source tapering.
-    x0 are available secandary sources.
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    d : (N, C) numpy.ndarray
+        Specifies the signals N(t) fed into each secondary source C (columns).
+        "N" is signal samples(t) per channel, and
+        "C" is channels
+    channel_weights : (C,) array_like
+        Additional weights applied during integration, e.g. source tapering.
+    t : float
+        Simulation point in time (seconds).
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    source: function, optional
+        Source type is a function, returning scalar field.
+        For default, see `sfs.time.source.point()`
+    fs: int, optional
+        Sampling frequency in hertz.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Pressure at grid positions.
 
     """
     if fs is None:
         fs = defs.fs
-    channel_weight = util.asarray_1d(channel_weight)
-    if len(channel_weight) != len(x0):
+    if c is None:
+        c = defs.c
+    x0 = util.asarray_of_rows(x0)
+    channel_weights = util.asarray_1d(channel_weights)
+    if np.size(channel_weights, 0) != np.size(x0, 0):
         raise ValueError("length mismatch")
-
-    delay = np.nonzero(d_line)[0]
-    offset = np.min(delay)
-    d_line = d_line[offset:, :]  # remove driving function time offset
-
-    channels = len(x0)  # extract no. of channels
-    # Add additional zeros to the driving signal to ensure an amplitude of 0
-    # in the whole listening area before and after the real driving signal
-    padding_samples = 1000  # TODO: round(max(max_distance/c*fs,2*L/c*fs))
-    zero_fill = np.zeros([padding_samples, channels])
-
-    # time reversal driving function
-    sig_length = len(d_line)
-    t_inverted = t - sig_length - padding_samples  # compensate time
-    # zero padding and reverse time signals
-    d_line_inverted = np.flipud(np.row_stack((zero_fill, d_line, zero_fill)))
 
     # synthesize soundfield
     p = 0
-    for signal, weight, position in zip(d_line_inverted.T, channel_weight, x0):
+    for signal, weight, position in zip(d.T, channel_weights, x0):
         if weight != 0:
-            g, t_delta = source.greens_function_ps(position, grid, t_inverted)
-            d_intpl = np.interp(t_delta, np.arange(np.size(signal)), signal)
-            p += g * d_intpl * weight  # integrate
-
+            p_s = source(position, signal, t, grid, fs, c)
+            p += p_s * weight  # integrate over secondary sources
     return p

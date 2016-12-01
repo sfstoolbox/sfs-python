@@ -1,12 +1,15 @@
+Version History
+===============
+
 Version 0.3.1 (2016-04-08):
-* Fixed metadata of release
+ * Fixed metadata of release
 
 Version 0.3.0 (2016-04-08):
-* Dirichlet Green's function for the scattering of a line source at an edge
-* Driving functions for the synthesis of various virtual source types with edge-shaped arrays by the equivalent scattering appoach
-* Driving functions for the synthesis of focused sources by WFS
-* Several refactorings, bugfixes and other improvements
-
+ * Dirichlet Green's function for the scattering of a line source at an edge
+ * Driving functions for the synthesis of various virtual source types with
+   edge-shaped arrays by the equivalent scattering appoach
+ * Driving functions for the synthesis of focused sources by WFS
+ * Several refactorings, bugfixes and other improvements
 
 Version 0.2.0 (2015-12-11):
  * Ability to calculate and plot particle velocity and displacement fields
