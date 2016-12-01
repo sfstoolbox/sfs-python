@@ -1,6 +1,8 @@
 Frequency Domain
 ================
 
+.. automodule:: sfs.mono
+
 Monochromatic Sources
 ---------------------
 
