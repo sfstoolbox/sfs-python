@@ -1,5 +1,3 @@
-.. default-role:: any
-
 .. include:: ../README.rst
 
 ----
