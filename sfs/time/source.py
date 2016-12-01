@@ -2,30 +2,58 @@
 
 The Green's function describes the spatial sound propagation over time.
 
+.. include:: math-definitions.rst
+
 """
 
+from __future__ import division
 import numpy as np
 from .. import util
 from .. import defs
 
 
-def greens_function_ps(xs, grid, t, fs=None, c=None):
-    """Source model for a point source: 3D Green's function.
+def point(xs, signal, t, grid, fs=None, c=None):
+    r"""Source model for a point source: 3D Green's function.
 
-    ::
+    Calculates the scalar pressure field for a given point in time, evoked by
+    source excitation signal.
 
-                         1
-         g(x-xs,t) = ---------- delta(t - |x-xs|/c)
-                     4pi |x-xs|
+    Parameters
+    ----------
+    xs : (3,) array_like
+        Position of source in cartesian coordinates.
+    signal : (N,) array_like
+        Excitation signal.
+    t : float
+        Observed point in time.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    fs: int, optional
+        Sampling frequency in hertz.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Scalar pressure field, evaluated at positions given by *grid*.
+
+    Notes
+    -----
+    .. math::
+
+        g(x-x_s,t) = \frac{1}{4 \pi |x - x_s|} \dirac{t - \frac{|x - x_s|}{c}}
 
     """
     xs = util.asarray_1d(xs)
     grid = util.as_xyz_components(grid)
     if c is None:
         c = defs.c
-    if fs is None:
-        fs = defs.fs
     r = np.linalg.norm(grid - xs)
-    g = 1 / (4*np.pi*r)
-    t = (r/c)*fs-t
-    return g, t
+    # evaluate g over grid
+    g_amplitude = 1 / (4 * np.pi * r)
+    g_time = r / c
+    p = np.interp(t - g_time, np.arange(len(signal)) / fs, signal,
+                  left=0, right=0)
+    return p * g_amplitude
