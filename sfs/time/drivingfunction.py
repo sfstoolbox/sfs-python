@@ -63,7 +63,7 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n = util.asarray_1d(n)
     xref = util.asarray_1d(xref)
     g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
-    delays = inner1d(n, x0)/c
+    delays = inner1d(n, x0) / c
     weights = 2 * g0 * inner1d(n, n0)
     return delays, weights
 
@@ -124,7 +124,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     xref = util.asarray_1d(xref)
     g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
     ds = x0 - xs
-    r = np.linalg.norm(x0 - xs, axis=1)
+    r = np.linalg.norm(ds, axis=1)
     delays = r/c
     weights = g0/(2 * np.pi) * inner1d(ds, n0) / r**(3/2)
     return delays, weights
@@ -133,7 +133,8 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
 def driving_signals(delays, weights, signal, fs=None):
     """Get driving signals per secondary source.
 
-    Returned signal is the delayed and weighted input signal per channel.
+    Returned signals are the delayed and weighted mono input signal (with N
+    samples) per channel (C).
 
     Parameters
     ----------
@@ -144,12 +145,12 @@ def driving_signals(delays, weights, signal, fs=None):
     signal : (N,) array_like
         Excitation signal (mono) which gets weighted and delayed.
     fs: int, optional
-        Sampling frequency in hertz.
+        Sampling frequency in Hertz.
 
     Returns
     -------
-    (N, C) numpy.ndarray
-        N is signal samples(t) per channel C, delayed and weighted.
+    driving_signals : (N, C) numpy.ndarray
+        Driving signals (with N samples) per channel C.
     t_offset : float
         Simulation point in time offset (seconds).
 
@@ -163,21 +164,22 @@ def driving_signals(delays, weights, signal, fs=None):
 def apply_delays(signal, delays, fs=None):
     """Apply Delays for every channel.
 
-    Delay in seconds, no fractional delay. An absolute time offset is applied.
+    Delay in seconds, no fractional delay. An absolute time offset is applied
+    and returned.
 
     Parameters
     ----------
     signal : (N,) array_like
-        Excitation signal (mono) which gets weighted and delayed.
-    delay : (C,) array_like, in seconds
-        delay in seconds for each channel, negative values allowed.
+        Mono excitation signal (with N samples) which gets delayed.
+    delays : (C,) array_like
+        Delay in seconds for each channel (C), negative values allowed.
     fs: int, optional
-        Sampling frequency in hertz.
+        Sampling frequency in Hertz.
 
     Returns
     -------
     out : (N, C) numpy.ndarray
-        N is signal samples(t) per channel C.
+        Output signals (with N samples) per channel C.
     t_offset : float
         Simulation point in time offset (seconds).
 
@@ -187,11 +189,10 @@ def apply_delays(signal, delays, fs=None):
     signal = util.asarray_1d(signal)
     delays = util.asarray_1d(delays)
 
-    # convert to samples
     delays_samples = np.rint(fs * delays).astype(int)
     offset_samples = delays_samples.min()
     delays_samples -= offset_samples
     out = np.zeros((delays_samples.max() + len(signal), len(delays_samples)))
     for channel, cdelay in enumerate(delays_samples):
-        out[cdelay: cdelay + len(signal), channel] = signal
+        out[cdelay:cdelay + len(signal), channel] = signal
     return out, offset_samples / fs

@@ -14,10 +14,9 @@ def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
     ----------
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
-    d : (N, C) numpy.ndarray
-        Specifies the signals N(t) fed into each secondary source C (columns).
-        "N" is signal samples(t) per channel, and
-        "C" is channels
+    d : (N, C) array_like
+        Specifies the signals (with N samples) fed into each secondary source
+        channel C (columns).
     channel_weights : (C,) array_like
         Additional weights applied during integration, e.g. source tapering.
     t : float
@@ -29,7 +28,7 @@ def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
         Source type is a function, returning scalar field.
         For default, see `sfs.time.source.point()`
     fs: int, optional
-        Sampling frequency in hertz.
+        Sampling frequency in Hertz.
     c : float, optional
         Speed of sound.
 
