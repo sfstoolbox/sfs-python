@@ -26,7 +26,7 @@ def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
         See `sfs.util.xyz_grid()`.
     source: function, optional
         Source type is a function, returning scalar field.
-        For default, see `sfs.time.source.point()`
+        For default, see `sfs.time.source.point()`.
     fs: int, optional
         Sampling frequency in Hertz.
     c : float, optional
@@ -35,7 +35,7 @@ def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
     Returns
     -------
     numpy.ndarray
-        Pressure at grid positions.
+        Sound pressure at grid positions.
 
     """
     if fs is None:
@@ -44,9 +44,10 @@ def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
         c = defs.c
     x0 = util.asarray_of_rows(x0)
     channel_weights = util.asarray_1d(channel_weights)
-    if np.size(channel_weights, 0) != np.size(x0, 0):
-        raise ValueError("length mismatch")
-
+    d = np.asarray(d)
+    if (len(channel_weights) != x0.shape[0]) or (
+            len(channel_weights) != d.shape[1]):
+        raise ValueError("Length mismatch")
     # synthesize soundfield
     p = 0
     for signal, weight, position in zip(d.T, channel_weights, x0):

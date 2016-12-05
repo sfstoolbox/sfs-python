@@ -30,7 +30,7 @@ def point(xs, signal, t, grid, fs=None, c=None):
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
     fs: int, optional
-        Sampling frequency in hertz.
+        Sampling frequency in Hertz.
     c : float, optional
         Speed of sound.
 
@@ -47,7 +47,10 @@ def point(xs, signal, t, grid, fs=None, c=None):
 
     """
     xs = util.asarray_1d(xs)
+    signal = util.asarray_1d(signal)
     grid = util.as_xyz_components(grid)
+    if fs is None:
+        fs = defs.fs
     if c is None:
         c = defs.c
     r = np.linalg.norm(grid - xs)
