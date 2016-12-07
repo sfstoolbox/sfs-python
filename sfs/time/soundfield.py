@@ -45,8 +45,7 @@ def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
     x0 = util.asarray_of_rows(x0)
     channel_weights = util.asarray_1d(channel_weights)
     d = np.asarray(d)
-    if (len(channel_weights) != x0.shape[0]) or (
-            len(channel_weights) != d.shape[1]):
+    if not (len(channel_weights) == len(x0) == d.shape[1]):
         raise ValueError("Length mismatch")
     # synthesize soundfield
     p = 0

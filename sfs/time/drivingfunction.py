@@ -126,7 +126,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
     delays = r/c
-    weights = g0/(2 * np.pi) * inner1d(ds, n0) / r**(3/2)
+    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
     return delays, weights
 
 
@@ -150,7 +150,7 @@ def driving_signals(delays, weights, signal, fs=None):
     Returns
     -------
     driving_signals : (N, C) numpy.ndarray
-        Driving signals (with N samples) per channel C.
+        Driving signal per channel (column represents channel).
     t_offset : float
         Simulation point in time offset (seconds).
 
@@ -162,10 +162,11 @@ def driving_signals(delays, weights, signal, fs=None):
 
 
 def apply_delays(signal, delays, fs=None):
-    """Apply Delays for every channel.
+    """Apply delays for every channel.
 
-    Delay in seconds, no fractional delay. An absolute time offset is applied
-    and returned.
+    A mono input signal gets delayed for each channel individually.
+    The simultation point in time is shifted by the smallest delay provided,
+    which allows negative delays as well.
 
     Parameters
     ----------
@@ -179,7 +180,7 @@ def apply_delays(signal, delays, fs=None):
     Returns
     -------
     out : (N, C) numpy.ndarray
-        Output signals (with N samples) per channel C.
+        Output signals (column represents channel).
     t_offset : float
         Simulation point in time offset (seconds).
 
