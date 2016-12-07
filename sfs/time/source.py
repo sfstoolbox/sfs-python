@@ -15,8 +15,8 @@ from .. import defs
 def point(xs, signal, t, grid, fs=None, c=None):
     r"""Source model for a point source: 3D Green's function.
 
-    Calculates the scalar sound pressure field for a given point in time,
-    evoked by source excitation signal.
+    Calculates the scalar sound pressure field for a given point in
+    time, evoked by source excitation signal.
 
     Parameters
     ----------
@@ -37,13 +37,15 @@ def point(xs, signal, t, grid, fs=None, c=None):
     Returns
     -------
     numpy.ndarray
-        Scalar sound pressure field, evaluated at positions given by *grid*.
+        Scalar sound pressure field, evaluated at positions given by
+        *grid*.
 
     Notes
     -----
     .. math::
 
-        g(x-x_s,t) = \frac{1}{4 \pi |x - x_s|} \dirac{t - \frac{|x - x_s|}{c}}
+        g(x-x_s,t) = \frac{1}{4 \pi |x - x_s|} \dirac{t - \frac{|x -
+        x_s|}{c}}
 
     """
     xs = util.asarray_1d(xs)

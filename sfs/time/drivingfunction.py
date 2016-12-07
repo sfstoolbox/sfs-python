@@ -133,8 +133,8 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
 def driving_signals(delays, weights, signal, fs=None):
     """Get driving signals per secondary source.
 
-    Returned signals are the delayed and weighted mono input signal (with N
-    samples) per channel (C).
+    Returned signals are the delayed and weighted mono input signal
+    (with N samples) per channel (C).
 
     Parameters
     ----------
@@ -164,8 +164,8 @@ def driving_signals(delays, weights, signal, fs=None):
 def apply_delays(signal, delays, fs=None):
     """Apply delays for every channel.
 
-    A mono input signal gets delayed for each channel individually.
-    The simultation point in time is shifted by the smallest delay provided,
+    A mono input signal gets delayed for each channel individually. The
+    simultation point in time is shifted by the smallest delay provided,
     which allows negative delays as well.
 
     Parameters

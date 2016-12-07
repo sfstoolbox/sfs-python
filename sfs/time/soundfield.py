@@ -8,17 +8,18 @@ from .source import point
 
 
 def p_array(x0, d, channel_weights, t, grid, source=point, fs=None, c=None):
-    """Compute sound field for an array of secondary sources for a given time.
+    """Compute sound field for an array of secondary sources.
 
     Parameters
     ----------
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     d : (N, C) array_like
-        Specifies the signals (with N samples) fed into each secondary source
-        channel C (columns).
+        Specifies the signals (with N samples) fed into each secondary
+        source channel C (columns).
     channel_weights : (C,) array_like
-        Additional weights applied during integration, e.g. source tapering.
+        Additional weights applied during integration, e.g. source
+        tapering.
     t : float
         Simulation point in time (seconds).
     grid : triple of array_like
