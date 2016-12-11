@@ -256,5 +256,6 @@ def wfs_prefilter(dim='2.5D', N=128, fl=50, fu=2000, fs=None, c=None):
 
     h = np.fft.ifft(np.concatenate((desired, desired[-1:0:-1])))
     h = np.roll(np.real(h), numbins - 1)
+    h = h / np.sqrt(np.sum(abs(h)**2))  # normalize energy
     delay = (numbins - 1) / fs
     return h, delay
