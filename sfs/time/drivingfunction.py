@@ -197,3 +197,64 @@ def apply_delays(signal, delays, fs=None):
     for channel, cdelay in enumerate(delays_samples):
         out[cdelay:cdelay + len(signal), channel] = signal
     return out, offset_samples / fs
+
+
+def wfs_prefilter(dim='2.5D', N=128, fl=50, fu=2000, fs=None, c=None):
+    """Get pre-equalization filter for WFS.
+
+    Rising slope with 3dB/oct ('2.5D') or 6dB/oct ('2D' and '3D').
+    Constant magnitude below fl and above fu.
+    Type 1 linear phase FIR filter of order N.
+    Simple design via "frequency sampling method".
+
+    Parameters
+    ----------
+    N : int, optional
+        Filter order, shall be even. For odd N, N+1 is used.
+    dim : str, optional
+        Dimensionality, must be '2D', '2.5D' or '3D'.
+    fl : int, optional
+        Lower corner frequency in Hertz.
+    fu : int, optional
+        Upper corner frequency in Hertz.
+        (Should be around spatial aliasing limit.)
+    fs : int, optional
+        Sampling frequency in Hertz.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    h : (N+1,) numpy.ndarray
+        Filter taps.
+    delay : float
+        Pre-delay in seconds.
+
+    """
+    N = 2*(int(N + 1)//2)  # for odd N, use N+1 instead
+    if fs is None:
+        fs = defs.fs
+    if c is None:
+        c = defs.c
+
+    numbins = int(N/2 + 1)
+    delta_f = fs / (2*numbins - 1)
+    f = np.arange(numbins) * delta_f
+    if dim == '2D' or dim == '3D':
+        alpha = 1
+    elif dim == '2.5D':
+        alpha = 0.5
+
+    desired = np.power(2 * np.pi * f / c, alpha)
+    low_shelf = np.power(2 * np.pi * fl / c, alpha)
+    high_shelf = np.power(2 * np.pi * fu / c, alpha)
+
+    l_index = int(np.ceil(fl / delta_f))
+    u_index = int(min(np.ceil(fu / delta_f), numbins - 1))
+    desired[:l_index] = low_shelf
+    desired[u_index:] = min(high_shelf, desired[u_index])
+
+    h = np.fft.ifft(np.concatenate((desired, desired[-1:0:-1])))
+    h = np.roll(np.real(h), numbins - 1)
+    delay = (numbins - 1) / fs
+    return h, delay
