@@ -210,7 +210,7 @@ def wfs_prefilter(dim='2.5D', N=128, fl=50, fu=2000, fs=None, c=None):
     Parameters
     ----------
     N : int, optional
-        Filter order, shall be even. For odd N, N+1 is used.
+        Filter order, shall be even.
     dim : str, optional
         Dimensionality, must be '2D', '2.5D' or '3D'.
     fl : int, optional
@@ -231,7 +231,8 @@ def wfs_prefilter(dim='2.5D', N=128, fl=50, fu=2000, fs=None, c=None):
         Pre-delay in seconds.
 
     """
-    N = 2*(int(N + 1)//2)  # for odd N, use N+1 instead
+    if N % 2:
+        raise ValueError('N must be an even int.')
     if fs is None:
         fs = defs.fs
     if c is None:
@@ -244,18 +245,13 @@ def wfs_prefilter(dim='2.5D', N=128, fl=50, fu=2000, fs=None, c=None):
         alpha = 1
     elif dim == '2.5D':
         alpha = 0.5
-
     desired = np.power(2 * np.pi * f / c, alpha)
     low_shelf = np.power(2 * np.pi * fl / c, alpha)
     high_shelf = np.power(2 * np.pi * fu / c, alpha)
+    desired = np.clip(desired, low_shelf, high_shelf)
 
-    l_index = int(np.ceil(fl / delta_f))
-    u_index = int(min(np.ceil(fu / delta_f), numbins - 1))
-    desired[:l_index] = low_shelf
-    desired[u_index:] = min(high_shelf, desired[u_index])
-
-    h = np.fft.ifft(np.concatenate((desired, desired[-1:0:-1])))
-    h = np.roll(np.real(h), numbins - 1)
+    h = np.fft.irfft(desired, 2*numbins - 1)
+    h = np.roll(h, numbins - 1)
     h = h / np.sqrt(np.sum(abs(h)**2))  # normalize energy
     delay = (numbins - 1) / fs
     return h, delay
