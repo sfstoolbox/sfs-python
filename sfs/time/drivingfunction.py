@@ -223,7 +223,7 @@ def driving_signals(delays, weights, signal):
     return util.DelayedSignal(data * weights, samplerate, signal_offset)
 
 
-def apply_delays(signal, delays):
+def apply_delays(signal, delays, interpolator=None):
     """Apply delays for every channel.
 
     Parameters
@@ -233,6 +233,8 @@ def apply_delays(signal, delays):
         rate (in Hertz).  A `DelayedSignal` object can also be used.
     delays : (C,) array_like
         Delay in seconds for each channel (C), negative values allowed.
+    interpolator : function, optional
+        Interpolator for fractional delays. See: TODO
 
     Returns
     -------
@@ -247,10 +249,14 @@ def apply_delays(signal, delays):
     delays = util.asarray_1d(delays)
     delays += initial_offset
 
-    delays_samples = np.rint(samplerate * delays).astype(int)
-    offset_samples = delays_samples.min()
-    delays_samples -= offset_samples
-    out = np.zeros((delays_samples.max() + len(data), len(delays_samples)))
-    for column, row in enumerate(delays_samples):
-        out[row:row + len(data), column] = data
-    return util.DelayedSignal(out, samplerate, offset_samples / samplerate)
+    integer_delays = np.rint(samplerate * delays).astype(int)
+    fractional_delays = samplerate * delays - integer_delays
+    offset = integer_delays.min()
+    integer_delays -= offset
+    out = np.zeros((integer_delays.max() + len(data), len(integer_delays)))
+    for channel, cdelay in enumerate(integer_delays):
+        out[cdelay:cdelay + len(data), channel] = data
+    if interpolator is not None:
+        out, filter_offset = interpolator(out, fractional_delays)
+        offset += filter_offset
+    return util.DelayedSignal(out, samplerate, offset / samplerate)
