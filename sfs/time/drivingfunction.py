@@ -161,7 +161,7 @@ def driving_signals(delays, weights, signal, fs=None):
     return d * weights, t_offset
 
 
-def apply_delays(signal, delays, fs=None):
+def apply_delays(signal, delays, interpolator=None, fs=None):
     """Apply delays for every channel.
 
     A mono input signal gets delayed for each channel individually. The
@@ -174,6 +174,8 @@ def apply_delays(signal, delays, fs=None):
         Mono excitation signal (with N samples) which gets delayed.
     delays : (C,) array_like
         Delay in seconds for each channel (C), negative values allowed.
+    interpolator : function, optional
+        Interpolator for fractional delays. See: TODO
     fs: int, optional
         Sampling frequency in Hertz.
 
@@ -190,10 +192,14 @@ def apply_delays(signal, delays, fs=None):
     signal = util.asarray_1d(signal)
     delays = util.asarray_1d(delays)
 
-    delays_samples = np.rint(fs * delays).astype(int)
-    offset_samples = delays_samples.min()
-    delays_samples -= offset_samples
-    out = np.zeros((delays_samples.max() + len(signal), len(delays_samples)))
-    for channel, cdelay in enumerate(delays_samples):
+    integer_delays = np.rint(fs * delays).astype(int)
+    fractional_delays = fs * delays - integer_delays
+    offset = integer_delays.min()
+    integer_delays -= offset
+    out = np.zeros((integer_delays.max() + len(signal), len(integer_delays)))
+    for channel, cdelay in enumerate(integer_delays):
         out[cdelay:cdelay + len(signal), channel] = signal
-    return out, offset_samples / fs
+    if interpolator is not None:
+        out, filter_offset = interpolator(out, fractional_delays)
+        offset += filter_offset
+    return out, offset / fs
