@@ -62,4 +62,27 @@ plt.grid()
 sfs.plot.virtualsource_2d([0, 0], npw, type='plane')
 plt.title('impulse_pw_wfs_25d')
 plt.savefig('impulse_pw_wfs_25d.png')
+
+# FOCUSED SOURCE
+xs = np.r_[0.5, 0.5, 0]  # position of virtual source
+xref = np.r_[0, 0, 0]
+nfs = sfs.util.normalize_vector(xref - xs)  # main n of fsource
+t = 0.003  # compute driving signals
+d_delay, d_weight = sfs.time.drivingfunction.wfs_25d_focused(x0, n0, xs)
+d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
+
+# test soundfield
+a = sfs.mono.drivingfunction.source_selection_focused(nfs, x0, xs)
+twin = sfs.tapering.tukey(a, .3)
+p = sfs.time.soundfield.p_array(x0, d, twin * a0, t, grid)
+p = p * 100  # scale absolute amplitude
+
+plt.figure(figsize=(10, 10))
+sfs.plot.level(p, grid, cmap=my_cmap)
+sfs.plot.loudspeaker_2d(x0, n0, twin)
+plt.grid()
+sfs.plot.virtualsource_2d(xs)
+plt.title('impulse_fs_wfs_25d')
+plt.savefig('impulse_fs_wfs_25d.png')
+
 # plt.show()

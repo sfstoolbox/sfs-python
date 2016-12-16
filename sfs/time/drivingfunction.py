@@ -130,6 +130,70 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     return delays, weights
 
 
+def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
+    r"""Point source by 2.5-dimensional WFS.
+
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of secondary source orientations.
+    xs : (3,) array_like
+        Virtual source position.
+    xref : (3,) array_like, optional
+        Reference position
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    delays : (N,) numpy.ndarray
+        Delays of secondary sources in seconds.
+    weights: (N,) numpy.ndarray
+        Weights of secondary sources.
+
+    Notes
+    -----
+    2.5D correction factor
+
+    .. math::
+
+         g_0 = \sqrt{\frac{|x_\mathrm{ref} - x_0|}
+         {|x_0-x_s| + |x_\mathrm{ref}-x_0|}}
+
+
+    d using a point source as source model
+
+    .. math::
+
+         d_{2.5D}(x_0,t) = h(t)
+         \frac{g_0  \scalarprod{(x_0 - x_s)}{n_0}}
+         {|x_0 - x_s|^{3/2}}
+         \dirac{t + \frac{|x_0 - x_s|}{c}}
+
+    with wfs(2.5D) prefilter h(t), which is not implemented yet.
+
+    References
+    ----------
+    See http://sfstoolbox.org/en/latest/#equation-d.wfs.fs.2.5D
+
+    """
+    if c is None:
+        c = defs.c
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+    g0 = np.sqrt(np.linalg.norm(xref - x0, axis=1)
+                 / (np.linalg.norm(xref - x0, axis=1) + r))
+    delays = -r/c
+    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
+    return delays, weights
+
+
 def driving_signals(delays, weights, signal):
     """Get driving signals per secondary source.
 
