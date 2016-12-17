@@ -193,7 +193,7 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
     return delays, weights
 
 
-def driving_signals(delays, weights, signal):
+def driving_signals(delays, weights, signal, interpolator=None):
     """Get driving signals per secondary source.
 
     Returned signals are the delayed and weighted mono input signal
@@ -208,6 +208,8 @@ def driving_signals(delays, weights, signal):
     signal : (N,) array_like + float
         Excitation signal consisting of (mono) audio data and a sampling
         rate (in Hertz).  A `DelayedSignal` object can also be used.
+    interpolator : function, optional
+        Interpolator for fractional delays. See: TODO
 
     Returns
     -------
@@ -219,7 +221,8 @@ def driving_signals(delays, weights, signal):
     """
     delays = util.asarray_1d(delays)
     weights = util.asarray_1d(weights)
-    data, samplerate, signal_offset = apply_delays(signal, delays)
+    data, samplerate, signal_offset = apply_delays(
+        signal, delays, interpolator)
     return util.DelayedSignal(data * weights, samplerate, signal_offset)
 
 
