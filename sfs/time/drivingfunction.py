@@ -130,7 +130,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     return delays, weights
 
 
-def driving_signals(delays, weights, signal, fs=None):
+def driving_signals(delays, weights, signal, interpolator=None, fs=None):
     """Get driving signals per secondary source.
 
     Returned signals are the delayed and weighted mono input signal
@@ -144,6 +144,8 @@ def driving_signals(delays, weights, signal, fs=None):
         Amplitude weighting factor for each channel.
     signal : (N,) array_like
         Excitation signal (mono) which gets weighted and delayed.
+    interpolator : function, optional
+        Interpolator for fractional delays. See: TODO
     fs: int, optional
         Sampling frequency in Hertz.
 
@@ -157,7 +159,7 @@ def driving_signals(delays, weights, signal, fs=None):
     """
     delays = util.asarray_1d(delays)
     weights = util.asarray_1d(weights)
-    d, t_offset = apply_delays(signal, delays, fs)
+    d, t_offset = apply_delays(signal, delays, interpolator, fs)
     return d * weights, t_offset
 
 
