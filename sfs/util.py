@@ -18,8 +18,8 @@ def rotation_matrix(n1, n2):
         Rotation matrix.
 
     """
-    n1 = normal_vector(n1)
-    n2 = normal_vector(n2)
+    n1 = normalize_vector(n1)
+    n2 = normalize_vector(n2)
     I = np.identity(3)
     if np.all(n1 == n2):
         return I  # no rotation
@@ -218,7 +218,7 @@ def broadcast_zip(*args):
     return zip(*np.broadcast_arrays(*args))
 
 
-def normal_vector(x):
+def normalize_vector(x):
     """Normalize a 1D vector."""
     x = asarray_1d(x)
     return x / np.linalg.norm(x)
