@@ -60,7 +60,7 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         c = defs.c
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     xref = util.asarray_1d(xref)
     g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
     delays = inner1d(n, x0) / c

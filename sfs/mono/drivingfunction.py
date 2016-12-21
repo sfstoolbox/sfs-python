@@ -86,7 +86,7 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
     return 2j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
@@ -106,7 +106,7 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     return wfs_25d_preeq(omega, omalias, c) * \
@@ -179,7 +179,7 @@ def wfs_25d_preeq(omega, omalias, c):
 def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by simple delay of secondary sources."""
     x0 = util.asarray_of_rows(x0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
     return np.exp(-1j * k * np.inner(n, x0))
 
@@ -191,7 +191,7 @@ def source_selection_plane(n0, n):
 
     """
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     return np.inner(n, n0) >= defs.selection_tolerance
 
 
@@ -225,7 +225,7 @@ def source_selection_focused(ns, x0, xs):
     """
     x0 = util.asarray_of_rows(x0)
     xs = util.asarray_1d(xs)
-    ns = util.asarray_1d(ns)
+    ns = util.normalize_vector(ns)
     ds = xs - x0
     return inner1d(ns, ds) >= defs.selection_tolerance
 
@@ -251,7 +251,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     """
     x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
     M = _max_order_circular_harmonics(len(x0), max_order)
@@ -305,7 +305,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     """
     x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
     M = _max_order_circular_harmonics(len(x0), max_order)
@@ -345,7 +345,7 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
     return k * n[1] * np.exp(-1j * k * n[0] * x0[:, 0])
 
@@ -361,7 +361,7 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     return 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
@@ -420,6 +420,7 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
 
     """
     x0 = np.asarray(x0)
+    n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
     phi_s = np.arctan2(n[1], n[0]) + np.pi
     L = x0.shape[0]
@@ -477,6 +478,7 @@ def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c
 
     """
     x0 = np.asarray(x0)
+    n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
     phi_s = np.arctan2(n[1], n[0]) + np.pi
     L = x0.shape[0]
