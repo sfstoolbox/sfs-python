@@ -325,14 +325,16 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         plot(d, selection, secondary_source)
 
     """
+    if max_order is None:
+        max_order = util.max_order_circular_harmonics(len(x0))
+
     x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
     n = util.normalize_vector(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0), max_order)
     d = 0
-    for m in range(-M, M + 1):
+    for m in range(-max_order, max_order + 1):
         d += 1j**-m / hankel2(m, k * r0) * np.exp(1j * m * (phi0 - phi))
     selection = util.source_selection_all(len(x0))
     return -2j / (np.pi*r0) * d, selection, secondary_source_point(omega, c)
@@ -361,16 +363,18 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
         plot(d, selection, secondary_source)
 
     """
+    if max_order is None:
+        max_order = util.max_order_circular_harmonics(len(x0))
+
     x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
     xs = util.asarray_1d(xs)
     phi, _, r = util.cart2sph(*xs)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0), max_order)
-    hr = util.spherical_hn2(range(0, M + 1), k * r)
-    hr0 = util.spherical_hn2(range(0, M + 1), k * r0)
+    hr = util.spherical_hn2(range(0, max_order + 1), k * r)
+    hr0 = util.spherical_hn2(range(0, max_order + 1), k * r0)
     d = 0
-    for m in range(-M, M + 1):
+    for m in range(-max_order, max_order + 1):
         d += hr[abs(m)] / hr0[abs(m)] * np.exp(1j * m * (phi0 - phi))
     selection = util.source_selection_all(len(x0))
     return d / (2 * np.pi * r0), selection, secondary_source_point(omega, c)
@@ -399,15 +403,17 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         plot(d, selection, secondary_source)
 
     """
+    if max_order is None:
+        max_order = util.max_order_circular_harmonics(len(x0))
+
     x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
     n = util.normalize_vector(n)
     phi, _, r = util.cart2sph(*n)
     phi0 = util.cart2sph(*x0.T)[0]
-    M = _max_order_circular_harmonics(len(x0), max_order)
     d = 0
-    hn2 = util.spherical_hn2(range(0, M + 1), k * r0)
-    for m in range(-M, M + 1):
+    hn2 = util.spherical_hn2(range(0, max_order + 1), k * r0)
+    for m in range(-max_order, max_order + 1):
         d += (-1j)**abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
     selection = util.source_selection_all(len(x0))
     return 2*1j / r0 * d, selection, secondary_source_point(omega, c)
@@ -782,8 +788,3 @@ def secondary_source_line(omega, c):
         return _source.line(omega, position, grid, c)
 
     return secondary_source
-
-
-def _max_order_circular_harmonics(N, max_order):
-    """Compute order of 2D HOA."""
-    return N // 2 if max_order is None else max_order

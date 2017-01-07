@@ -616,3 +616,45 @@ def source_selection_focused(ns, x0, xs):
 def source_selection_all(N):
     """Select all secondary sources."""
     return np.ones(N, dtype=bool)
+
+
+def max_order_circular_harmonics(N):
+    r"""Maximum order of 2D/2.5D HOA.
+
+    It returns the maximum order for which no spatial aliasing appears.
+    It is given on page 132 of [Ahrens2012]_ as
+
+    .. math::
+        \text{max_order} =
+            \begin{cases}
+                N/2 - 1 & \text{even}\;N \\
+                (N-1)/2 & \text{odd}\;N,
+            \end{cases}
+
+    which is equivalent to
+
+    .. math::
+        \text{max_order} = \big\lfloor \frac{N - 1}{2} \big\rfloor.
+
+    Parameters
+    ----------
+    N : int
+        Number of secondary sources.
+
+    """
+    return (N - 1) // 2
+
+
+def max_order_spherical_harmonics(N):
+    r"""Maximum order of 3D HOA.
+
+    .. math::
+        \text{max_order} = \lfloor \sqrt{N} \rfloor - 1.
+
+    Parameters
+    ----------
+    N : int
+        Number of secondary sources.
+
+    """
+    return int(np.sqrt(N) - 1)

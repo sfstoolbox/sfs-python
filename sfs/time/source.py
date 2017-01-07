@@ -17,7 +17,8 @@ The Green's function describes the spatial sound propagation over time.
     ts = rs / sfs.default.c  # time-of-arrival at origin
 
     # Impulsive excitation
-    signal = unit_impulse(512), 44100
+    fs = 44100
+    signal = unit_impulse(512), fs
 
     grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
