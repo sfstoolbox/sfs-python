@@ -3,7 +3,8 @@ from __future__ import division
 import matplotlib.pyplot as plt
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
-from matplotlib.collections import PatchCollection
+from matplotlib.collections import PatchCollection, LineCollection
+from matplotlib.colors import ListedColormap
 from mpl_toolkits import axes_grid1
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
@@ -84,6 +85,38 @@ def secondarysource_2d(x0, n0, grid=None):
     for x00 in x0:
         ss = plt.Circle(x00[0:2], .05, edgecolor='k', facecolor='k')
         ax.add_artist(ss)
+
+
+def secondarysourcecontour_2d(x0, a0=True, ax=None):
+    """Draw contour of secondary source distribution as polygon.
+
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Secondary source positions.
+    a0 : float or (N,) array_like, optional
+        Active secondary sources.
+    ax : Axes object, optional
+        The loudspeakers are plotted into this `matplotlib.axes.Axes`
+        object or -- if not specified -- into the current axes.
+    """
+    x0 = util.asarray_of_rows(x0)
+    a0 = util.asarray_1d(a0)
+
+    # colormap with black and gray
+    cmap = ListedColormap(np.stack((np.zeros(3), .5*np.ones(3))))
+
+    # setup line collection with secondary source contour
+    points = np.array([x0[:, 0], x0[:, 1]]).T.reshape(-1, 1, 2)
+    segments = np.concatenate([points[:-1], points[1:]], axis=1)
+    lc = LineCollection(segments, cmap=cmap)
+    lc.set_linewidth(2)
+    lc.set_array(np.where(a0, 0, 1))
+
+    # add collection of lines to current axis
+    if ax is None:
+        ax = plt.gca()
+    plt.gca().add_collection(lc)
 
 
 def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
