@@ -8,6 +8,8 @@ The Green's function describes the spatial sound propagation over time.
 
 from __future__ import division
 import numpy as np
+from scipy.interpolate import interp1d
+from scipy.signal import resample
 from .. import util
 from .. import defs
 
@@ -59,6 +61,16 @@ def point(xs, signal, t, grid, fs=None, c=None):
     # evaluate g over grid
     g_amplitude = 1 / (4 * np.pi * r)
     g_time = r / c
-    p = np.interp(t - g_time, np.arange(len(signal)) / fs, signal,
+    
+    oversampling = 10
+    signal = resample(signal, oversampling * len(signal))
+    
+    p = np.interp(t - g_time, np.arange(len(signal)) / (oversampling*fs), signal,
                   left=0, right=0)
+    
+    
+    
+    #interpolator = interp1d(np.arange(len(signal)), signal, kind='cubic', bounds_error=False, fill_value=0)
+    #p = interpolator((t - g_time) * fs)
+    
     return p * g_amplitude
