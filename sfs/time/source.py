@@ -13,7 +13,7 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, observation_time, grid, c=None):
+def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -59,19 +59,10 @@ def point(xs, signal, observation_time, grid, c=None):
     weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-
-    oversampling = 10
-    data = resample(data, oversampling * len(data))
-
-    p = np.interp(base_time - delays, np.arange(len(data)) / (oversampling*fs),
-            data,
-                  left=0, right=0)
-
-
-
-    #interpolator = interp1d(np.arange(len(data)), data, kind='cubic', bounds_error=False, fill_value=0)
-    #p = interpolator((base_time - delays) * fs)
-
+    interpolator = interp1d(np.arange(len(data)), data,
+                            kind=interpolator_kind, bounds_error=False,
+                            fill_value=0)
+    p = interpolator((base_time - delays) * samplerate)
     return p * weights
 
 
