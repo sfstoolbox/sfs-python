@@ -94,7 +94,7 @@ def secondarysourcecontour_2d(x0, a0=True, ax=None):
     ----------
     x0 : (N, 3) array_like
         Secondary source positions.
-    a0 : float or (N,) array_like, optional
+    a0 : bool or (N,) array_like, optional
         Active secondary sources.
     ax : Axes object, optional
         The loudspeakers are plotted into this `matplotlib.axes.Axes`
