@@ -7,6 +7,8 @@ The Green's function describes the spatial sound propagation over time.
 """
 
 import numpy as np
+from scipy.interpolate import interp1d
+from scipy.signal import resample
 from .. import util
 from .. import defs
 
@@ -57,9 +59,20 @@ def point(xs, signal, observation_time, grid, c=None):
     weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    return weights * np.interp(base_time - delays,
-                               np.arange(len(data)) / samplerate,
-                               data, left=0, right=0)
+
+    oversampling = 10
+    data = resample(data, oversampling * len(data))
+
+    p = np.interp(base_time - delays, np.arange(len(data)) / (oversampling*fs),
+            data,
+                  left=0, right=0)
+
+
+
+    #interpolator = interp1d(np.arange(len(data)), data, kind='cubic', bounds_error=False, fill_value=0)
+    #p = interpolator((base_time - delays) * fs)
+
+    return p * weights
 
 
 def point_image_sources(x0, signal, observation_time, grid, L, max_order,
