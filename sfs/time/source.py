@@ -8,7 +8,6 @@ The Green's function describes the spatial sound propagation over time.
 
 import numpy as np
 from scipy.interpolate import interp1d
-from scipy.signal import resample
 from .. import util
 from .. import defs
 
