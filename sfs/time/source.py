@@ -61,7 +61,7 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
     base_time = observation_time - signal_offset
     if interpolator_kind == 'sinc':
         p = _sinc_interp(data, np.arange(len(data)),
-                         np.array((base_time - delays) * samplerate), samplerate)
+                         np.array((base_time - delays) * samplerate))
     else:
         interpolator = interp1d(np.arange(len(data)), data,
                                 kind=interpolator_kind, bounds_error=False,
@@ -70,21 +70,29 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
     return p * weights
 
 
-def _sinc_interp(x, s, u, fs):
+def _sinc_interp(x, s, u):
     """
-    Interpolates x, sampled at "s" instants
-    Output y is sampled at "u" instants ("u" for "upsampled")
+    Ideal sinc interpolation of a signal
+    adapted from https://gist.github.com/endolith/1297227
 
-    from Matlab:
-    http://phaseportrait.blogspot.com/2008/06/sinc-interpolation-in-matlab.html
+    Parameters
+    ----------
+    x : (N,) array_like
+        Signal to be interpolated.
+    s : (N,) array_like
+        Sampling instants of signal.
+    u : (N,) array_like
+        Sampling instants after interpolation.
+
+    Returns
+    -------
+    numpy.ndarray
+        Interpolated signal
     """
 
-    #if len(x) != len(s):
-    #    raise Exception, 'x and s must be the same length'
-
-    # Find the period
+    # sampling period
     T = s[1] - s[0]
-
+    # perform sinc interpolation
     sincM = np.tile(u, (len(s), 1)) - np.tile(s[:, np.newaxis], (1, len(u)))
     y = np.dot(x, np.sinc(sincM/T))
 
