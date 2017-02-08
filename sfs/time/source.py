@@ -50,6 +50,7 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
     xs = util.asarray_1d(xs)
     data, samplerate, signal_offset = util.as_delayed_signal(signal)
     data = util.asarray_1d(data)
+    observation_time = util.asarray_1d(observation_time)
     grid = util.as_xyz_components(grid)
     if c is None:
         c = defs.c
@@ -58,11 +59,36 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
     weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    interpolator = interp1d(np.arange(len(data)), data,
-                            kind=interpolator_kind, bounds_error=False,
-                            fill_value=0)
-    p = interpolator((base_time - delays) * samplerate)
+    if interpolator_kind == 'sinc':
+        p = _sinc_interp(data, np.arange(len(data)),
+                         np.array((base_time - delays) * samplerate), samplerate)
+    else:
+        interpolator = interp1d(np.arange(len(data)), data,
+                                kind=interpolator_kind, bounds_error=False,
+                                fill_value=0)
+        p = interpolator((base_time - delays) * samplerate)
     return p * weights
+
+
+def _sinc_interp(x, s, u, fs):
+    """
+    Interpolates x, sampled at "s" instants
+    Output y is sampled at "u" instants ("u" for "upsampled")
+
+    from Matlab:
+    http://phaseportrait.blogspot.com/2008/06/sinc-interpolation-in-matlab.html
+    """
+
+    #if len(x) != len(s):
+    #    raise Exception, 'x and s must be the same length'
+
+    # Find the period
+    T = s[1] - s[0]
+
+    sincM = np.tile(u, (len(s), 1)) - np.tile(s[:, np.newaxis], (1, len(u)))
+    y = np.dot(x, np.sinc(sincM/T))
+
+    return y
 
 
 def point_image_sources(x0, signal, observation_time, grid, L, max_order,
