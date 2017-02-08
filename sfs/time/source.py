@@ -13,7 +13,7 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear', zeropad=True):
+def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear', zeropad=2):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -34,8 +34,9 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear', zero
         Sampling frequency in Hertz.
     c : float, optional
         Speed of sound.
-    zeropad : bool, optional
-        zerodap time signals with 2 samples for spline interpolation.
+    zeropad : int
+        pre- & post-zeropad time signals with N samples.
+        (For interpolation only.)
 
     Returns
     -------
@@ -64,13 +65,13 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear', zero
     g_amplitude = 1 / (4 * np.pi * r)
     g_time = r / c
     if zeropad:
-        time_instants = np.arange(-2, len(signal)+2)
-        signal = np.concatenate([[0, 0], signal, [0, 0]])
+        time_instants = np.arange(-zeropad, len(signal)+zeropad)
+        signal = np.concatenate([np.zeros(zeropad), signal, np.zeros(zeropad)])
     else:
         time_instants = np.arange(len(signal))
     if interpolator_kind is 'sinc':
         p = _sinc_interp(signal, time_instants,
-                         np.array((t - g_time) * fs), fs)
+                         np.array((t - g_time) * fs))
     else:
         interpolator = interp1d(time_instants, signal,
                                 kind=interpolator_kind, bounds_error=False,
@@ -81,21 +82,29 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear', zero
     return p * g_amplitude
 
 
-def _sinc_interp(x, s, u, fs):
+def _sinc_interp(x, s, u):
     """
-    Interpolates x, sampled at "s" instants
-    Output y is sampled at "u" instants ("u" for "upsampled")
+    Ideal sinc interpolation of a signal
+    adapted from https://gist.github.com/endolith/1297227
 
-    from Matlab:
-    http://phaseportrait.blogspot.com/2008/06/sinc-interpolation-in-matlab.html
+    Parameters
+    ----------
+    x : (N,) array_like
+        Signal to be interpolated.
+    s : (N,) array_like
+        Sampling instants of signal.
+    u : (N,) array_like
+        Sampling instants after interpolation.
+
+    Returns
+    -------
+    numpy.ndarray
+        Interpolated signal
     """
 
-    #if len(x) != len(s):
-    #    raise Exception, 'x and s must be the same length'
-
-    # Find the period
+    # sampling period
     T = s[1] - s[0]
-
+    # perform sinc interpolation
     sincM = np.tile(u, (len(s), 1)) - np.tile(s[:, np.newaxis], (1, len(u)))
     y = np.dot(x, np.sinc(sincM/T))
 
