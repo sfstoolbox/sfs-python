@@ -51,6 +51,7 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear'):
     """
     xs = util.asarray_1d(xs)
     signal = util.asarray_1d(signal)
+    t = util.asarray_1d(t)
     grid = util.as_xyz_components(grid)
     if fs is None:
         fs = defs.fs
@@ -61,10 +62,35 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear'):
     g_amplitude = 1 / (4 * np.pi * r)
     g_time = r / c
 
-    interpolator = interp1d(np.arange(len(signal)), signal,
-                            kind=interpolator_kind, bounds_error=False,
-                            fill_value=0)
+    if interpolator_kind is 'sinc':
+        p = _sinc_interp(signal, np.arange(len(signal)),
+                         np.array((t - g_time) * fs), fs)
+    else:
+        interpolator = interp1d(np.arange(len(signal)), signal,
+                                kind=interpolator_kind, bounds_error=False,
+                                fill_value=0)
 
-    p = interpolator((t - g_time) * fs)
+        p = interpolator((t - g_time) * fs)
 
     return p * g_amplitude
+
+
+def _sinc_interp(x, s, u, fs):
+    """
+    Interpolates x, sampled at "s" instants
+    Output y is sampled at "u" instants ("u" for "upsampled")
+
+    from Matlab:
+    http://phaseportrait.blogspot.com/2008/06/sinc-interpolation-in-matlab.html        
+    """
+
+    #if len(x) != len(s):
+    #    raise Exception, 'x and s must be the same length'
+
+    # Find the period
+    T = s[1] - s[0]
+
+    sincM = np.tile(u, (len(s), 1)) - np.tile(s[:, np.newaxis], (1, len(u)))
+    y = np.dot(x, np.sinc(sincM/T))
+
+    return y
