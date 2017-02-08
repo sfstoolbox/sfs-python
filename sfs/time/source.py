@@ -12,7 +12,7 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'):
+def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear', zeropad=True):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -32,6 +32,8 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
         See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
+    zeropad : bool, optional
+        zeropad time signals with 2 samples for spline interpolation.
 
     Returns
     -------
@@ -59,11 +61,16 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
     weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    if interpolator_kind == 'sinc':
-        p = _sinc_interp(data, np.arange(len(data)),
-                         np.array((base_time - delays) * samplerate))
+    if zeropad:
+        time_instants = np.arange(-2, len(data) + 2)
+        data = np.concatenate([[0, 0], data, [0, 0]])
     else:
-        interpolator = interp1d(np.arange(len(data)), data,
+        time_instants = np.arange(len(data))
+    if interpolator_kind is 'sinc':
+        p = _sinc_interp(data, time_instants,
+                         np.array((base_time - delays) * samplerate), samplerate)
+    else:
+        interpolator = interp1d(time_instants, data,
                                 kind=interpolator_kind, bounds_error=False,
                                 fill_value=0)
         p = interpolator((base_time - delays) * samplerate)
