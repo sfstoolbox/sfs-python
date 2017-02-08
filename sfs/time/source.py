@@ -13,7 +13,7 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear'):
+def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear', zeropad=True):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -34,6 +34,8 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear'):
         Sampling frequency in Hertz.
     c : float, optional
         Speed of sound.
+    zeropad : bool, optional
+        zerodap time signals with 2 samples for spline interpolation.
 
     Returns
     -------
@@ -61,12 +63,16 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator_kind='linear'):
     # evaluate g over grid
     g_amplitude = 1 / (4 * np.pi * r)
     g_time = r / c
-
+    if zeropad:
+        time_instants = np.arange(-2, len(signal)+2)
+        signal = np.concatenate([[0, 0], signal, [0, 0]])
+    else:
+        time_instants = np.arange(len(signal))
     if interpolator_kind is 'sinc':
-        p = _sinc_interp(signal, np.arange(len(signal)),
+        p = _sinc_interp(signal, time_instants,
                          np.array((t - g_time) * fs), fs)
     else:
-        interpolator = interp1d(np.arange(len(signal)), signal,
+        interpolator = interp1d(time_instants, signal,
                                 kind=interpolator_kind, bounds_error=False,
                                 fill_value=0)
 
@@ -81,7 +87,7 @@ def _sinc_interp(x, s, u, fs):
     Output y is sampled at "u" instants ("u" for "upsampled")
 
     from Matlab:
-    http://phaseportrait.blogspot.com/2008/06/sinc-interpolation-in-matlab.html        
+    http://phaseportrait.blogspot.com/2008/06/sinc-interpolation-in-matlab.html
     """
 
     #if len(x) != len(s):
