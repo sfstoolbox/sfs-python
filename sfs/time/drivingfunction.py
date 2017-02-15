@@ -261,5 +261,5 @@ def apply_delays(signal, delays, interpolator=None, **kwargs):
         out[cdelay:cdelay + len(data), channel] = data
     if interpolator is not None:
         out, filter_offset = interpolator(out, fractional_delays, **kwargs)
-        offset += filter_offset
+        offset -= filter_offset
     return util.DelayedSignal(out, samplerate, offset / samplerate)
