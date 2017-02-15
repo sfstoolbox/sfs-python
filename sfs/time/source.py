@@ -105,7 +105,9 @@ def _sinc_interp(x, s, u):
     # sampling period
     T = s[1] - s[0]
     # perform sinc interpolation
+    shape = u.shape
+    u = u.flatten()
     sincM = np.tile(u, (len(s), 1)) - np.tile(s[:, np.newaxis], (1, len(u)))
     y = np.dot(x, np.sinc(sincM/T))
-
+    y = np.reshape(y, shape)
     return y
