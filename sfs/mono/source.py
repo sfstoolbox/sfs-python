@@ -489,7 +489,7 @@ def plane(omega, x0, n0, grid, c=None):
     """
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
-    n0 = util.asarray_1d(n0)
+    n0 = util.normalize_vector(n0)
     grid = util.as_xyz_components(grid)
     return np.exp(-1j * k * np.inner(grid - x0, n0))
 

@@ -60,7 +60,7 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         c = defs.c
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
-    n = util.asarray_1d(n)
+    n = util.normalize_vector(n)
     xref = util.asarray_1d(xref)
     g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
     delays = inner1d(n, x0) / c
@@ -130,7 +130,71 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     return delays, weights
 
 
-def driving_signals(delays, weights, signal, interpolator=None, fs=None):
+def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
+    r"""Point source by 2.5-dimensional WFS.
+
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of secondary source orientations.
+    xs : (3,) array_like
+        Virtual source position.
+    xref : (3,) array_like, optional
+        Reference position
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    delays : (N,) numpy.ndarray
+        Delays of secondary sources in seconds.
+    weights: (N,) numpy.ndarray
+        Weights of secondary sources.
+
+    Notes
+    -----
+    2.5D correction factor
+
+    .. math::
+
+         g_0 = \sqrt{\frac{|x_\mathrm{ref} - x_0|}
+         {|x_0-x_s| + |x_\mathrm{ref}-x_0|}}
+
+
+    d using a point source as source model
+
+    .. math::
+
+         d_{2.5D}(x_0,t) = h(t)
+         \frac{g_0  \scalarprod{(x_0 - x_s)}{n_0}}
+         {|x_0 - x_s|^{3/2}}
+         \dirac{t + \frac{|x_0 - x_s|}{c}}
+
+    with wfs(2.5D) prefilter h(t), which is not implemented yet.
+
+    References
+    ----------
+    See http://sfstoolbox.org/en/latest/#equation-d.wfs.fs.2.5D
+
+    """
+    if c is None:
+        c = defs.c
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
+    ds = x0 - xs
+    r = np.linalg.norm(ds, axis=1)
+    g0 = np.sqrt(np.linalg.norm(xref - x0, axis=1)
+                 / (np.linalg.norm(xref - x0, axis=1) + r))
+    delays = -r/c
+    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
+    return delays, weights
+
+
+def driving_signals(delays, weights, signal, interpolator=None,):
     """Get driving signals per secondary source.
 
     Returned signals are the delayed and weighted mono input signal
@@ -142,66 +206,60 @@ def driving_signals(delays, weights, signal, interpolator=None, fs=None):
         Delay in seconds for each channel, negative values allowed.
     weights : (C,) array_like
         Amplitude weighting factor for each channel.
-    signal : (N,) array_like
-        Excitation signal (mono) which gets weighted and delayed.
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
     interpolator : function, optional
         Interpolator for fractional delays. See: TODO
-    fs: int, optional
-        Sampling frequency in Hertz.
 
     Returns
     -------
-    driving_signals : (N, C) numpy.ndarray
-        Driving signal per channel (column represents channel).
-    t_offset : float
-        Simulation point in time offset (seconds).
+    `DelayedSignal`
+        A tuple containing the driving signals (in a `numpy.ndarray`
+        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
+        and a (possibly negative) time offset (in seconds).
 
     """
     delays = util.asarray_1d(delays)
     weights = util.asarray_1d(weights)
-    d, t_offset = apply_delays(signal, delays, interpolator, fs)
-    return d * weights, t_offset
+    data, samplerate, signal_offset = apply_delays(signal, delays, interpolator)
+    return util.DelayedSignal(data * weights, samplerate, signal_offset)
 
 
-def apply_delays(signal, delays, interpolator=None, fs=None):
+def apply_delays(signal, delays, interpolator=None):
     """Apply delays for every channel.
-
-    A mono input signal gets delayed for each channel individually. The
-    simultation point in time is shifted by the smallest delay provided,
-    which allows negative delays as well.
 
     Parameters
     ----------
-    signal : (N,) array_like
-        Mono excitation signal (with N samples) which gets delayed.
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
     delays : (C,) array_like
         Delay in seconds for each channel (C), negative values allowed.
     interpolator : function, optional
         Interpolator for fractional delays. See: TODO
-    fs: int, optional
-        Sampling frequency in Hertz.
 
     Returns
     -------
-    out : (N, C) numpy.ndarray
-        Output signals (column represents channel).
-    t_offset : float
-        Simulation point in time offset (seconds).
+    `DelayedSignal`
+        A tuple containing the delayed signals (in a `numpy.ndarray`
+        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
+        and a (possibly negative) time offset (in seconds).
 
     """
-    if fs is None:
-        fs = defs.fs
-    signal = util.asarray_1d(signal)
+    data, samplerate, initial_offset = util.as_delayed_signal(signal)
+    data = util.asarray_1d(data)
     delays = util.asarray_1d(delays)
+    delays += initial_offset
 
-    integer_delays = np.rint(fs * delays).astype(int)
-    fractional_delays = fs * delays - integer_delays
+    integer_delays = np.rint(samplerate * delays).astype(int)
+    fractional_delays = samplerate * delays - integer_delays
     offset = integer_delays.min()
     integer_delays -= offset
-    out = np.zeros((integer_delays.max() + len(signal), len(integer_delays)))
+    out = np.zeros((integer_delays.max() + len(data), len(integer_delays)))
     for channel, cdelay in enumerate(integer_delays):
-        out[cdelay:cdelay + len(signal), channel] = signal
+        out[cdelay:cdelay + len(data), channel] = data
     if interpolator is not None:
         out, filter_offset = interpolator(out, fractional_delays)
         offset += filter_offset
-    return out, offset / fs
+    return util.DelayedSignal(out, samplerate, offset / samplerate)
