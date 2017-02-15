@@ -562,3 +562,38 @@ def spherical_hn2(n, z):
 
     """
     return spherical_jn(n, z) - 1j * spherical_yn(n, z)
+
+
+def _fftconvolve_1d(a, v, axis):
+    """1-d fast convolution along axis. """
+    output_length = a.shape[axis] + v.shape[axis] - 1
+    fft_length = int(2 ** np.ceil(np.log2(output_length)))
+    A = np.fft.rfft(a, fft_length, axis)
+    V = np.fft.rfft(v, fft_length, axis)
+    out = np.fft.irfft(A*V, fft_length, axis)
+    return np.delete(out, np.s_[output_length:], axis)
+
+
+def _lagrange(N, tau):
+    """Lagrange interpolator for fractional shift.
+
+    Parameters
+    ----------
+    N : int
+        Order.
+    tau : (M,) array_like
+        Fractional shifts.
+
+    Returns
+    -----
+    h : (N+1, M) ndarray
+        FIR filters.
+
+    """
+    tau = asarray_1d(tau)
+    h = np.ones([N+1, len(tau)])
+    for n in range(0, N+1):
+        for k in range(0, N+1):
+            if n != k:
+                h[n, :] *= (tau + N//2 - k)/(n-k)
+    return h

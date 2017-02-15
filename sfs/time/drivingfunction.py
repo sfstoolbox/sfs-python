@@ -193,7 +193,7 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
     return delays, weights
 
 
-def driving_signals(delays, weights, signal, interpolator=None):
+def driving_signals(delays, weights, signal, interpolator=None, **kwargs):
     """Get driving signals per secondary source.
 
     Returned signals are the delayed and weighted mono input signal
@@ -221,12 +221,12 @@ def driving_signals(delays, weights, signal, interpolator=None):
     """
     delays = util.asarray_1d(delays)
     weights = util.asarray_1d(weights)
-    data, samplerate, signal_offset = apply_delays(
-        signal, delays, interpolator)
+    data, samplerate, signal_offset = apply_delays(signal, delays,
+                                                   interpolator, **kwargs)
     return util.DelayedSignal(data * weights, samplerate, signal_offset)
 
 
-def apply_delays(signal, delays, interpolator=None):
+def apply_delays(signal, delays, interpolator=None, **kwargs):
     """Apply delays for every channel.
 
     Parameters
@@ -260,6 +260,6 @@ def apply_delays(signal, delays, interpolator=None):
     for channel, cdelay in enumerate(integer_delays):
         out[cdelay:cdelay + len(data), channel] = data
     if interpolator is not None:
-        out, filter_offset = interpolator(out, fractional_delays)
+        out, filter_offset = interpolator(out, fractional_delays, **kwargs)
         offset += filter_offset
     return util.DelayedSignal(out, samplerate, offset / samplerate)
