@@ -12,7 +12,8 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear', zeropad=True):
+def point(xs, signal, observation_time, grid, c=None, interpolator=interp1d,
+          zeropad=0, **kwargs):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -32,8 +33,12 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
         See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
-    zeropad : bool, optional
-        zeropad time signals with 2 samples for spline interpolation.
+    interpolator : function, optional
+        A function which constructs and returns a 1d interpolator.
+        (Expamples: interp1d, PchipInterpolator from scipy.interpolator)
+    zeropad : int, optional
+        pre- & post-zeropad time signals with N samples.
+        (For interpolation only.)
 
     Returns
     -------
@@ -61,51 +66,16 @@ def point(xs, signal, observation_time, grid, c=None, interpolator_kind='linear'
     weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    if zeropad:
-        time_instants = np.arange(-2, len(data) + 2)
-        data = np.concatenate([[0, 0], data, [0, 0]])
-    else:
-        time_instants = np.arange(len(data))
-    if interpolator_kind is 'sinc':
-        p = _sinc_interp(data, time_instants,
-                         np.array((base_time - delays) * samplerate), samplerate)
-    else:
-        interpolator = interp1d(time_instants, data,
-                                kind=interpolator_kind, bounds_error=False,
-                                fill_value=0)
-        p = interpolator((base_time - delays) * samplerate)
+    time_instants = np.arange(-zeropad, len(data) + zeropad)
+    data = np.concatenate([np.zeros(zeropad), data, np.zeros(zeropad)])
+    p = interpolator(time_instants, data, **kwargs)((base_time - delays) * samplerate)
     return p * weights
 
 
-def _sinc_interp(x, s, u):
-    """
-    Ideal sinc interpolation of a signal
-    adapted from https://gist.github.com/endolith/1297227
-
-    Parameters
-    ----------
-    x : (N,) array_like
-        Signal to be interpolated.
-    s : (N,) array_like
-        Sampling instants of signal.
-    u : (N,) array_like
-        Sampling instants after interpolation.
-
-    Returns
-    -------
-    numpy.ndarray
-        Interpolated signal
-    """
-
-    # sampling period
-    T = s[1] - s[0]
-    # perform sinc interpolation
-    shape = u.shape
-    u = u.flatten()
-    sincM = np.tile(u, (len(s), 1)) - np.tile(s[:, np.newaxis], (1, len(u)))
-    y = np.dot(x, np.sinc(sincM/T))
-    y = np.reshape(y, shape)
-    return y
+def sincinterp(x, y, **kwargs):
+    def f(xnew):
+        return sum([y[i] * np.sinc(xnew - x[i]) for i in range(len(x))])
+    return f
 
 
 def point_image_sources(x0, signal, observation_time, grid, L, max_order,
