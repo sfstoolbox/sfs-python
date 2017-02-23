@@ -103,15 +103,20 @@ def secondarysourcecontour_2d(x0, a0=True, ax=None):
     x0 = util.asarray_of_rows(x0)
     a0 = util.asarray_1d(a0)
 
-    # colormap with black and gray
-    cmap = ListedColormap(np.stack((np.zeros(3), .5*np.ones(3))))
+    # colormap with black and gray to indicate active parts
+    cmap = ListedColormap(np.stack((.5*np.ones(3), np.zeros(3))))
 
     # setup line collection with secondary source contour
+    x0 = np.append(x0, x0[0:1, :], axis=0)
     points = np.array([x0[:, 0], x0[:, 1]]).T.reshape(-1, 1, 2)
     segments = np.concatenate([points[:-1], points[1:]], axis=1)
     lc = LineCollection(segments, cmap=cmap)
     lc.set_linewidth(2)
-    lc.set_array(np.where(a0, 0, 1))
+
+    # set color of line to indicate active parts
+    a0 = np.append(a0, a0[0])
+    active = np.logical_and(a0[0:-1], a0[1:])
+    lc.set_array(active)
 
     # add collection of lines to current axis
     if ax is None:
