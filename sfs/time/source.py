@@ -13,8 +13,32 @@ from .. import util
 from .. import defs
 
 
-def point(xs, signal, t, grid, fs=None, c=None, interpolator=interp1d,
-          zeropad=0, **kwargs):
+def linear_interpolator(x, y):
+    """1d linear interpolator with zero-padding.
+
+    Parameters
+    ----------
+    x : (N,) array_like
+        Sampling points.
+    y : (N,) array_like
+        Values at sampling points.
+
+    Returns
+    -------
+    function
+        Piecewise linear interpolant.
+
+    """
+    x = util.asarray_1d(x)
+    y = util.asarray_1d(y)
+    if len(x) < 3:
+        x = np.concatenate([np.array([min(x)-1]), x, np.array([max(x)+1])])
+        y = np.concatenate([np.array([0]), y, np.array([0])])
+    return interp1d(x, y, bounds_error=False, fill_value=0)
+
+
+def point(xs, signal, t, grid, fs=None, c=None,
+          interpolator=linear_interpolator):
     r"""Source model for a point source: 3D Green's function.
 
     Calculates the scalar sound pressure field for a given point in
@@ -37,10 +61,7 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator=interp1d,
         Speed of sound.
     interpolator : function, optional
         A function which constructs and returns a 1d interpolator.
-        (Expamples: interp1d, PchipInterpolator from scipy.interpolator)
-    zeropad : int, optional
-        pre- & post-zeropad time signals with N samples.
-        (For interpolation only.)
+        see: linear_interpolator, sinc_interpolator
 
     Returns
     -------
@@ -68,13 +89,14 @@ def point(xs, signal, t, grid, fs=None, c=None, interpolator=interp1d,
     # evaluate g over grid
     g_amplitude = 1 / (4 * np.pi * r)
     g_time = r / c
-    time_instants = np.arange(-zeropad, len(signal)+zeropad)
-    signal = np.concatenate([np.zeros(zeropad), signal, np.zeros(zeropad)])
-    p = interpolator(time_instants, signal, **kwargs)((t - g_time) * fs)
+    p = interpolator(np.arange(len(signal)), signal)((t - g_time) * fs)
     return p * g_amplitude
 
 
-def sincinterp(x, y, **kwargs):
+def sinc_interpolator(x, y):
+    x = util.asarray_1d(x)
+    y = util.asarray_1d(y)
+
     def f(xnew):
         return sum([y[i] * np.sinc(xnew - x[i]) for i in range(len(x))])
     return f
