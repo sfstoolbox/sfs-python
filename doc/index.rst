@@ -10,8 +10,8 @@
     time_domain
     plotting
     utilities
-    CONTRIBUTING
-    NEWS
+    contributing
+    version-history
 
 .. only:: html
 
