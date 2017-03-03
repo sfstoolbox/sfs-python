@@ -6,8 +6,8 @@
 
     usage
     arrays
-    frequency_domain
-    time_domain
+    frequency-domain
+    time-domain
     plotting
     utilities
     contributing
