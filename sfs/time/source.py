@@ -37,7 +37,7 @@ def linear_interpolator(x, y):
     return interp1d(x, y, bounds_error=False, fill_value=0)
 
 
-def point(xs, signal, t, grid, fs=None, c=None,
+def point(xs, signal, observation_time, grid, c=None,
           interpolator=linear_interpolator):
     r"""Source model for a point source: 3D Green's function.
 
@@ -48,15 +48,14 @@ def point(xs, signal, t, grid, fs=None, c=None,
     ----------
     xs : (3,) array_like
         Position of source in cartesian coordinates.
-    signal : (N,) array_like
-        Excitation signal.
-    t : float
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
+    observation_time : float
         Observed point in time.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
-    fs: int, optional
-        Sampling frequency in Hertz.
     c : float, optional
         Speed of sound.
     interpolator : function, optional
@@ -78,19 +77,18 @@ def point(xs, signal, t, grid, fs=None, c=None,
 
     """
     xs = util.asarray_1d(xs)
-    signal = util.asarray_1d(signal)
-    t = util.asarray_1d(t)
+    data, samplerate, signal_offset = util.as_delayed_signal(signal)
+    data = util.asarray_1d(data)
     grid = util.as_xyz_components(grid)
-    if fs is None:
-        fs = defs.fs
     if c is None:
         c = defs.c
     r = np.linalg.norm(grid - xs)
     # evaluate g over grid
-    g_amplitude = 1 / (4 * np.pi * r)
-    g_time = r / c
-    p = interpolator(np.arange(len(signal)), signal)((t - g_time) * fs)
-    return p * g_amplitude
+    weights = 1 / (4 * np.pi * r)
+    delays = r / c
+    base_time = observation_time - signal_offset
+    p_interpolant = interpolator(np.arange(len(data)), data)
+    return p_interpolant((base_time - delays) * samplerate) * weights
 
 
 def sinc_interpolator(x, y):

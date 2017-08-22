@@ -1,4 +1,7 @@
 This directory holds the documentation in reStructuredText/Sphinx format.
 Have a look at the online documentation for the auto-generated HTML version:
 
-http://sfs.rtfd.org/
+http://python.sfstoolbox.org/
+
+If you want to generate the HTML (or LaTeX/PDF) files on your computer, have a
+look at http://python.sfstoolbox.org/en/latest/contributing.html.
