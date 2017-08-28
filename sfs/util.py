@@ -415,3 +415,50 @@ If you want to ensure that a given variable contains a valid signal, use
 `sfs.util.as_delayed_signal()`.
 
 """
+
+
+def image_sources_for_box(x, L, N):
+    """Image source method for cuboid room.
+
+    Parameters
+    ----------
+    x : (D,)
+    original source location within [0,L(i)]^D cuboid
+    L : (D,)
+    room dimensions
+    N : int
+    max number of reflections for each wall pair
+
+    Returns
+    -------
+    xs : (M, D)
+    original & mirror sources within [-NL(i),NL(i)]^D cube
+    walls : (M, 2D)
+    how often each wall contributes
+    """
+    def _images_1d(x, N):
+        a = np.arange(-N, N+1, 2, dtype=float)
+        b = np.arange(-N+1, N, 2, dtype=float)
+        if N % 2 == 0:
+            a += x
+            b += (1-x)
+        else:
+            a += (1-x)
+            b += x
+        return np.sort(np.concatenate([a, b]))
+
+    def _count_walls_1d(a):
+        b = np.floor(a/2)
+        c = np.ceil((a-1)/2)
+        return np.abs(np.stack([b, c], axis=1)).astype(int)
+
+    L = asarray_1d(L)
+    x = asarray_1d(x)/L
+    D = len(x)
+    xs = [_images_1d(coord, N) for coord in x]
+    xs = np.squeeze(np.meshgrid(*xs))
+    xs = np.reshape(xs.T, ((2*N+1)**D, D))
+
+    walls = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
+    xs *= L
+    return xs, walls
