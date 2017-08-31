@@ -61,3 +61,52 @@ def point(xs, signal, observation_time, grid, c=None):
     return weights * np.interp(base_time - delays,
                                np.arange(len(data)) / samplerate,
                                data, left=0, right=0)
+
+
+def point_mism(x0, signal, observation_time, grid, L, order, coeffs=None, c=None):
+    """Point source in a rectangular room using the mirror image source model.
+
+    Parameters
+    ----------
+    x0 : (3,) array_like
+        Position of source in cartesian coordinates.
+    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
+        Excitation signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
+    observation_time : float
+        Observed point in time.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    L : (3,) array_like
+        Dimensionons of the rectangular room.
+    order : int
+        Maximum number of rfelections for each wall pair (order of model)
+    coeffs : (6,) array_like, optional
+        Reflection coeffecients of the walls.
+        If not given, the reflection coefficients are set to one.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Scalar sound pressure field, evaluated at positions given by
+        *grid*.
+
+    """
+    x0 = util.asarray_1d(x0)
+    x, y, z = util.as_xyz_components(grid)
+
+    if coeffs is None:
+        coeffs = np.ones(6)
+
+    positions, walls = util.image_sources_for_box(x0, L, order)
+    source_strengths = np.prod(coeffs**walls, axis=1)
+
+    p = 0
+    for position, strength in zip(positions, source_strengths):
+        if strength != 0:
+            p += strength * point(position, signal, observation_time, grid, c)
+
+    return p
