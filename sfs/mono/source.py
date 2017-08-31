@@ -297,6 +297,54 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     return util.XyzComponents([vx, vy, vz])
 
 
+def point_mism(omega, x0, n0, grid, L, order, coeffs=None, c=None):
+    """Point source in a rectangular room using the mirror image source model.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of source (only required for
+        compatibility).
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    L : (3,) array_like
+        Dimensionons of the rectangular room.
+    order : int
+        Maximum number of rfelections for each wall pair (order of model)
+    coeffs : (6,) array_like, optional
+        Reflection coeffecients of the walls.
+        If not given, the reflection coefficients are set to one.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
+
+    """
+    x0 = util.asarray_1d(x0)
+    x, y, z = util.as_xyz_components(grid)
+
+    if coeffs is None:
+        coeffs = np.ones(6)
+
+    xs, walls = util.image_sources_for_box(x0, L, order)
+    source_strengths = np.prod(coeffs**walls, axis=1)
+
+    p = 0
+    for position, strength in zip(xs, source_strengths):
+        if strength != 0:
+            p += strength * point(omega, position, n0, grid, c)
+
+    return p
+
+
 def line(omega, x0, n0, grid, c=None):
     """Line source parallel to the z-axis.
 
