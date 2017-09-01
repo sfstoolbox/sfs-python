@@ -125,7 +125,7 @@ def as_delayed_signal(arg, **kwargs):
     ----------
     arg : sequence of 1 array_like followed by 1 or 2 scalars
         The first element is converted to a NumPy array, the second
-        element is used a the sampling rate (in Hertz) and the optional
+        element is used as the sampling rate (in Hertz) and the optional
         third element is used as the starting time of the signal (in
         seconds).  Default starting time is 0.
     **kwargs
@@ -410,8 +410,8 @@ This class (a `collections.namedtuple`) is not meant to be instantiated
 by users.
 
 To pass a signal to a function, just use a simple `tuple` or `list`
-containing the audio data and the sampling rate, with an optional
-starting time (in seconds) as a third item.
+containing the audio data and the sampling rate (in Hertz), with an
+optional starting time (in seconds) as a third item.
 If you want to ensure that a given variable contains a valid signal, use
 `sfs.util.as_delayed_signal()`.
 

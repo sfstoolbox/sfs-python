@@ -206,9 +206,9 @@ def driving_signals(delays, weights, signal):
         Delay in seconds for each channel, negative values allowed.
     weights : (C,) array_like
         Amplitude weighting factor for each channel.
-    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
-        Excitation signal consisting of (mono) audio data, sampling rate
-        (in Hertz) and optional starting time (in seconds).
+    signal : (N,) array_like + float
+        Excitation signal consisting of (mono) audio data and a sampling
+        rate (in Hertz).  A `DelayedSignal` object can also be used.
 
     Returns
     -------
@@ -229,9 +229,9 @@ def apply_delays(signal, delays):
 
     Parameters
     ----------
-    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
-        Excitation signal consisting of (mono) audio data, sampling rate
-        (in Hertz) and optional starting time (in seconds).
+    signal : (N,) array_like + float
+        Excitation signal consisting of (mono) audio data and a sampling
+        rate (in Hertz).  A `DelayedSignal` object can also be used.
     delays : (C,) array_like
         Delay in seconds for each channel (C), negative values allowed.
 

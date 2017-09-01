@@ -22,9 +22,9 @@ def point(xs, signal, observation_time, grid, c=None):
     ----------
     xs : (3,) array_like
         Position of source in cartesian coordinates.
-    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
-        Excitation signal consisting of (mono) audio data, sampling rate
-        (in Hertz) and optional starting time (in seconds).
+    signal : (N,) array_like + float
+        Excitation signal consisting of (mono) audio data and a sampling
+        rate (in Hertz).  A `DelayedSignal` object can also be used.
     observation_time : float
         Observed point in time.
     grid : triple of array_like
@@ -71,9 +71,9 @@ def point_image_sources(x0, signal, observation_time, grid, L, max_order,
     ----------
     x0 : (3,) array_like
         Position of source in cartesian coordinates.
-    signal : tuple of (N,) array_like, followed by 1 or 2 scalars
-        Excitation signal consisting of (mono) audio data, sampling rate
-        (in Hertz) and optional starting time (in seconds).
+    signal : (N,) array_like + float
+        Excitation signal consisting of (mono) audio data and a sampling
+        rate (in Hertz).  A `DelayedSignal` object can also be used.
     observation_time : float
         Observed point in time.
     grid : triple of array_like

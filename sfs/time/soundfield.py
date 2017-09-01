@@ -14,9 +14,10 @@ def p_array(x0, signals, weights, observation_time, grid, source=point,
     ----------
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
-    signals : tuple of (N, C) array_like, followed by 1 or 2 scalars
-        Driving signals consisting of audio data (C channels), sampling
-        rate (in Hertz) and optional starting time (in seconds).
+    signals : (N, C) array_like + float
+        Driving signals consisting of audio data (C channels) and a
+        sampling rate (in Hertz).
+        A `DelayedSignal` object can also be used.
     weights : (C,) array_like
         Additional weights applied during integration, e.g. source
         tapering.
