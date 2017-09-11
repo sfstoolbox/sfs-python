@@ -297,7 +297,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     return util.XyzComponents([vx, vy, vz])
 
 
-def point_mism(omega, x0, n0, grid, L, order, coeffs=None, c=None):
+def point_image_sources(omega, x0, n0, grid, L, order, coeffs=None, c=None):
     """Point source in a rectangular room using the mirror image source model.
 
     Parameters

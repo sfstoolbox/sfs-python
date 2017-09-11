@@ -63,7 +63,7 @@ def point(xs, signal, observation_time, grid, c=None):
                                data, left=0, right=0)
 
 
-def point_mism(x0, signal, observation_time, grid, L, order, coeffs=None, c=None):
+def point_image_sources(x0, signal, observation_time, grid, L, order, coeffs=None, c=None):
     """Point source in a rectangular room using the mirror image source model.
 
     Parameters
