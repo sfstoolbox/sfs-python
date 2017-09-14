@@ -297,7 +297,8 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     return util.XyzComponents([vx, vy, vz])
 
 
-def point_image_sources(omega, x0, n0, grid, L, order, coeffs=None, c=None):
+def point_image_sources(omega, x0, n0, grid, L, max_order, coeffs=None,
+                        c=None):
     """Point source in a rectangular room using the mirror image source model.
 
     Parameters
@@ -314,7 +315,7 @@ def point_image_sources(omega, x0, n0, grid, L, order, coeffs=None, c=None):
         See `sfs.util.xyz_grid()`.
     L : (3,) array_like
         Dimensions of the rectangular room.
-    order : int
+    max_order : int
         Maximum number of reflections for each wall pair (order of model)
     coeffs : (6,) array_like, optional
         Reflection coeffecients of the walls.
@@ -331,8 +332,8 @@ def point_image_sources(omega, x0, n0, grid, L, order, coeffs=None, c=None):
     if coeffs is None:
         coeffs = np.ones(6)
 
-    xs, walls = util.image_sources_for_box(x0, L, order)
-    source_strengths = np.prod(coeffs**walls, axis=1)
+    xs, order = util.image_sources_for_box(x0, L, max_order)
+    source_strengths = np.prod(coeffs**order, axis=1)
 
     p = 0
     for position, strength in zip(xs, source_strengths):

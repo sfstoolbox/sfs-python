@@ -418,7 +418,7 @@ If you want to ensure that a given variable contains a valid signal, use
 """
 
 
-def image_sources_for_box(x, L, order):
+def image_sources_for_box(x, L, max_order):
     """Image source method for cuboid room.
 
     Parameters
@@ -434,13 +434,13 @@ def image_sources_for_box(x, L, order):
     -------
     xs : (M, D) array_like
         original & mirror sources within [-NL(i),NL(i)]^D cube
-    walls : (M, 2D) array_like
-        how often each wall contributes
+    order : (M, 2D) array_like
+        order of each individual reflection
     """
-    def _images_1d_unit_box(x, order):
-        result = np.arange(-order, order + 1, dtype=x.dtype)
-        result[order % 2::2] += x
-        result[1 - (order % 2)::2] += 1 - x
+    def _images_1d_unit_box(x, max_order):
+        result = np.arange(-max_order, max_order + 1, dtype=x.dtype)
+        result[max_order % 2::2] += x
+        result[1 - (max_order % 2)::2] += 1 - x
         return result
 
     def _count_walls_1d(a):
@@ -451,9 +451,9 @@ def image_sources_for_box(x, L, order):
     L = asarray_1d(L)
     x = asarray_1d(x)/L
     D = len(x)
-    xs = [_images_1d_unit_box(coord, order) for coord in x]
+    xs = [_images_1d_unit_box(coord, max_order) for coord in x]
     xs = np.reshape(np.transpose(np.meshgrid(*xs, indexing='ij')), (-1, D))
 
-    walls = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
+    order = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
     xs *= L
-    return xs, walls
+    return xs, order

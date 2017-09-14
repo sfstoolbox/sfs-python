@@ -63,7 +63,7 @@ def point(xs, signal, observation_time, grid, c=None):
                                data, left=0, right=0)
 
 
-def point_image_sources(x0, signal, observation_time, grid, L, order,
+def point_image_sources(x0, signal, observation_time, grid, L, max_order,
                         coeffs=None, c=None):
     """Point source in a rectangular room using the mirror image source model.
 
@@ -81,7 +81,7 @@ def point_image_sources(x0, signal, observation_time, grid, L, order,
         See `sfs.util.xyz_grid()`.
     L : (3,) array_like
         Dimensions of the rectangular room.
-    order : int
+    max_order : int
         Maximum number of reflections for each wall pair (order of model)
     coeffs : (6,) array_like, optional
         Reflection coeffecients of the walls.
@@ -99,8 +99,8 @@ def point_image_sources(x0, signal, observation_time, grid, L, order,
     if coeffs is None:
         coeffs = np.ones(6)
 
-    positions, walls = util.image_sources_for_box(x0, L, order)
-    source_strengths = np.prod(coeffs**walls, axis=1)
+    positions, order = util.image_sources_for_box(x0, L, max_order)
+    source_strengths = np.prod(coeffs**order, axis=1)
 
     p = 0
     for position, strength in zip(positions, source_strengths):
