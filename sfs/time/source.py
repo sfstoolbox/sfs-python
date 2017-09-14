@@ -63,7 +63,8 @@ def point(xs, signal, observation_time, grid, c=None):
                                data, left=0, right=0)
 
 
-def point_image_sources(x0, signal, observation_time, grid, L, order, coeffs=None, c=None):
+def point_image_sources(x0, signal, observation_time, grid, L, order,
+                        coeffs=None, c=None):
     """Point source in a rectangular room using the mirror image source model.
 
     Parameters
@@ -79,9 +80,9 @@ def point_image_sources(x0, signal, observation_time, grid, L, order, coeffs=Non
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
     L : (3,) array_like
-        Dimensionons of the rectangular room.
+        Dimensions of the rectangular room.
     order : int
-        Maximum number of rfelections for each wall pair (order of model)
+        Maximum number of reflections for each wall pair (order of model)
     coeffs : (6,) array_like, optional
         Reflection coeffecients of the walls.
         If not given, the reflection coefficients are set to one.
@@ -95,9 +96,6 @@ def point_image_sources(x0, signal, observation_time, grid, L, order, coeffs=Non
         *grid*.
 
     """
-    x0 = util.asarray_1d(x0)
-    x, y, z = util.as_xyz_components(grid)
-
     if coeffs is None:
         coeffs = np.ones(6)
 

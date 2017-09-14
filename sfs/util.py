@@ -418,17 +418,17 @@ If you want to ensure that a given variable contains a valid signal, use
 """
 
 
-def image_sources_for_box(x, L, N):
+def image_sources_for_box(x, L, order):
     """Image source method for cuboid room.
 
     Parameters
     ----------
     x : (D,) array_like
-        original source location within [0,L(i)]^D cuboid
+        Original source location within :math:`[0,L(i)]^D` cuboid.
     L : (D,) array_like
-        room dimensions
-    N : int array_like
-        max number of reflections for each wall pair
+        Room dimensions.
+    order : int
+        Maximum number of reflections for each wall pair.
 
     Returns
     -------
@@ -437,10 +437,10 @@ def image_sources_for_box(x, L, N):
     walls : (M, 2D) array_like
         how often each wall contributes
     """
-    def _images_1d_unit_box(x, N):
-        result = np.arange(-N, N + 1, dtype=x.dtype)
-        result[N % 2::2] += x
-        result[1 - (N % 2)::2] += 1 - x
+    def _images_1d_unit_box(x, order):
+        result = np.arange(-order, order + 1, dtype=x.dtype)
+        result[order % 2::2] += x
+        result[1 - (order % 2)::2] += 1 - x
         return result
 
     def _count_walls_1d(a):
@@ -451,7 +451,7 @@ def image_sources_for_box(x, L, N):
     L = asarray_1d(L)
     x = asarray_1d(x)/L
     D = len(x)
-    xs = [_images_1d_unit_box(coord, N) for coord in x]
+    xs = [_images_1d_unit_box(coord, order) for coord in x]
     xs = np.reshape(np.transpose(np.meshgrid(*xs, indexing='ij')), (-1, D))
 
     walls = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
