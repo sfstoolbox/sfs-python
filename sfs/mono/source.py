@@ -297,6 +297,52 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     return util.XyzComponents([vx, vy, vz])
 
 
+def point_image_sources(omega, x0, n0, grid, L, max_order, coeffs=None,
+                        c=None):
+    """Point source in a rectangular room using the mirror image source model.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of source (only required for
+        compatibility).
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    L : (3,) array_like
+        Dimensions of the rectangular room.
+    max_order : int
+        Maximum number of reflections for each wall pair (order of model)
+    coeffs : (6,) array_like, optional
+        Reflection coeffecients of the walls.
+        If not given, the reflection coefficients are set to one.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
+
+    """
+    if coeffs is None:
+        coeffs = np.ones(6)
+
+    xs, order = util.image_sources_for_box(x0, L, max_order)
+    source_strengths = np.prod(coeffs**order, axis=1)
+
+    p = 0
+    for position, strength in zip(xs, source_strengths):
+        if strength != 0:
+            p += strength * point(omega, position, n0, grid, c)
+
+    return p
+
+
 def line(omega, x0, n0, grid, c=None):
     """Line source parallel to the z-axis.
 
