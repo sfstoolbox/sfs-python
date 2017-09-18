@@ -418,7 +418,7 @@ If you want to ensure that a given variable contains a valid signal, use
 """
 
 
-def image_sources_for_box(x, L, max_order):
+def image_sources_for_box(x, L, max_order, strict_order=True):
     """Image source method for cuboid room.
 
     Parameters
@@ -427,8 +427,11 @@ def image_sources_for_box(x, L, max_order):
         Original source location within :math:`[0,L(i)]^D` cuboid.
     L : (D,) array_like
         Room dimensions.
-    order : int
+    max_order : int
         Maximum number of reflections for each wall pair.
+    strict_order : bool, optional
+        If ``strict_order=True`` (the default) only mirror image sources
+        up to max_order are included.
 
     Returns
     -------
@@ -456,4 +459,10 @@ def image_sources_for_box(x, L, max_order):
 
     order = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
     xs *= L
+
+    if strict_order is True:
+        max_order_mask = np.sum(order, axis=1) <= max_order
+        xs = xs[max_order_mask, :]
+        order = order[max_order_mask, :]
+
     return xs, order
