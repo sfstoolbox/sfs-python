@@ -436,7 +436,7 @@ def image_sources_for_box(x, L, max_order, strict_order=True):
     Returns
     -------
     xs : (M, D) array_like
-        original & mirror sources within [-NL(i),NL(i)]^D cube
+        original & mirror sources within :math:`[-NL(i),NL(i)]^D` cube
     order : (M, 2D) array_like
         order of each individual reflection
     """
@@ -464,5 +464,5 @@ def image_sources_for_box(x, L, max_order, strict_order=True):
         max_order_mask = np.sum(order, axis=1) <= max_order
         xs = xs[max_order_mask, :]
         order = order[max_order_mask, :]
-
+        
     return xs, order
