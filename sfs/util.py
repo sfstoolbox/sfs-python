@@ -436,8 +436,7 @@ def image_sources_for_box(x, L, N, prune=True):
         selection of image sources:
 
         - If True (default):
-          Returns all images reflected up to N times,
-          a total number of :math:`M := 1 + 2^{D-1}N(N+1)`.
+          Returns all images reflected up to N times.
           This is the usual interpretation of N as "maximum order".
 
         - If False:
