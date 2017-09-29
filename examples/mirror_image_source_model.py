@@ -18,8 +18,8 @@ signal = ([1, 0, 0], fs)  # signal for broadband response
 
 
 # get 2D mirror image sources and their strength
-xs, order = sfs.util.image_sources_for_box(x0[0:2], L[0:2], max_order)
-source_strength = np.prod(coeffs[0:4]**order, axis=1)
+xs, wall_count = sfs.util.image_sources_for_box(x0[0:2], L[0:2], max_order)
+source_strength = np.prod(coeffs[0:4]**wall_count, axis=1)
 # plot mirror image sources
 plt.figure()
 plt.scatter(*xs.T, source_strength*20)

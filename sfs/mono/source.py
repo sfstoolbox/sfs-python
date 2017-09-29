@@ -316,7 +316,7 @@ def point_image_sources(omega, x0, n0, grid, L, max_order, coeffs=None,
     L : (3,) array_like
         Dimensions of the rectangular room.
     max_order : int
-        Maximum number of reflections for each wall pair (order of model)
+        Maximum number of reflections for each image source.
     coeffs : (6,) array_like, optional
         Reflection coeffecients of the walls.
         If not given, the reflection coefficients are set to one.

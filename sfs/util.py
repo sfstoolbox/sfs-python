@@ -418,32 +418,58 @@ If you want to ensure that a given variable contains a valid signal, use
 """
 
 
-def image_sources_for_box(x, L, max_order, strict_order=True):
-    """Image source method for cuboid room.
+def image_sources_for_box(x, L, N, prune=True):
+    """Image source method for a cuboid room.
+
+    The classical method by Allen & Berkley [1].
 
     Parameters
     ----------
     x : (D,) array_like
-        Original source location within :math:`[0,L(i)]^D` cuboid.
+        Original source location within box.
+        Values between 0 and corresponding side length.
     L : (D,) array_like
-        Room dimensions.
-    max_order : int
-        Maximum number of reflections for each wall pair.
-    strict_order : bool, optional
-        If ``strict_order=True`` (the default) only mirror image sources
-        up to max_order are included.
+        side lengths of room.
+    N : int
+        Maximum number of reflections per image source, see below.
+    prune : bool, optional
+        selection of image sources:
+
+        - If True (default):
+          Returns all images reflected up to N times,
+          a total number of :math:`M := 1 + 2^{D-1}N(N+1)`.
+          This is the usual interpretation of N as "maximum order".
+
+        - If False:
+          Returns reflected up to N times between individual wall pairs,
+          a total number of :math:`M := (2N+1)^D`.
+          This larger set is useful e.g. to select image sources based on
+          distance to listener, as suggested by Borish [2].
+
 
     Returns
     -------
     xs : (M, D) array_like
-        original & mirror sources within :math:`[-NL(i),NL(i)]^D` cube
-    order : (M, 2D) array_like
-        order of each individual reflection
+        original & image source locations.
+    wall_count : (M, 2D) array_like
+        number of reflections at individual walls for each source.
+
+
+    References
+    ----------
+    .. [1] J. B. Allen, D. A. Berkley. "Image method for efficiently simulating
+           small‐room acoustics." The Journal of the Acoustical Society of
+           America 65.4, pp. 943-950, 1979.
+
+    .. [2] J. Borish, "Extension of the image model to arbitrary polyhedra.",
+           The Journal of the Acoustical Society of America 75.6,
+           pp. 1827-1836, 1984.
+
     """
-    def _images_1d_unit_box(x, max_order):
-        result = np.arange(-max_order, max_order + 1, dtype=x.dtype)
-        result[max_order % 2::2] += x
-        result[1 - (max_order % 2)::2] += 1 - x
+    def _images_1d_unit_box(x, N):
+        result = np.arange(-N, N + 1, dtype=x.dtype)
+        result[N % 2::2] += x
+        result[1 - (N % 2)::2] += 1 - x
         return result
 
     def _count_walls_1d(a):
@@ -454,15 +480,15 @@ def image_sources_for_box(x, L, max_order, strict_order=True):
     L = asarray_1d(L)
     x = asarray_1d(x)/L
     D = len(x)
-    xs = [_images_1d_unit_box(coord, max_order) for coord in x]
+    xs = [_images_1d_unit_box(coord, N) for coord in x]
     xs = np.reshape(np.transpose(np.meshgrid(*xs, indexing='ij')), (-1, D))
 
-    order = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
+    wall_count = np.concatenate([_count_walls_1d(d) for d in xs.T], axis=1)
     xs *= L
 
-    if strict_order is True:
-        max_order_mask = np.sum(order, axis=1) <= max_order
-        xs = xs[max_order_mask, :]
-        order = order[max_order_mask, :]
-        
-    return xs, order
+    if prune is True:
+        N_mask = np.sum(wall_count, axis=1) <= N
+        xs = xs[N_mask, :]
+        wall_count = wall_count[N_mask, :]
+
+    return xs, wall_count
