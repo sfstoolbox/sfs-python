@@ -421,7 +421,7 @@ If you want to ensure that a given variable contains a valid signal, use
 def image_sources_for_box(x, L, N, prune=True):
     """Image source method for a cuboid room.
 
-    The classical method by Allen & Berkley [1].
+    The classical method by Allen & Berkley [1]_.
 
     Parameters
     ----------
@@ -443,7 +443,7 @@ def image_sources_for_box(x, L, N, prune=True):
           Returns reflected up to N times between individual wall pairs,
           a total number of :math:`M := (2N+1)^D`.
           This larger set is useful e.g. to select image sources based on
-          distance to listener, as suggested by Borish [2].
+          distance to listener, as suggested by Borish [2]_.
 
 
     Returns
