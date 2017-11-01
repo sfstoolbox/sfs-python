@@ -31,9 +31,8 @@ def linear_interpolator(x, y):
     """
     x = util.asarray_1d(x)
     y = util.asarray_1d(y)
-    if len(x) < 3:
-        x = np.concatenate([np.array([min(x)-1]), x, np.array([max(x)+1])])
-        y = np.concatenate([np.array([0]), y, np.array([0])])
+    x = np.concatenate([np.array([min(x)-1]), x, np.array([max(x)+1])])
+    y = np.concatenate([np.array([0]), y, np.array([0])])
     return interp1d(x, y, bounds_error=False, fill_value=0)
 
 
