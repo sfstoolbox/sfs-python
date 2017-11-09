@@ -79,7 +79,7 @@ wfs_3d_point = _wfs_point
 def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by two- or three-dimensional WFS.
 
-    Eq.(17) from [Spors et al, 2008]::
+    Eq.(17) from [Spors2008]_::
 
         D(x0,k) =  j k n n0  e^(-j k n x0)
 
@@ -187,7 +187,7 @@ def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 def source_selection_plane(n0, n):
     """Secondary source selection for a plane wave.
 
-    Eq.(13) from [Spors et al, 2008]
+    Eq.(13) from [Spors2008]_
 
     """
     n0 = util.asarray_of_rows(n0)
@@ -198,7 +198,7 @@ def source_selection_plane(n0, n):
 def source_selection_point(n0, x0, xs):
     """Secondary source selection for a point source.
 
-    Eq.(15) from [Spors et al, 2008]
+    Eq.(15) from [Spors2008]_
 
     """
     n0 = util.asarray_of_rows(n0)
@@ -211,7 +211,7 @@ def source_selection_point(n0, x0, xs):
 def source_selection_line(n0, x0, xs):
     """Secondary source selection for a line source.
 
-    compare Eq.(15) from [Spors et al, 2008]
+    compare Eq.(15) from [Spors2008]_
 
     """
     return source_selection_point(n0, x0, xs)
@@ -220,7 +220,7 @@ def source_selection_line(n0, x0, xs):
 def source_selection_focused(ns, x0, xs):
     """Secondary source selection for a focused source.
 
-    Eq.(2.78) from [Wierstorf, 2014]
+    Eq.(2.78) from [Wierstorf2014]_
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -320,7 +320,7 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
     """Line source by two-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Derived from [Spors 2009, 126th AES Convention], Eq.(9), Eq.(4)::
+    Derived from [SporsAhrens2009]_, Eq.(9), Eq.(4)::
 
         D(x0,k) =
 
@@ -338,7 +338,7 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     """Plane wave by two-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Derived from [Ahrens 2011, Springer], Eq.(3.73), Eq.(C.5), Eq.(C.11)::
+    Derived from [Ahrens2012]_, Eq.(3.73), Eq.(C.5), Eq.(C.11)::
 
         D(x0,k) = kpw,y * e^(-j*kpw,x*x)
 
@@ -354,7 +354,7 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     """Plane wave by 2.5-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Eq.(3.79) from [Ahrens 2011, Springer]::
+    Eq.(3.79) from [Ahrens2012]_::
 
         D_2.5D(x0,w) =
 
@@ -372,7 +372,7 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     """Point source by 2.5-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Driving funcnction from [Spors 2010, 128th AES Covention], Eq.(24)::
+    Driving funcnction from [SporsAhrens2010]_, Eq.(24)::
 
         D(x0,k) =
 
@@ -395,7 +395,7 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
     One leg of the secondary sources has to be located on the x-axis (y0=0),
     the edge at the origin.
 
-    Derived from [Spors 2016, DAGA]
+    Derived from [Spors2016]_
 
     Parameters
     ----------
@@ -453,7 +453,7 @@ def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c
     One leg of the secondary sources has to be located on the x-axis (y0=0),
     the edge at the origin.
 
-    Derived from [Spors 2016, DAGA]
+    Derived from [Spors2016]_
 
     Parameters
     ----------
@@ -509,7 +509,7 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     One leg of the secondary sources have to be located on the x-axis (y0=0),
     the edge at the origin.
 
-    Derived from [Spors 2016, DAGA]
+    Derived from [Spors2016]_
 
     Parameters
     ----------
@@ -571,7 +571,7 @@ def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None,
     One leg of the secondary sources have to be located on the x-axis (y0=0),
     the edge at the origin.
 
-    Derived from [Spors 2016, DAGA]
+    Derived from [Spors2016]_
 
     Parameters
     ----------
@@ -616,7 +616,7 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     One leg of the secondary sources have to be located on the x-axis (y0=0),
     the edge at the origin.
 
-    Derived from [Spors 2016, DAGA]
+    Derived from [Spors2016]_
 
     Parameters
     ----------
