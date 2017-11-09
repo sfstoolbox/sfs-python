@@ -449,7 +449,7 @@ def line_dipole(omega, x0, n0, grid, c=None):
 def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     """Line source scattered at an edge with Dirichlet boundary conditions.
 
-    [Michael M"oser, Technische Akustik, 2012, Springer, eq.(10.18/19)]
+    [Moser2012]_, eq.(10.18/19)
 
     Parameters
     ----------

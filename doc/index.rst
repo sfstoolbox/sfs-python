@@ -10,6 +10,7 @@
     time-domain
     plotting
     utilities
+    references
     contributing
     version-history
 
