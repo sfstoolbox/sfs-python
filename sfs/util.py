@@ -135,8 +135,8 @@ def as_delayed_signal(arg, **kwargs):
     -------
     `DelayedSignal`
         A named tuple consisting of a `numpy.ndarray` containing the
-        audio data, followed by the sampling rate and the starting time
-        of the signal.
+        audio data, followed by the sampling rate (in Hertz) and the
+        starting time (in seconds) of the signal.
 
     Examples
     --------
