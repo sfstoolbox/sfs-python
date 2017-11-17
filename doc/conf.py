@@ -70,7 +70,7 @@ plot_html_show_formats = False
 plot_pre_code = ""
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['_template']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -83,7 +83,7 @@ master_doc = 'index'
 
 # General information about the project.
 authors = 'SFS Toolbox Developers'
-project = 'Sound Field Synthesis Toolbox'
+project = 'SFS Toolbox'
 copyright = '2017, ' + authors
 
 # The version info for the project you're documenting, acts as replacement for
@@ -143,6 +143,10 @@ pygments_style = 'sphinx'
 
 
 # -- Options for HTML output ----------------------------------------------
+
+def setup(app):
+    """Include custom theme files to sphinx HTML header"""
+    app.add_stylesheet('css/title.css')
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
