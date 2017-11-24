@@ -169,9 +169,9 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     L : (3,) array_like
         Dimensionons of the rectangular room.
     N : (3,) array_like or int, optional
-        For all three spatial dimensions per dimension maximum order,
-        list of orders used or if not given maximum modal order is
-        approximately determined. A scalar applies to all three dimensions.
+        For all three spatial dimensions per dimension maximum order or
+        ￼list of orders. A scalar applies to all three dimensions. If no
+        order is provided it is approximately determined.
     deltan : float, optional
         Absorption coefficient of the walls.
     c : float, optional
@@ -197,7 +197,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     for i in range(3):
         if N[i] is None:
             # compute max order
-            orders[i] = range(np.ceil(L[i]/np.pi * k) + 1)
+            orders[i] = range(int(np.ceil(L[i]/np.pi * k) + 1))
         elif np.isscalar(N[i]):
             # use given max order
             orders[i] = range(N[i] + 1)
