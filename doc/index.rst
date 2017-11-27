@@ -4,7 +4,8 @@
 
 .. toctree::
 
-    usage
+    installation
+    examples/index
     arrays
     frequency-domain
     time-domain

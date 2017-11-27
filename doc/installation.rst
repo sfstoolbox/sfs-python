@@ -1,5 +1,5 @@
-Usage
-=====
+Installation
+============
 
 Requirements
 ------------
@@ -35,15 +35,3 @@ To un-install, use::
     python3 -m pip uninstall sfs
 
 .. _pip: http://www.pip-installer.org/en/latest/installing.html
-
-How to Get Started
-------------------
-
-Various examples are located in the directory examples/
-
-* sound_field_synthesis.py:
-    Illustrates the general usage of the toolbox
-* horizontal_plane_arrays.py:
-    Computes the sound fields for various techniques, virtual sources and loudspeaker array configurations
-* soundfigures.py:
-    Illustrates the synthesis of sound figures with Wave Field Synthesis
