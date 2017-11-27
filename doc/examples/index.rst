@@ -9,3 +9,9 @@ Various examples are located in the directory ``doc/examples/``, e.g.
     Computes the sound fields for various techniques, virtual sources and loudspeaker array configurations
 * soundfigures.py:
     Illustrates the synthesis of sound figures with Wave Field Synthesis
+
+
+.. toctree::
+    :maxdepth: 1
+
+    modal-room-acoustics
