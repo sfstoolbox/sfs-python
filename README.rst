@@ -26,4 +26,4 @@ License:
 Quick start:
     * Install NumPy, SciPy and Matplotlib
     * ``python3 -m pip install sfs --user``
-    * ``python3 examples/horizontal_plane_arrays.py``
+    * ``python3 doc/examples/horizontal_plane_arrays.py``
