@@ -34,7 +34,7 @@ References
 .. [Spors2008]
     Spors, S., Rabenstein, R., and Ahrens, J.,
     “The Theory of Wave Field Synthesis Revisited,”
-    in *124th Conv. Audio Eng. Soc.*, Amsterdam, Netherlands (2008), preprint 7358,
+    in *124th Conv. Audio Eng. Soc.*, Amsterdam, Netherlands (2008), Paper 7358,
     `pdf <https://www.int.uni-rostock.de/fileadmin/user_upload/publications/spors/2008/AES124_Spors_WFS_Theory.pdf>`__
 
 .. [Wierstorf2014]
