@@ -3,6 +3,7 @@
 from __future__ import division
 import collections
 import numpy as np
+from scipy.special import spherical_jn, spherical_yn
 from . import defs
 
 
@@ -480,3 +481,27 @@ def image_sources_for_box(x, L, N, prune=True):
         wall_count = wall_count[N_mask, :]
 
     return xs, wall_count
+
+
+def spherical_hn2(n, z):
+    r"""Spherical Hankel function of 2nd kind.
+
+    Defined as http://dlmf.nist.gov/10.47.E6,
+
+    .. math::
+
+        \hankel{2}{n}{z} = \sqrt{\frac{\pi}{2z}}
+        \Hankel{2}{n + \frac{1}{2}}{z},
+
+    where :math:`\Hankel{2}{n}{\cdot}` is the Hankel function of the
+    second kind and n-th order, and :math:`z` its complex argument.
+
+    Parameters
+    ----------
+    n : array_like
+        Order of the spherical Hankel function (n >= 0).
+    z : array_like
+        Argument of the spherical Hankel function.
+
+    """
+    return spherical_jn(n, z) - 1j * spherical_yn(n, z)
