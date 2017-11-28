@@ -14,3 +14,7 @@ References
 .. [Spors2008] Spors, S., Rabenstein, R., and Ahrens, J., “The Theory of Wave Field Synthesis Revisited,” in *124th Conv. Audio Eng. Soc.*, Amsterdam, Netherlands (2008), preprint 7358, `pdf <https://www.int.uni-rostock.de/fileadmin/user_upload/publications/spors/2008/AES124_Spors_WFS_Theory.pdf>`__
 
 .. [Wierstorf2014] Wierstorf, H., *Perceptual Assessment of Sound Field Synthesis*, Ph.D. dissertation, Technische Universität Berlin, Berlin, Germany, 2014, doi:`10.14279/depositonce-4310 <http://dx.doi.org/10.14279/depositonce-4310>`__
+
+.. [AllenBerkley1979] Allen, J. B., Berkley, D. A., “Image method for efficiently simulating small‐room acoustics,” J. Acoust. Soc. Am. **65**, 943-950 (1979), doi:`10.1121/1.382599 <https://doi.org/10.1121/1.382599>`__
+
+.. [Borish1984] Borish, J., “Extension of the image model to arbitrary polyhedra,” J. Acoust. Soc. Am. **75**, 1827-1836 (1984), doi:`10.1121/1.390983 <https://doi.org/10.1121/1.390983>`__
