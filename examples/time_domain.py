@@ -31,7 +31,7 @@ d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
 a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
 twin = sfs.tapering.tukey(a, .3)
 p = sfs.time.soundfield.p_array(x0, d, twin * a0, t, grid)
-p = p * 100  # scale absolute amplitude
+p = p * 30  # scale absolute amplitude
 
 plt.figure(figsize=(10, 10))
 sfs.plot.level(p, grid, cmap=my_cmap)
