@@ -1,4 +1,8 @@
-"""Various utility functions."""
+"""Various utility functions.
+
+.. include:: math-definitions.rst
+
+"""
 
 from __future__ import division
 import collections
