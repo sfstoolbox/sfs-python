@@ -37,6 +37,7 @@ extensions = [
     'sphinx.ext.napoleon',  # support for NumPy-style docstrings
     'sphinx.ext.intersphinx',
     'sphinx.ext.extlinks',
+    'sphinxcontrib.bibtex',
     'matplotlib.sphinxext.plot_directive',
     'nbsphinx',
 ]
