@@ -426,7 +426,7 @@ If you want to ensure that a given variable contains a valid signal, use
 def image_sources_for_box(x, L, N, prune=True):
     """Image source method for a cuboid room.
 
-    The classical method by :cite:`Allen1979`.
+    The classical method by Allen and Berkley :cite:`Allen1979`.
 
     Parameters
     ----------
