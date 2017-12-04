@@ -11,6 +11,10 @@ Various examples are located in the directory ``doc/examples/``, e.g.
     Illustrates the synthesis of sound figures with Wave Field Synthesis
 
 
+The Jupyter notebooks are also available online as interactive examples:
+:binder:`doc/examples`.
+
+
 .. toctree::
     :maxdepth: 1
 
