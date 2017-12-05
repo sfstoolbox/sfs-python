@@ -1,7 +1,8 @@
 Examples
 ========
 
-Various examples are located in the directory ``doc/examples/``, e.g.
+Various examples are located in the directory ``doc/examples/`` as Python
+scripts, e.g.
 
 * sound_field_synthesis.py:
     Illustrates the general usage of the toolbox
@@ -11,7 +12,7 @@ Various examples are located in the directory ``doc/examples/``, e.g.
     Illustrates the synthesis of sound figures with Wave Field Synthesis
 
 
-The Jupyter notebooks are also available online as interactive examples:
+Or Jupyter notebooks, which are also available online as interactive examples:
 :binder:`doc/examples`.
 
 
