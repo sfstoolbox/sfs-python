@@ -1,0 +1,7 @@
+This directory holds configuration files for https://mybinder.org/.
+
+The SFS Toolbox examples can be accessed with this link:
+https://mybinder.org/v2/gh/sfstoolbox/sfs-python/master?filepath=doc/examples
+
+To check out a different version, just replace "master" with the desired
+branch/tag name or commit hash.
