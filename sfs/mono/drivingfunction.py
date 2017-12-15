@@ -246,7 +246,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         \frac{\i^{-m}}{\Hankel{2}{m}{\wc r_0}}
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2D.
+    See http://sfstoolbox.org/en/3.0/d_nfchoa/#equation-D.nfchoa.pw.2D.
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -272,7 +272,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
         \frac{\hankel{2}{|m|}{\wc r}}{\hankel{2}{|m|}{\wc r_0}}
         \e{\i m (\phi_0 - \phi)}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.ps.2.5D.
+    See http://sfstoolbox.org/en/3.0/d_nfchoa/#equation-D.nfchoa.ps.2.5D.
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -300,7 +300,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         \frac{\i^{-|m|}}{\wc \hankel{2}{|m|}{\wc r_0}}
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2.5D.
+    See http://sfstoolbox.org/en/3.0/d_nfchoa/#equation-D.nfchoa.pw.2.5D.
 
     """
     x0 = util.asarray_of_rows(x0)

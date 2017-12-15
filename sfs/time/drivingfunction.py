@@ -53,7 +53,7 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
     References
     ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.pw.2.5D
+    See http://sfstoolbox.org/en/3.0/d_wfs/#equation-d.wfs.pw.2.5D.
 
     """
     if c is None:
@@ -113,7 +113,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     References
     ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.ps.2.5D
+    See http://sfstoolbox.org/en/3.0/d_wfs/#equation-d.wfs.ps.2.5D.
 
     """
     if c is None:
@@ -176,7 +176,7 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     References
     ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.fs.2.5D
+    See http://sfstoolbox.org/en/3.0/d_wfs/#equation-d.wfs.fs.2.5D.
 
     """
     if c is None:
