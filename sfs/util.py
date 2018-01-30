@@ -38,10 +38,10 @@ def rotation_matrix(n1, n2):
     v = v0, v1, v2 = np.cross(n1, n2)
     s = np.linalg.norm(v)  # sine
     c = np.inner(n1, n2)  # cosine
-    vx = np.matrix([[0, -v2, v1],
-                    [v2, 0, -v0],
-                    [-v1, v0, 0]])  # skew-symmetric cross-product matrix
-    return I + vx + vx**2 * (1 - c) / s**2
+    vx = [[0, -v2, v1],
+          [v2, 0, -v0],
+          [-v1, v0, 0]]  # skew-symmetric cross-product matrix
+    return I + vx + np.dot(vx, vx) * (1 - c) / s**2
 
 
 def wavenumber(omega, c=None):
