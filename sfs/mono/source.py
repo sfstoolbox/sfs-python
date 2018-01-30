@@ -170,7 +170,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         Dimensionons of the rectangular room.
     N : (3,) array_like or int, optional
         For all three spatial dimensions per dimension maximum order or
-        ￼list of orders. A scalar applies to all three dimensions. If no
+        list of orders. A scalar applies to all three dimensions. If no
         order is provided it is approximately determined.
     deltan : float, optional
         Absorption coefficient of the walls.
