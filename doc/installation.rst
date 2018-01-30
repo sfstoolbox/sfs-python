@@ -12,11 +12,11 @@ If you also want to plot the resulting sound fields, you'll need matplotlib_.
 Instead of installing all of them separately, you should probably get a Python
 distribution that already includes everything, e.g. Anaconda_.
 
-.. _Python: http://www.python.org/
+.. _Python: https://www.python.org/
 .. _NumPy: http://www.numpy.org/
-.. _SciPy: http://www.scipy.org/scipylib/
-.. _matplotlib: http://matplotlib.org/
-.. _Anaconda: http://docs.continuum.io/anaconda/
+.. _SciPy: https://www.scipy.org/scipylib/
+.. _matplotlib: https://matplotlib.org/
+.. _Anaconda: https://docs.anaconda.com/anaconda/
 
 Installation
 ------------
@@ -34,4 +34,4 @@ To un-install, use::
 
     python3 -m pip uninstall sfs
 
-.. _pip: http://www.pip-installer.org/en/latest/installing.html
+.. _pip: https://pip.pypa.io/en/latest/installing/

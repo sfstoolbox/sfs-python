@@ -12,10 +12,10 @@ Documentation:
     http://python.sfstoolbox.org/
 
 Source code and issue tracker:
-    http://github.com/sfstoolbox/sfs-python/
+    https://github.com/sfstoolbox/sfs-python/
 
 Python Package Index:
-    http://pypi.python.org/pypi/sfs/
+    https://pypi.python.org/pypi/sfs/
 
 SFS Toolbox for Matlab:
     http://matlab.sfstoolbox.org/

@@ -3,7 +3,7 @@ Contributing
 
 If you find errors, omissions, inconsistencies or other things that need
 improvement, please create an issue or a pull request at
-http://github.com/sfstoolbox/sfs-python/.
+https://github.com/sfstoolbox/sfs-python/.
 Contributions are always welcome!
 
 Instead of pip-installing the latest release from PyPI, you should get the
@@ -13,7 +13,7 @@ newest development version from Github_::
    cd sfs-python
    python setup.py develop --user
 
-.. _Github: http://github.com/sfstoolbox/sfs-python/
+.. _Github: https://github.com/sfstoolbox/sfs-python/
 
 This way, your installation always stays up-to-date, even if you pull new
 changes from the Github repository.
