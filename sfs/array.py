@@ -509,6 +509,7 @@ def _rotate_array(positions, normals, n1, n2):
 
 def _linear_helper(ycoordinates, center, orientation):
     """Create a full linear array from an array of y-coordinates."""
+    center = util.asarray_1d(center)
     N = len(ycoordinates)
     positions = np.zeros((N, 3))
     positions[:, 1] = ycoordinates - np.mean(ycoordinates[[0, -1]])
