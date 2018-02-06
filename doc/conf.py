@@ -45,8 +45,6 @@ extensions = [
 # Override kernel name to allow running with Python 2 on Travis-CI
 nbsphinx_kernel_name = 'python'
 
-linkcheck_timeout = 10
-
 autoclass_content = 'init'
 autodoc_member_order = 'bysource'
 autodoc_default_flags = ['members', 'undoc-members']

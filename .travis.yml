@@ -12,5 +12,5 @@ install:
   - pip install -r doc/requirements.txt
 script:
   - python -m pytest
-  # This executes the example notebooks and checks for valid URLs:
-  - python -m sphinx doc/ _build/ -b linkcheck
+  # This executes the example notebooks:
+  - python -m sphinx doc/ _build/ -b dummy
