@@ -1,6 +1,7 @@
 """Plot sound fields etc."""
 from __future__ import division
 import matplotlib.pyplot as plt
+from matplotlib import __version__ as matplotlib_version
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 from matplotlib.collections import PatchCollection
@@ -284,8 +285,8 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
     if ax is None:
         ax = plt.gca()
 
-    # clip to float64 range for matplotlib 2.1, see #50
-    p = np.clip(p, -1e15, 1e15)
+    if matplotlib_version.startswith('2.1.'):
+        p = np.clip(p, -1e15, 1e15)  # clip to float64 range
 
     im = ax.imshow(np.real(p), cmap=cmap, origin='lower',
                    extent=[x.min(), x.max(), y.min(), y.max()],
