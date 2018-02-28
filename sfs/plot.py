@@ -285,6 +285,7 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
     if ax is None:
         ax = plt.gca()
 
+    # see https://github.com/matplotlib/matplotlib/issues/10567
     if matplotlib_version.startswith('2.1.'):
         p = np.clip(p, -1e15, 1e15)  # clip to float64 range
 
