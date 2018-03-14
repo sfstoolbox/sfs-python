@@ -1,6 +1,23 @@
 Version History
 ===============
 
+Version 0.4.0 (2018-03-14):
+ * Driving functions in time domain for a plane wave, point source, and
+   focused source
+ * Image source model for a point source in a rectangular room
+ * DelayedSignal class and as_delayed_signal()
+ * Improvements to the documentation
+ * Start using Jupyter notebooks for examples in documentation
+ * Spherical Hankel function as util.spherical_hn2
+ * Use spherical_jn, spherical_yn from scipy.special instead of sph_jnyn
+ * Generalization of the modal order argument in mono.source.point_modal()
+ * Rename util.normal_vector() to util.normalize_vector()
+ * Add parameter max_order to NFCHOA driving functions
+ * Add beta parameter to Kaiser tapering window
+ * Fix clipping problem of sound field plots with matplotlib 2.1
+ * Fix elevation in util.cart2sph
+ * Fix tapering.tukey() for alpha=1
+
 Version 0.3.1 (2016-04-08):
  * Fixed metadata of release
 
