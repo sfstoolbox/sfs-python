@@ -16,14 +16,14 @@ cart_sph_data = [
 
 
 @pytest.mark.parametrize('coord, polar', cart_sph_data)
-def testcart2sph(coord, polar):
+def test_cart2sph(coord, polar):
     x, y, z = coord
     a = sfs.util.cart2sph(x, y, z)
     assert_allclose(a, polar)
 
 
 @pytest.mark.parametrize('coord, polar', cart_sph_data)
-def testsph2cart(coord, polar):
+def test_sph2cart(coord, polar):
     alpha, beta, r = polar
     b = sfs.util.sph2cart(alpha, beta, r)
     assert_allclose(b, coord)
