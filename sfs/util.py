@@ -159,7 +159,7 @@ def asarray_of_rows(a, **kwargs):
 
 
 def as_xyz_components(components, **kwargs):
-    """Convert *components* to `XyzComponents` of `numpy.ndarray`\s.
+    """Convert *components* to `XyzComponents` of `numpy.ndarray`\\s.
 
     The *components* are first converted to NumPy arrays (using
     :func:`numpy.asarray`) which are then assembled into an
@@ -339,7 +339,7 @@ def normalize_vector(x):
 
 
 def displacement(v, omega):
-    """Particle displacement
+    r"""Particle displacement
 
     .. math::
 
@@ -378,7 +378,7 @@ class XyzComponents(np.ndarray):
         This class is a subclass of `numpy.ndarray`.  It is
         one-dimensional (like a plain `list`) and has a length of 3 (or
         2, if no z-component is available).  It uses ``dtype=object`` in
-        order to be able to store other `numpy.ndarray`\s of arbitrary
+        order to be able to store other `numpy.ndarray`\\s of arbitrary
         shapes but also scalars, if needed.  Because it is a NumPy array
         subclass, it can be used in operations with scalars and "normal"
         NumPy arrays, as long as they have a compatible shape.  Like any
