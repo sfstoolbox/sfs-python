@@ -11,15 +11,11 @@ def vectortypes(*coeffs):
         np.array(coeffs),
         np.array(coeffs).reshape(1, -1),
         np.array(coeffs).reshape(-1, 1),
-        np.matrix(coeffs),
-        np.matrix(coeffs).transpose(),
     ]
 
 
 def vector_id(vector):
-    if isinstance(vector, np.matrix):
-        return 'matrix, shape=' + repr(vector.shape)
-    elif isinstance(vector, np.ndarray):
+    if isinstance(vector, np.ndarray):
         return 'array, shape=' + repr(vector.shape)
     return type(vector).__name__
 
