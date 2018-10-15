@@ -4,5 +4,4 @@ build/
 dist/
 .eggs/
 sfs.egg-info/
-.cache
-.vscode
+
