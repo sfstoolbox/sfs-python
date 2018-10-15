@@ -5,14 +5,15 @@ import pytest
 import sfs
 
 cart_sph_data = [
-    ((1, 1, 1), (np.pi/4, np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, 1, 1), (np.arctan2(1, -1), np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((1, -1, 1), (-np.pi/4, np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, -1, 1), (np.arctan2(-1, -1), np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((1, 1, -1), (np.pi/4, np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, 1, -1), (np.arctan2(1, -1), np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
-    ((1, -1, -1), (-np.pi/4, np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, -1, -1), (np.arctan2(-1, -1), np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
+    ((1, 1, 1), (np.pi / 4, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, 1, 1), (np.arctan2(1, -1), np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((1, -1, 1), (-np.pi / 4, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, -1, 1), (np.arctan2(-1, -1), np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((1, 1, -1), (np.pi / 4, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, 1, -1), (np.arctan2(1, -1), np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((1, -1, -1), (-np.pi / 4, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, -1, -1), (np.arctan2(-1, -1),
+                    np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
 ]
 
 
@@ -31,14 +32,14 @@ def test_sph2cart(coord, polar):
 
 
 direction_vector_data = [
-    ((np.pi/4, np.pi/4), (0.5, 0.5, np.sqrt(2)/2)),
-    ((3*np.pi/4, 3*np.pi/4), (-1/2, 1/2, -np.sqrt(2)/2)),
-    ((3*np.pi/4, -3*np.pi/4), (1/2, -1/2, -np.sqrt(2)/2)),
-    ((np.pi/4, -np.pi/4), (-1/2, -1/2, np.sqrt(2)/2)),
-    ((-np.pi/4, np.pi/4), (1/2, -1/2, np.sqrt(2)/2)),
-    ((-3*np.pi/4, 3*np.pi/4), (-1/2, -1/2, -np.sqrt(2)/2)),
-    ((-3*np.pi/4, -3*np.pi/4), (1/2, 1/2, -np.sqrt(2)/2)),
-    ((-np.pi/4, -np.pi/4), (-1/2, 1/2, np.sqrt(2)/2)),
+    ((np.pi / 4, np.pi / 4), (0.5, 0.5, np.sqrt(2) / 2)),
+    ((3 * np.pi / 4, 3 * np.pi / 4), (-1 / 2, 1 / 2, -np.sqrt(2) / 2)),
+    ((3 * np.pi / 4, -3 * np.pi / 4), (1 / 2, -1 / 2, -np.sqrt(2) / 2)),
+    ((np.pi / 4, -np.pi / 4), (-1 / 2, -1 / 2, np.sqrt(2) / 2)),
+    ((-np.pi / 4, np.pi / 4), (1 / 2, -1 / 2, np.sqrt(2) / 2)),
+    ((-3 * np.pi / 4, 3 * np.pi / 4), (-1 / 2, -1 / 2, -np.sqrt(2) / 2)),
+    ((-3 * np.pi / 4, -3 * np.pi / 4), (1 / 2, 1 / 2, -np.sqrt(2) / 2)),
+    ((-np.pi / 4, -np.pi / 4), (-1 / 2, 1 / 2, np.sqrt(2) / 2)),
 ]
 
 
@@ -53,13 +54,13 @@ db_data = [
     (0, -np.inf),
     (1, 0),
     (10, 10),
-    (10*2, (10+3.010299956639813)),
-    (10*10, (10+10)),
-    (10*3, (10+4.771212547196624)),
-    (10*4, (10+6.02059991327962)),
-    (10*0.5, (10-3.01029995663981198)),
-    (10*0.1, (10-10)),
-    (10*0.25, (10-6.02059991327962396))
+    (10 * 2, (10 + 3.010299956639813)),
+    (10 * 10, (10 + 10)),
+    (10 * 3, (10 + 4.771212547196624)),
+    (10 * 4, (10 + 6.02059991327962)),
+    (10 * 0.5, (10 - 3.01029995663981198)),
+    (10 * 0.1, (10 - 10)),
+    (10 * 0.25, (10 - 6.02059991327962396))
     ]
 
 
@@ -72,7 +73,7 @@ def test_db_amplitude(linear, decibel):
 @pytest.mark.parametrize('linear, decibel', db_data)
 def test_db_power(linear, decibel):
     d = sfs.util.db(linear)
-    assert_allclose(d, 2*decibel)
+    assert_allclose(d, 2 * decibel)
 
 
 image_sources_for_box_data = [(
@@ -84,16 +85,17 @@ image_sources_for_box_data = [(
        (9,  1,  1),
        (1,  7,  1),
        (1,  1,  5)), ((0, 0, 0, 0, 1, 0),
-       (0, 0, 1, 0, 0, 0),
-       (1, 0, 0, 0, 0, 0),
-       (0, 0, 0, 0, 0, 0),
-       (0, 1, 0, 0, 0, 0),
-       (0, 0, 0, 1, 0, 0),
-       (0, 0, 0, 0, 0, 1)))),
+                      (0, 0, 1, 0, 0, 0),
+                      (1, 0, 0, 0, 0, 0),
+                      (0, 0, 0, 0, 0, 0),
+                      (0, 1, 0, 0, 0, 0),
+                      (0, 0, 0, 1, 0, 0),
+                      (0, 0, 0, 0, 0, 1)))),
 )]
 
 
-@pytest.mark.parametrize('in_image_source, out_image_source', image_sources_for_box_data)
+@pytest.mark.parametrize('in_image_source, out_image_source',
+                         image_sources_for_box_data)
 def test_image_sources_for_box(in_image_source, out_image_source):
     X, L, N = in_image_source
     Xs, wall = out_image_source
