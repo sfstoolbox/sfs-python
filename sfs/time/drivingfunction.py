@@ -6,6 +6,7 @@
 from __future__ import division
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
+from scipy.signal import fftconvolve
 from .. import defs
 from .. import util
 
@@ -255,3 +256,95 @@ def apply_delays(signal, delays):
     for column, row in enumerate(delays_samples):
         out[row:row + len(data), column] = data
     return util.DelayedSignal(out, samplerate, offset_samples / samplerate)
+
+
+def wfs_25d_fir_prefilter(signal, N=128, fl=50, fu=1200, c=None):
+    """Apply 2.5D pre-equalization to WFS source signal.
+
+    (Type 1 linear phase FIR filter of order N.
+    Rising slope with 3dB/oct between fl and fu.
+    Constant magnitude below fl and above fu.)
+
+    Parameters
+    ----------
+    signal : tuple of (M,) array_like, followed by 1 or 2 scalars
+        Input signal consisting of (mono) audio data, sampling rate
+        (in Hertz) and optional starting time (in seconds).
+    N : int, optional
+        Filter order, shall be even.
+    fl : int, optional
+        Lower corner frequency in Hertz.
+    fu : int, optional
+        Upper corner frequency in Hertz.
+        (Should be around spatial aliasing limit.)
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `DelayedSignal`
+        A tuple containing the filtered signal (in a `numpy.ndarray`
+        with shape ``(M+N, )``), followed by the sampling rate (in Hertz)
+        and a (possibly negative) time offset (in seconds).
+
+    """
+    data, fs, initial_offset = util.as_delayed_signal(signal)
+    if c is None:
+        c = defs.c
+    h, delay = _wfs_prefilter_fir('2.5D', N, fl, fu, fs, c)
+    out = fftconvolve(data, h)
+    return util.DelayedSignal(out, fs, initial_offset - delay)
+
+
+def _wfs_prefilter_fir(dim, N, fl, fu, fs, c):
+    """Create pre-equalization filter for WFS.
+
+    Rising slope with 3dB/oct ('2.5D') or 6dB/oct ('2D' and '3D').
+    Constant magnitude below fl and above fu.
+    Type 1 linear phase FIR filter of order N.
+    Simple design via "frequency sampling method".
+
+    Parameters
+    ----------
+    dim : str
+        Dimensionality, must be '2D', '2.5D' or '3D'.
+    N : int
+        Filter order, shall be even.
+    fl : int
+        Lower corner frequency in Hertz.
+    fu : int
+        Upper corner frequency in Hertz.
+        (Should be around spatial aliasing limit.)
+    fs : int
+        Sampling frequency in Hertz.
+    c : float
+        Speed of sound.
+
+    Returns
+    -------
+    h : (N+1,) numpy.ndarray
+        Filter taps.
+    delay : float
+        Pre-delay in seconds.
+
+    """
+    if N % 2:
+        raise ValueError('N must be an even int.')
+
+    bins = int(N/2 + 1)
+    delta_f = fs / (2*bins - 1)
+    f = np.arange(bins) * delta_f
+    if dim == '2D' or dim == '3D':
+        alpha = 1
+    elif dim == '2.5D':
+        alpha = 0.5
+    desired = np.power(2 * np.pi * f / c, alpha)
+    low_shelf = np.power(2 * np.pi * fl / c, alpha)
+    high_shelf = np.power(2 * np.pi * fu / c, alpha)
+    desired = np.clip(desired, low_shelf, high_shelf)
+
+    h = np.fft.irfft(desired, 2*bins - 1)
+    h = np.roll(h, bins - 1)
+    h = h / np.sqrt(np.sum(abs(h)**2))  # normalize energy
+    delay = (bins - 1) / fs
+    return h, delay
