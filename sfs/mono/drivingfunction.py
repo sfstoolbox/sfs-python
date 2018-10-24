@@ -110,7 +110,7 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     return wfs_25d_preeq(omega, omalias, c) * \
-        np.sqrt(2*np.pi * np.linalg.norm(xref - x0)) * \
+        np.sqrt(8*np.pi * np.linalg.norm(xref - x0, axis=-1)) * \
         np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
