@@ -31,7 +31,26 @@ from .. import defs
 
 
 def point(omega, x0, n0, grid, c=None):
-    """Point source.
+    """Sound pressure of a point source.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of source. Only for compatibilty, not used.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `XyzComponents`
+        Sound pressure at positions given by *grid*.
 
     Notes
     -----
@@ -69,7 +88,21 @@ def point(omega, x0, n0, grid, c=None):
 
 
 def point_velocity(omega, x0, n0, grid, c=None):
-    """Velocity of a point source.
+    """Particle velocity of a point source.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of source. Only for compatibilty, not used.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
 
     Returns
     -------
@@ -89,13 +122,15 @@ def point_velocity(omega, x0, n0, grid, c=None):
         plt.title("Sound Pressure and Particle Velocity")
 
     """
+    if c is None:
+        c = defs.c
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
     v = point(omega, x0, n0, grid, c=c)
-    v *= (1+1j*k*r) / (defs.rho0 * defs.c * 1j*k*r)
+    v *= (1+1j*k*r) / (defs.rho0 * c * 1j*k*r)
     return util.XyzComponents([v * o / r for o in offset])
 
 
