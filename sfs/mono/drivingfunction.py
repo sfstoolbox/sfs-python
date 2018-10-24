@@ -110,7 +110,7 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
     return wfs_25d_preeq(omega, omalias, c) * \
-        np.sqrt(2*np.pi * np.linalg.norm(xref - x0)) * \
+        np.sqrt(8*np.pi * np.linalg.norm(xref - x0, axis=-1)) * \
         np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
 
 
@@ -312,8 +312,8 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     d = 0
     hn2 = util.spherical_hn2(range(0, M + 1), k * r0)
     for m in range(-M, M + 1):
-        d += 1j**-abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
-    return -2 / r0 * d
+        d += (-1j)**abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
+    return 2*1j / r0 * d
 
 
 def sdm_2d_line(omega, x0, n0, xs, c=None):
