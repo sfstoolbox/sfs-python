@@ -134,6 +134,36 @@ def point_velocity(omega, x0, n0, grid, c=None):
     return util.XyzComponents([v * o / r for o in offset])
 
 
+def point_averaged_intensity(omega, x0, n0, grid, c=None):
+    """Velocity of a point source.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of source. Only for compatibilty, not used.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `XyzComponents`
+        Averaged intensity at positions given by *grid*.
+    """
+    x0 = util.asarray_1d(x0)
+    grid = util.as_xyz_components(grid)
+    offset = grid - x0
+    r = np.linalg.norm(offset)
+    i = 1 / (2*defs.rho0 * defs.c)
+    return util.XyzComponents([i * o / r**2 for o in offset])
+
+
 def point_dipole(omega, x0, n0, grid, c=None):
     """Point source with dipole characteristics.
 
@@ -436,13 +466,15 @@ def line_velocity(omega, x0, n0, grid, c=None):
         plt.title("Sound Pressure and Particle Velocity")
 
     """
+    if c is None:
+        c = defs.c
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)[:2]  # ignore z-component
     grid = util.as_xyz_components(grid)
 
     offset = grid[:2] - x0
     r = np.linalg.norm(offset)
-    v = -1/(4*defs.c*defs.rho0) * special.hankel2(1, k * r)
+    v = -1/(4*c*defs.rho0) * special.hankel2(1, k * r)
     v = [v * o / r for o in offset]
 
     assert v[0].shape == v[1].shape
@@ -547,6 +579,25 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
 def plane(omega, x0, n0, grid, c=None):
     """Plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Frequency of plane wave.
+    x0 : (3,) array_like
+        Position of plane wave.
+    n0 : (3,) array_like
+        Normal vector (direction) of plane wave.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `XyzComponents`
+        Sound pressure at positions given by *grid*.
+
     Notes
     -----
     ::
@@ -575,16 +626,30 @@ def plane(omega, x0, n0, grid, c=None):
 def plane_velocity(omega, x0, n0, grid, c=None):
     """Velocity of a plane wave.
 
-    Notes
-    -----
-    ::
-
-        V(x, w) = 1/(rho c) e^(-i w/c n x) n
+    Parameters
+    ----------
+    omega : float
+        Frequency of plane wave.
+    x0 : (3,) array_like
+        Position of plane wave.
+    n0 : (3,) array_like
+        Normal vector (direction) of plane wave.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
 
     Returns
     -------
     `XyzComponents`
         Particle velocity at positions given by *grid*.
+
+    Notes
+    -----
+    ::
+
+        V(x, w) = 1/(rho c) e^(-i w/c n x) n
 
     Examples
     --------
@@ -599,8 +664,45 @@ def plane_velocity(omega, x0, n0, grid, c=None):
         plt.title("Sound Pressure and Particle Velocity")
 
     """
-    v = plane(omega, x0, n0, grid, c=c) / (defs.rho0 * defs.c)
+    if c is None:
+        c = defs.c
+    v = plane(omega, x0, n0, grid, c=c) / (defs.rho0 * c)
     return util.XyzComponents([v * n for n in n0])
+
+
+def plane_averaged_intensity(omega, x0, n0, grid, c=None):
+    """Averaged intensity of a plane wave.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of plane wave.
+    x0 : (3,) array_like
+        Position of plane wave.
+    n0 : (3,) array_like
+        Normal vector (direction) of plane wave.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `XyzComponents`
+        Averaged intensity at positions given by *grid*.
+
+    Notes
+    -----
+    ::
+
+        I(x, w) = 1/(2 rho c) n
+
+    """
+    if c is None:
+        c = defs.c
+    i = 1 / (2 * defs.rho0 * c)
+    return util.XyzComponents([i * n for n in n0])
 
 
 def _duplicate_zdirection(p, grid):
@@ -610,6 +712,7 @@ def _duplicate_zdirection(p, grid):
         return np.tile(p, [1, 1, gridshape[2]])
     else:
         return p
+
 
 def _hankel2_0(x):
     """Wrapper for Hankel function of the second type using fast versions
