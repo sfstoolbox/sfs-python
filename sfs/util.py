@@ -343,7 +343,7 @@ def displacement(v, omega):
 
     .. math::
 
-        d(x, t) = \int_0^t v(x, t) dt
+        d(x, t) = \int_{-\infty}^t v(x, \tau) d\tau
 
     """
     return as_xyz_components(v) / (1j * omega)
