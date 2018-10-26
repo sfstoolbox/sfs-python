@@ -83,4 +83,4 @@ New releases are made using the following steps:
 
 .. _twine: https://pypi.python.org/pypi/twine
 .. _add release notes: https://github.com/sfstoolbox/sfs-python/tags
-.. _RTD: http://readthedocs.org/projects/sfs/builds/
+.. _RTD: http://readthedocs.org/projects/sfs-python/builds/
