@@ -705,6 +705,45 @@ def plane_averaged_intensity(omega, x0, n0, grid, c=None):
     return util.XyzComponents([i * n for n in n0])
 
 
+def pulsating_sphere_displacement(omega, x0, a, d, grid, c=None):
+    """Particle displacement of a pulsating sphere.
+
+    Paramters
+    ---------
+    omega : float
+        Frequency of pulsation.
+    x0 : (3,) array_like
+        Position of source.
+    a : float
+        Radius of sphere.
+    d : float
+        Amplitude of displacement.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `XyzComponents`
+        Particle displacement at positions given by *grid*.
+    """
+    k = util.wavenumber(omega, c)
+    x0 = util.asarray_1d(x0)
+    offset = grid - x0
+    r = np.linalg.norm(offset)
+    idx_valid = r > a
+    r = r[idx_valid]
+    for i in range(3):
+        if not np.isscalar(offset[i]):
+            offset[i] = offset[i][idx_valid]
+        if not np.isscalar(grid[i]):
+            grid[i] = grid[i][idx_valid]
+    return util.XyzComponents([d * a / r**2 * np.exp(-1j * k * (r - a)) * o
+                               for o in offset])
+
+
 def _duplicate_zdirection(p, grid):
     """If necessary, duplicate field in z-direction."""
     gridshape = np.broadcast(*grid).shape
