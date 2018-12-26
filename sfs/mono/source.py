@@ -707,6 +707,115 @@ def plane_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
     return util.XyzComponents([i * n for n in n0])
 
 
+def pulsating_sphere(omega, center, radius, amplitude, grid, inside=False,
+                     c=None):
+    """Sound pressure of a pulsating sphere.
+
+    Parameters
+    ---------
+    omega : float
+        Frequency of pulsating sphere
+    center : (3,) array_like
+        Center of sphere.
+    radius : float
+        Radius of sphere.
+    amplitude : float
+        Amplitude of displacement.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    inside : bool, optional
+        As default, `numpy.nan` is returned for inside the sphere.
+        If ``inside=True``, the sound field inside the sphere is extrapolated.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
+        If ``inside=False``, `numpy.nan` is returned for inside the sphere.
+
+    Examples
+    --------
+
+    .. plot::
+        :context: close-figs
+
+        radius = 0.25
+        amplitude = 1 / (radius * omega * sfs.default.rho0 * sfs.default.c)
+        p = sfs.mono.source.pulsating_sphere(omega, x0, radius, amplitude, grid)
+        sfs.plot.soundfield(p, grid)
+        plt.title("Sound Pressure of a Pulsating Sphere")
+
+    """
+    if c is None:
+        c = default.c
+    k = util.wavenumber(omega, c)
+    center = util.asarray_1d(center)
+    grid = util.as_xyz_components(grid)
+
+    distance = np.linalg.norm(grid - center)
+    theta = np.arctan(1, k * distance)
+    impedance = default.rho0 * c * np.cos(theta) * np.exp(1j * theta)
+    radial_velocity = 1j * omega * amplitude * radius / distance \
+        * np.exp(-1j * k * (distance - radius))
+    if not inside:
+        radial_velocity[distance <= radius] = np.nan
+    return impedance * radial_velocity
+
+
+def pulsating_sphere_velocity(omega, center, radius, amplitude, grid, c=None):
+    """Particle velocity of a pulsating sphere.
+
+    Parameters
+    ---------
+    omega : float
+        Frequency of pulsating sphere
+    center : (3,) array_like
+        Center of sphere.
+    radius : float
+        Radius of sphere.
+    amplitude : float
+        Amplitude of displacement.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    `XyzComponents`
+        Particle velocity at positions given by *grid*.
+        `numpy.nan` is returned for inside the sphere.
+
+    Examples
+    --------
+
+    .. plot::
+        :context: close-figs
+
+        v = sfs.mono.source.pulsating_sphere_velocity(omega, x0, radius, amplitude, vgrid)
+        sfs.plot.soundfield(p, grid)
+        sfs.plot.vectors(v, vgrid)
+        plt.title("Sound Pressure and Particle Velocity of a Pulsating Sphere")
+
+    """
+    if c is None:
+        c = default.c
+    k = util.wavenumber(omega, c)
+    grid = util.as_xyz_components(grid)
+
+    center = util.asarray_1d(center)
+    offset = grid - center
+    distance = np.linalg.norm(offset)
+    radial_velocity = 1j * omega * amplitude * radius / distance \
+        * np.exp(-1j * k * (distance - radius))
+    radial_velocity[distance <= radius] = np.nan
+    return util.XyzComponents([radial_velocity * o / distance for o in offset])
+
+
 def _duplicate_zdirection(p, grid):
     """If necessary, duplicate field in z-direction."""
     gridshape = np.broadcast(*grid).shape

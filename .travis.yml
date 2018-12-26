@@ -9,6 +9,7 @@ addons:
   apt:
     packages:
       - pandoc
+      - ffmpeg
 install:
   - pip install .
   - pip install -r tests/requirements.txt

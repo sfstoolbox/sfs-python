@@ -328,8 +328,8 @@ def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
 
 
 def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
-              edgecolor='', **kwargs):
-    """Plot particle positions as scatter plot."""
+              edgecolor='', marker='.', s=15, **kwargs):
+    """Plot particle positions as scatter plot"""
     XX, YY = [np.real(c) for c in x[:2]]
 
     if trim is not None:
@@ -342,12 +342,12 @@ def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
     if ax is None:
         ax = plt.gca()
 
-    ax.scatter(XX, YY, edgecolor=edgecolor, **kwargs)
-
     if xlabel:
         ax.set_xlabel(xlabel)
     if ylabel:
         ax.set_ylabel(ylabel)
+    return ax.scatter(XX, YY, edgecolor=edgecolor, marker=marker, s=s,
+                      **kwargs)
 
 
 def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
