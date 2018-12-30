@@ -49,7 +49,7 @@ def point(omega, x0, n0, grid, c=None):
 
     Returns
     -------
-    `XyzComponents`
+    numpy.ndarray
         Sound pressure at positions given by *grid*.
 
     Notes
@@ -595,7 +595,7 @@ def plane(omega, x0, n0, grid, c=None):
 
     Returns
     -------
-    `XyzComponents`
+    numpy.ndarray
         Sound pressure at positions given by *grid*.
 
     Notes
