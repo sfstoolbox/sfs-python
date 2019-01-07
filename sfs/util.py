@@ -123,6 +123,7 @@ def cart2sph(x, y, z):
     """
     r = np.sqrt(x**2 + y**2 + z**2)
     alpha = np.arctan2(y, x)
+    alpha = alpha % (2 * np.pi)  # [0, 2pi)
     beta = np.arccos(z / r)
     return alpha, beta, r
 

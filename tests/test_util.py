@@ -4,14 +4,18 @@ import pytest
 import sfs
 
 cart_sph_data = [
-    ((1, 1, 1), (np.pi/4, np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, 1, 1), (np.arctan2(1, -1), np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((1, -1, 1), (-np.pi/4, np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, -1, 1), (np.arctan2(-1, -1), np.arccos(1/np.sqrt(3)), np.sqrt(3))),
-    ((1, 1, -1), (np.pi/4, np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, 1, -1), (np.arctan2(1, -1), np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
-    ((1, -1, -1), (-np.pi/4, np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
-    ((-1, -1, -1), (np.arctan2(-1, -1), np.arccos(-1/np.sqrt(3)), np.sqrt(3))),
+    ((1, 1, 1), (np.pi / 4, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, 1, 1), (3 * np.pi / 4, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((1, -1, 1), (2 * np.pi - np.pi / 4, np.arccos(1 / np.sqrt(3)),
+                  np.sqrt(3))),
+    ((-1, -1, 1), (2 * np.pi - 3 * np.pi / 4, np.arccos(1 / np.sqrt(3)),
+                   np.sqrt(3))),
+    ((1, 1, -1), (np.pi / 4, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, 1, -1), (3 * np.pi / 4, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((1, -1, -1), (2 * np.pi - np.pi / 4, np.arccos(-1 / np.sqrt(3)),
+                   np.sqrt(3))),
+    ((-1, -1, -1), (2 * np.pi - 3 * np.pi / 4, np.arccos(-1 / np.sqrt(3)),
+                    np.sqrt(3))),
 ]
 
 
