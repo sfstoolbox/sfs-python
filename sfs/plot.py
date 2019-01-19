@@ -1,5 +1,4 @@
 """Plot sound fields etc."""
-from __future__ import division
 import matplotlib.pyplot as plt
 from matplotlib import __version__ as matplotlib_version
 from matplotlib.patches import PathPatch

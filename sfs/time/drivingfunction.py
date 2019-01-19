@@ -3,7 +3,6 @@
 .. include:: math-definitions.rst
 
 """
-from __future__ import division
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
 from .. import defs

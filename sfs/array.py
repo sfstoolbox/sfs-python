@@ -12,7 +12,6 @@
    :members: take
 
 """
-from __future__ import division  # for Python 2.x
 from collections import namedtuple
 import numpy as np
 from . import util

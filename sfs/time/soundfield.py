@@ -1,6 +1,5 @@
 """Compute sound field."""
 
-from __future__ import division
 from .. import util
 from .. import defs
 from .source import point

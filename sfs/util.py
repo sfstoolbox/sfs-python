@@ -4,7 +4,6 @@
 
 """
 
-from __future__ import division
 import collections
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn

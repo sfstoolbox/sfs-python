@@ -6,7 +6,6 @@ The Green's function describes the spatial sound propagation over time.
 
 """
 
-from __future__ import division
 import numpy as np
 from .. import util
 from .. import defs
