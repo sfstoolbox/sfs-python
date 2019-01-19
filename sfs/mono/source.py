@@ -165,7 +165,7 @@ def point_averaged_intensity(omega, x0, n0, grid, c=None):
 
 
 def point_dipole(omega, x0, n0, grid, c=None):
-    """Point source with dipole characteristics.
+    r"""Point source with dipole characteristics.
 
     Parameters
     ----------

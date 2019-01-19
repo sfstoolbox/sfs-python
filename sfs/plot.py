@@ -394,7 +394,7 @@ def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
 
 
 def add_colorbar(im, aspect=20, pad=0.5, **kwargs):
-    """Add a vertical color bar to a plot.
+    r"""Add a vertical color bar to a plot.
 
     Parameters
     ----------

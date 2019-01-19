@@ -38,7 +38,7 @@ class ArrayData(namedtuple('ArrayData', 'x n a')):
 
     def __repr__(self):
         return 'ArrayData(\n' + ',\n'.join(
-            '    {0}={1}'.format(name, repr(data).replace('\n', '\n      '))
+            '    {}={}'.format(name, repr(data).replace('\n', '\n      '))
             for name, data in zip('xna', self)) + ')'
 
     def take(self, indices):

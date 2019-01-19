@@ -431,7 +431,7 @@ class XyzComponents(np.ndarray):
 
     def __repr__(self):
         return 'XyzComponents(\n' + ',\n'.join(
-            '    {0}={1}'.format(name, repr(data).replace('\n', '\n      '))
+            '    {}={}'.format(name, repr(data).replace('\n', '\n      '))
             for name, data in zip('xyz', self)) + ')'
 
     def make_property(index, doc):

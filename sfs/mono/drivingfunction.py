@@ -51,7 +51,7 @@ wfs_2d_point = _wfs_point
 
 
 def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
-    """Point source by 2.5-dimensional WFS.
+    r"""Point source by 2.5-dimensional WFS.
 
     ::
 
@@ -96,7 +96,7 @@ wfs_2d_plane = _wfs_plane
 
 def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
                   omalias=None):
-    """Plane wave by 2.5-dimensional WFS.
+    r"""Plane wave by 2.5-dimensional WFS.
 
     ::
 
@@ -140,7 +140,7 @@ wfs_2d_focused = _wfs_focused
 
 
 def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
-    """Focused source by 2.5-dimensional WFS.
+    r"""Focused source by 2.5-dimensional WFS.
 
     ::
 
