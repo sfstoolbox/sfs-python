@@ -24,6 +24,7 @@ setup(
     keywords="audio SFS WFS Ambisonics".split(),
     url="http://github.com/sfstoolbox/",
     platforms='any',
+    python_requires='>=3.6',
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
