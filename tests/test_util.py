@@ -51,25 +51,20 @@ def test_direction_vector(input, vector):
 
 db_data = [
     (0, -np.inf),
+    (0.5, -3.01029995663981),
     (1, 0),
+    (2, 3.01029995663981),
     (10, 10),
-    (10 * 2, (10 + 3.010299956639813)),
-    (10 * 10, (10 + 10)),
-    (10 * 3, (10 + 4.771212547196624)),
-    (10 * 4, (10 + 6.02059991327962)),
-    (10 * 0.5, (10 - 3.01029995663981198)),
-    (10 * 0.1, (10 - 10)),
-    (10 * 0.25, (10 - 6.02059991327962396))
-    ]
+]
 
 
-@pytest.mark.parametrize('linear, decibel', db_data)
-def test_db_amplitude(linear, decibel):
-    d = sfs.util.db(linear, True)
-    assert_allclose(d, decibel)
-
-
-@pytest.mark.parametrize('linear, decibel', db_data)
-def test_db_power(linear, decibel):
+@pytest.mark.parametrize('linear, power_db', db_data)
+def test_db_amplitude(linear, power_db):
     d = sfs.util.db(linear)
-    assert_allclose(d, 2 * decibel)
+    assert_allclose(d, power_db * 2)
+
+
+@pytest.mark.parametrize('linear, power_db', db_data)
+def test_db_power(linear, power_db):
+    d = sfs.util.db(linear, power=True)
+    assert_allclose(d, power_db)
