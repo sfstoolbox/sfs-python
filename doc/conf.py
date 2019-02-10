@@ -46,6 +46,11 @@ extensions = [
 # Override kernel name to allow running with Python 2 on Travis-CI
 nbsphinx_kernel_name = 'python'
 
+nbsphinx_execute_arguments = [
+    "--InlineBackend.figure_formats={'svg', 'pdf'}",
+    "--InlineBackend.rc={'figure.dpi': 96}",
+]
+
 autoclass_content = 'init'
 autodoc_member_order = 'bysource'
 autodoc_default_flags = ['members', 'undoc-members']
@@ -73,7 +78,8 @@ intersphinx_mapping = {
 plot_include_source = True
 plot_html_show_source_link = False
 plot_html_show_formats = False
-plot_pre_code = ""
+plot_pre_code = ''
+plot_formats = ['svg', 'pdf']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_template']
