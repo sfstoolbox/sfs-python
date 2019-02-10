@@ -155,6 +155,48 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+jinja_define = """
+{% set docname = env.doc2path(env.docname, base='doc') %}
+{% set latex_href = ''.join([
+    '\href{https://github.com/sfstoolbox/sfs-python/blob/',
+    env.config.release,
+    '/',
+    docname | escape_latex,
+    '}{\sphinxcode{\sphinxupquote{',
+    docname | escape_latex,
+    '}}}',
+]) %}
+"""
+
+nbsphinx_prolog = jinja_define + r"""
+.. only:: html
+
+    .. role:: raw-html(raw)
+        :format: html
+
+    .. nbinfo::
+
+        This page was generated from `{{ docname }}`__.
+        Interactive online version:
+        :raw-html:`<a href="https://mybinder.org/v2/gh/sfstoolbox/sfs-python/{{ env.config.release }}?filepath={{ docname }}"><img alt="Binder badge" src="https://mybinder.org/badge_logo.svg" style="vertical-align:text-bottom"></a>`
+
+    __ https://github.com/sfstoolbox/sfs-python/blob/
+        {{ env.config.release }}/{{ docname }}
+
+.. raw:: latex
+
+    \nbsphinxstartnotebook{\scriptsize\noindent\strut
+    \textcolor{gray}{The following section was generated from {{ latex_href }}
+    \dotfill}}
+"""
+
+nbsphinx_epilog = jinja_define + r"""
+.. raw:: latex
+
+    \nbsphinxstopnotebook{\scriptsize\noindent\strut
+    \textcolor{gray}{\dotfill\ {{ latex_href }} ends here.}}
+"""
+
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -228,6 +270,7 @@ html_static_path = ['_static']
 
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = True
+html_sourcelink_suffix = ''
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 #html_show_sphinx = True
@@ -246,20 +289,32 @@ html_show_sourcelink = True
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'SFS'
 
+html_scaled_image_link = False
 
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-'papersize': 'a4paper',
-
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
-
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
-
-'printindex': '',
+    'papersize': 'a4paper',
+    'printindex': '',
+    'sphinxsetup': r"""
+        VerbatimColor={HTML}{F5F5F5},
+        VerbatimBorderColor={HTML}{E0E0E0},
+        noteBorderColor={HTML}{E0E0E0},
+        noteborder=1.5pt,
+        warningBorderColor={HTML}{E0E0E0},
+        warningborder=1.5pt,
+        warningBgColor={HTML}{FBFBFB},
+    """,
+    'preamble': r"""
+\usepackage[sc,osf]{mathpazo}
+\linespread{1.05}  % see http://www.tug.dk/FontCatalogue/urwpalladio/
+\renewcommand{\sfdefault}{pplj}  % Palatino instead of sans serif
+\IfFileExists{zlmtt.sty}{
+    \usepackage[light,scaled=1.05]{zlmtt}  % light typewriter font from lmodern
+}{
+    \renewcommand{\ttdefault}{lmtt}  % typewriter font from lmodern
+}
+""",
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
