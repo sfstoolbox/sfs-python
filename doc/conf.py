@@ -43,9 +43,6 @@ extensions = [
     'nbsphinx',
 ]
 
-# Override kernel name to allow running with Python 2 on Travis-CI
-nbsphinx_kernel_name = 'python'
-
 nbsphinx_execute_arguments = [
     "--InlineBackend.figure_formats={'svg', 'pdf'}",
     "--InlineBackend.rc={'figure.dpi': 96}",
