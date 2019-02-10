@@ -82,6 +82,12 @@ plot_html_show_formats = False
 plot_pre_code = ''
 plot_formats = ['svg', 'pdf']
 
+mathjax_config = {
+    'TeX': {
+        'extensions': ['newcommand.js', 'begingroup.js'],  # Support for \gdef
+    },
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_template']
 
