@@ -12,3 +12,4 @@ dependencies:
   - pandoc
   - pip:
     - nbsphinx
+    - sphinxcontrib-katex

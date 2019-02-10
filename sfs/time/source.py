@@ -2,8 +2,6 @@
 
 The Green's function describes the spatial sound propagation over time.
 
-.. include:: math-definitions.rst
-
 """
 
 import numpy as np

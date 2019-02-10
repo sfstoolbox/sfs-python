@@ -3,6 +3,7 @@ Sphinx-RTD-Theme
 nbsphinx
 ipykernel
 sphinxcontrib-bibtex
+sphinxcontrib-katex
 
 NumPy
 SciPy
