@@ -33,7 +33,7 @@ npw = sfs.util.direction_vector(np.radians(pw_angle), np.radians(90))
 #x0, n0, a0 = sfs.array.linear_random(N, 0.2*dx, 5*dx)
 #x0, n0, a0 = sfs.array.rectangular(N, dx, orientation=sfs.util.direction_vector(0*np.pi/4, np.pi/2))
 #x0, n0, a0 = sfs.array.circular(N, R)
-x0, n0, a0 = sfs.array.load('../data/arrays/university_rostock.csv')
+x0, n0, a0 = sfs.array.load('../../data/arrays/university_rostock.csv')
 
 #x0, n0, a0 = sfs.array.planar(N, dx, orientation=sfs.util.direction_vector(np.radians(0),np.radians(180)))
 #x0, n0, a0 = sfs.array.cube(N, dx, orientation=sfs.util.direction_vector(0, np.pi/2))

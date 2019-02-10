@@ -13,7 +13,10 @@ install:
   - pip install .
   - pip install -r tests/requirements.txt
   - pip install -r doc/requirements.txt
+  # This is needed in example scripts:
+  - pip install pillow
 script:
   - python -m pytest
+  - python doc/examples/run_all.py
   # This executes the example notebooks:
   - python -m sphinx doc/ _build/ -b dummy
