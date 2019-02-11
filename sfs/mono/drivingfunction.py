@@ -2,6 +2,34 @@
 
 .. include:: math-definitions.rst
 
+.. plot::
+    :context: reset
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sfs
+
+    plt.rcParams['figure.figsize'] = 6, 6
+
+    xs = -1.5, 1.5, 0
+    xs_focused = -0.5, 0.5, 0
+    # normal vector for plane wave:
+    npw = sfs.util.direction_vector(np.radians(-45))
+    # normal vector for focused source:
+    ns = sfs.util.direction_vector(np.radians(-45))
+    f = 300  # Hz
+    omega = 2 * np.pi * f
+    R = 1.5  # Radius of circular loudspeaker array
+
+    grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
+
+    x0, n0, a0 = sfs.array.circular(N=32, R=R)
+
+    def plot(d, selected):
+        p = sfs.mono.synthesized.generic(omega, x0, n0, d * selected * a0 , grid)
+        sfs.plot.soundfield(p, grid)
+        sfs.plot.loudspeaker_2d(x0, n0, selected * a0, size=0.15)
+
 """
 
 import numpy as np
@@ -17,6 +45,15 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     ::
 
         D(x0,k) = j/2 k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
+        a = sfs.mono.drivingfunction.source_selection_line(n0, x0, xs)
+        plot(d, a)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -36,6 +73,15 @@ def _wfs_point(omega, x0, n0, xs, c=None):
                        (x0-xs) n0
         D(x0,k) = j k ------------- e^(-j k |x0-xs|)
                       |x0-xs|^(3/2)
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_3d_point(omega, x0, n0, xs)
+        a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+        plot(d, a)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -58,6 +104,15 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
                     ____________   (x0-xs) n0
         D(x0,k) = \|j k |xref-x0| ------------- e^(-j k |x0-xs|)
                                   |x0-xs|^(3/2)
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs)
+        a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+        plot(d, a)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -83,6 +138,15 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 
         D(x0,k) =  j k n n0  e^(-j k n x0)
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
+        a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+        plot(d, a)
+
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
@@ -102,6 +166,15 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
 
                          ____________
         D_2.5D(x0,w) = \|j k |xref-x0| n n0 e^(-j k n x0)
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw)
+        a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+        plot(d, a)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -126,6 +199,15 @@ def _wfs_focused(omega, x0, n0, xs, c=None):
         D(x0,k) = j k ------------- e^(j k |x0-xs|)
                       |x0-xs|^(3/2)
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_3d_focused(omega, x0, n0, xs_focused)
+        a = sfs.mono.drivingfunction.source_selection_focused(ns, x0, xs_focused)
+        plot(d, a)
+
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
@@ -147,6 +229,15 @@ def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
                     ____________   (x0-xs) n0
         D(x0,w) = \|j k |xref-x0| ------------- e^(j k |x0-xs|)
                                   |x0-xs|^(3/2)
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.wfs_25d_focused(omega, x0, n0, xs_focused)
+        a = sfs.mono.drivingfunction.source_selection_focused(ns, x0, xs_focused)
+        plot(d, a)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -248,6 +339,14 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
 
     See http://sfstoolbox.org/#equation-D.nfchoa.pw.2D.
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, x0, R, npw)
+        plot(d, 1)
+
     """
     x0 = util.asarray_of_rows(x0)
     k = util.wavenumber(omega, c)
@@ -273,6 +372,14 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
         \e{\i m (\phi_0 - \phi)}
 
     See http://sfstoolbox.org/#equation-D.nfchoa.ps.2.5D.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.nfchoa_25d_point(omega, x0, R, xs)
+        plot(d, 1)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -301,6 +408,14 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
     See http://sfstoolbox.org/#equation-D.nfchoa.pw.2.5D.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, x0, R, npw)
+        plot(d, 1)
 
     """
     x0 = util.asarray_of_rows(x0)
