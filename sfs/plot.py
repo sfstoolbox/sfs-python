@@ -8,7 +8,7 @@ from mpl_toolkits import axes_grid1
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from . import util
-from . import defs
+from . import default
 
 
 def _register_cmap_clip(name, original_cmap, alpha):
@@ -385,7 +385,7 @@ def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
     if ax is None:
         ax = plt.gca()
     if clim is None:
-        v_ref = 1 / (defs.rho0 * defs.c)  # reference particle velocity
+        v_ref = 1 / (default.rho0 * default.c)  # reference particle velocity
         clim = 0, 2 * v_ref
     return ax.quiver(X, Y, U, V, speed, cmap=cmap, pivot='mid', units='xy',
                      angles='xy', headlength=headlength,

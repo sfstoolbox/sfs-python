@@ -5,10 +5,47 @@ http://sfs.rtfd.org/
 """
 __version__ = "0.4.0"
 
+
+class default:
+    """Get/set defaults for the *sfs* module.
+
+    For example, when you want to change the default speed of sound::
+
+        import sfs
+        sfs.default.c = 330
+
+    """
+
+    c = 343
+    """Speed of sound."""
+
+    rho0 = 1.2250
+    """Static density of air."""
+
+    selection_tolerance = 1e-6
+    """Tolerance used for secondary source selection."""
+
+    def __setattr__(self, name, value):
+        """Only allow setting existing attributes."""
+        if name in dir(self) and name != 'reset':
+            super().__setattr__(name, value)
+        else:
+            raise AttributeError(
+                '"default" object has no attribute ' + repr(name))
+
+    def reset(self):
+        """Reset all attributes to their "factory default"."""
+        vars(self).clear()
+
+
+import sys as _sys
+if not getattr(_sys.modules.get('sphinx'), 'SFS_DOCS_ARE_BEING_BUILT', False):
+    # This object shadows the 'default' class, except when the docs are built:
+    default = default()
+
 from . import tapering
 from . import array
 from . import util
-from . import defs
 try:
     from . import plot
 except ImportError:

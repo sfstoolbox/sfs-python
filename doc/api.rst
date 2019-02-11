@@ -12,3 +12,4 @@ API Documentation
     time
     plot
     util
+    default

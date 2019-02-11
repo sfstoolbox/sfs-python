@@ -5,7 +5,7 @@
 """
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
-from .. import defs
+from .. import default
 from .. import util
 
 
@@ -56,7 +56,7 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
     """
     if c is None:
-        c = defs.c
+        c = default.c
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
     n = util.normalize_vector(n)
@@ -116,7 +116,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     """
     if c is None:
-        c = defs.c
+        c = default.c
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
     xs = util.asarray_1d(xs)
@@ -179,7 +179,7 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     """
     if c is None:
-        c = defs.c
+        c = default.c
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
     xs = util.asarray_1d(xs)

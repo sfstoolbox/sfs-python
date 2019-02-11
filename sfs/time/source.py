@@ -8,7 +8,7 @@ The Green's function describes the spatial sound propagation over time.
 
 import numpy as np
 from .. import util
-from .. import defs
+from .. import default
 
 
 def point(xs, signal, observation_time, grid, c=None):
@@ -51,7 +51,7 @@ def point(xs, signal, observation_time, grid, c=None):
     data = util.asarray_1d(data)
     grid = util.as_xyz_components(grid)
     if c is None:
-        c = defs.c
+        c = default.c
     r = np.linalg.norm(grid - xs)
     # evaluate g over grid
     weights = 1 / (4 * np.pi * r)

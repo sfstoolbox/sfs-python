@@ -1,7 +1,7 @@
 """Compute sound field."""
 
 from .. import util
-from .. import defs
+from .. import default
 from .source import point
 
 
@@ -38,7 +38,7 @@ def p_array(x0, signals, weights, observation_time, grid, source=point,
 
     """
     if c is None:
-        c = defs.c
+        c = default.c
     x0 = util.asarray_of_rows(x0)
     data, samplerate, signal_offset = util.as_delayed_signal(signals)
     weights = util.asarray_1d(weights)

@@ -16,7 +16,7 @@
 
     normalization_point = 4 * np.pi
     normalization_line = \\
-        np.sqrt(8 * np.pi * omega / sfs.defs.c) * np.exp(1j * np.pi / 4)
+        np.sqrt(8 * np.pi * omega / sfs.default.c) * np.exp(1j * np.pi / 4)
 
     grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
@@ -29,7 +29,7 @@ import itertools
 import numpy as np
 from scipy import special
 from .. import util
-from .. import defs
+from .. import default
 
 
 def point(omega, x0, n0, grid, c=None):
@@ -123,14 +123,14 @@ def point_velocity(omega, x0, n0, grid, c=None):
 
     """
     if c is None:
-        c = defs.c
+        c = default.c
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
     v = point(omega, x0, n0, grid, c=c)
-    v *= (1+1j*k*r) / (defs.rho0 * c * 1j*k*r)
+    v *= (1+1j*k*r) / (default.rho0 * c * 1j*k*r)
     return util.XyzComponents([v * o / r for o in offset])
 
 
@@ -160,7 +160,7 @@ def point_averaged_intensity(omega, x0, n0, grid, c=None):
     grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
-    i = 1 / (2*defs.rho0 * defs.c)
+    i = 1 / (2 * default.rho0 * default.c)
     return util.XyzComponents([i * o / r**2 for o in offset])
 
 
@@ -466,14 +466,14 @@ def line_velocity(omega, x0, n0, grid, c=None):
 
     """
     if c is None:
-        c = defs.c
+        c = default.c
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)[:2]  # ignore z-component
     grid = util.as_xyz_components(grid)
 
     offset = grid[:2] - x0
     r = np.linalg.norm(offset)
-    v = -1/(4*c*defs.rho0) * special.hankel2(1, k * r)
+    v = -1/(4*c*default.rho0) * special.hankel2(1, k * r)
     v = [v * o / r for o in offset]
 
     assert v[0].shape == v[1].shape
@@ -662,8 +662,8 @@ def plane_velocity(omega, x0, n0, grid, c=None):
 
     """
     if c is None:
-        c = defs.c
-    v = plane(omega, x0, n0, grid, c=c) / (defs.rho0 * c)
+        c = default.c
+    v = plane(omega, x0, n0, grid, c=c) / (default.rho0 * c)
     return util.XyzComponents([v * n for n in n0])
 
 
@@ -697,8 +697,8 @@ def plane_averaged_intensity(omega, x0, n0, grid, c=None):
 
     """
     if c is None:
-        c = defs.c
-    i = 1 / (2 * defs.rho0 * c)
+        c = default.c
+    i = 1 / (2 * default.rho0 * c)
     return util.XyzComponents([i * n for n in n0])
 
 

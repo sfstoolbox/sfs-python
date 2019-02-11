@@ -36,7 +36,7 @@ import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import jn, hankel2
 from .. import util
-from .. import defs
+from .. import default
 
 
 def wfs_2d_line(omega, x0, n0, xs, c=None):
@@ -291,7 +291,7 @@ def source_selection_plane(n0, n):
     """
     n0 = util.asarray_of_rows(n0)
     n = util.normalize_vector(n)
-    return np.inner(n, n0) >= defs.selection_tolerance
+    return np.inner(n, n0) >= default.selection_tolerance
 
 
 def source_selection_point(n0, x0, xs):
@@ -304,7 +304,7 @@ def source_selection_point(n0, x0, xs):
     x0 = util.asarray_of_rows(x0)
     xs = util.asarray_1d(xs)
     ds = x0 - xs
-    return inner1d(ds, n0) >= defs.selection_tolerance
+    return inner1d(ds, n0) >= default.selection_tolerance
 
 
 def source_selection_line(n0, x0, xs):
@@ -326,7 +326,7 @@ def source_selection_focused(ns, x0, xs):
     xs = util.asarray_1d(xs)
     ns = util.normalize_vector(ns)
     ds = xs - x0
-    return inner1d(ns, ds) >= defs.selection_tolerance
+    return inner1d(ns, ds) >= default.selection_tolerance
 
 
 def source_selection_all(N):

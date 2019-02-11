@@ -7,7 +7,7 @@
 import collections
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn
-from . import defs
+from . import default
 
 
 def rotation_matrix(n1, n2):
@@ -46,7 +46,7 @@ def rotation_matrix(n1, n2):
 def wavenumber(omega, c=None):
     """Compute the wavenumber for a given radial frequency."""
     if c is None:
-        c = defs.c
+        c = default.c
     return omega / c
 
 
