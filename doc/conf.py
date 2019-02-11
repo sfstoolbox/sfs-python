@@ -149,6 +149,25 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+math_definitions = r"""
+\newcommand{\dirac}[1]{\operatorname{\delta}\left(#1\right)}
+\newcommand{\e}[1]{\operatorname{e}^{#1}}
+\newcommand{\Hankel}[3]{\mathop{{}H_{#2}^{(#1)}}\!\left(#3\right)}
+\newcommand{\hankel}[3]{\mathop{{}h_{#2}^{(#1)}}\!\left(#3\right)}
+\renewcommand{\i}{\mathrm{i}}
+\newcommand{\scalarprod}[2]{\left\langle#1,#2\right\rangle}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\wc}{\frac{\omega}{c}}
+"""
+
+rst_prolog = """
+.. only:: html
+
+    .. rst-class:: hidden
+    .. math::
+
+        """ + '        '.join(math_definitions.split('\n'))
+
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -251,7 +270,7 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+'preamble': math_definitions,
 
 'printindex': '',
 }

@@ -1,9 +1,4 @@
-"""Compute driving functions for various systems.
-
-.. include:: math-definitions.rst
-
-"""
-
+"""Compute driving functions for various systems."""
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import jn, hankel2

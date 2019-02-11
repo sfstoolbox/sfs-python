@@ -1,9 +1,4 @@
-"""Various utility functions.
-
-.. include:: math-definitions.rst
-
-"""
-
+"""Various utility functions."""
 import collections
 import numpy as np
 from scipy.special import spherical_jn, spherical_yn
