@@ -20,3 +20,4 @@ Or Jupyter notebooks, which are also available online as interactive examples:
     :maxdepth: 1
 
     modal-room-acoustics
+    mirror-image-source-model
