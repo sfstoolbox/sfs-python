@@ -40,11 +40,13 @@ from .. import defs
 
 
 def wfs_2d_line(omega, x0, n0, xs, c=None):
-    """Line source by 2-dimensional WFS.
+    r"""Line source by 2-dimensional WFS.
 
-    ::
+    .. math::
 
-        D(x0,k) = j/2 k (x0-xs) n0 / |x0-xs| * H1(k |x0-xs|)
+        D(\x_0,\w) = \frac{\i}{2} \wc
+            \frac{\scalarprod{\x-\x_0}{\n_0}}{|\x-\x_\text{s}|}
+            \Hankel{2}{1}{\wc|\x-\x_\text{s}|}
 
     Examples
     --------
@@ -66,13 +68,13 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
 
 
 def _wfs_point(omega, x0, n0, xs, c=None):
-    """Point source by two- or three-dimensional WFS.
+    r"""Point source by two- or three-dimensional WFS.
 
-    ::
+    .. math::
 
-                       (x0-xs) n0
-        D(x0,k) = j k ------------- e^(-j k |x0-xs|)
-                      |x0-xs|^(3/2)
+        D(\x_0, \w) = \i\wc \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
+            {|\x_0-\x_\text{s}|^{\frac{3}{2}}}
+            \e{-\i\wc |\x_0-\x_\text{s}|}
 
     Examples
     --------
@@ -99,11 +101,12 @@ wfs_2d_point = _wfs_point
 def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     r"""Point source by 2.5-dimensional WFS.
 
-    ::
+    .. math::
 
-                    ____________   (x0-xs) n0
-        D(x0,k) = \|j k |xref-x0| ------------- e^(-j k |x0-xs|)
-                                  |x0-xs|^(3/2)
+        D(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
+            \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
+            {|\x_0-\x_\text{s}|^\frac{3}{2}}
+            \e{-\i\wc |\x_0-\x_\text{s}|}
 
     Examples
     --------
@@ -132,11 +135,14 @@ wfs_3d_point = _wfs_point
 
 
 def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
-    """Plane wave by two- or three-dimensional WFS.
+    r"""Plane wave by two- or three-dimensional WFS.
 
-    Eq.(17) from :cite:`Spors2008`::
+    Eq.(17) from :cite:`Spors2008`:
 
-        D(x0,k) =  j k n n0  e^(-j k n x0)
+    .. math::
+
+        D(\x_0,\w) = \i\wc \scalarprod{\n}{\n_0}
+            \e{-\i\wc\scalarprod{\n}{\x_0}}
 
     Examples
     --------
@@ -162,10 +168,11 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
                   omalias=None):
     r"""Plane wave by 2.5-dimensional WFS.
 
-    ::
+    .. math::
 
-                         ____________
-        D_2.5D(x0,w) = \|j k |xref-x0| n n0 e^(-j k n x0)
+        D_\text{2.5D}(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
+            \scalarprod{\n}{\n_0}
+            \e{-\i\wc \scalarprod{\n}{\x_0}}
 
     Examples
     --------
@@ -191,13 +198,13 @@ wfs_3d_plane = _wfs_plane
 
 
 def _wfs_focused(omega, x0, n0, xs, c=None):
-    """Focused source by two- or three-dimensional WFS.
+    r"""Focused source by two- or three-dimensional WFS.
 
-    ::
+    .. math::
 
-                       (x0-xs) n0
-        D(x0,k) = j k ------------- e^(j k |x0-xs|)
-                      |x0-xs|^(3/2)
+        D(\x_0,\w) = \i\wc \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
+            {|\x_0-\x_\text{s}|^\frac{3}{2}}
+            \e{\i\wc |\x_0-\x_\text{s}|}
 
     Examples
     --------
@@ -224,11 +231,12 @@ wfs_2d_focused = _wfs_focused
 def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     r"""Focused source by 2.5-dimensional WFS.
 
-    ::
+    .. math::
 
-                    ____________   (x0-xs) n0
-        D(x0,w) = \|j k |xref-x0| ------------- e^(j k |x0-xs|)
-                                  |x0-xs|^(3/2)
+        D(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
+            \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
+            {|\x_0-\x_\text{s}|^\frac{3}{2}}
+            \e{\i\wc |\x_0-\x_\text{s}|}
 
     Examples
     --------
@@ -435,9 +443,7 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
     """Line source by two-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Derived from :cite:`Spors2009`, Eq.(9), Eq.(4)::
-
-        D(x0,k) =
+    Derived from :cite:`Spors2009`, Eq.(9), Eq.(4).
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -450,12 +456,14 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
 
 
 def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
-    """Plane wave by two-dimensional SDM.
+    r"""Plane wave by two-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Derived from :cite:`Ahrens2012`, Eq.(3.73), Eq.(C.5), Eq.(C.11)::
+    Derived from :cite:`Ahrens2012`, Eq.(3.73), Eq.(C.5), Eq.(C.11):
 
-        D(x0,k) = kpw,y * e^(-j*kpw,x*x)
+    .. math::
+
+        D(\x_0,k) = k_\text{pw,y} \e{-\i k_\text{pw,x} x}
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -469,9 +477,7 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     """Plane wave by 2.5-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Eq.(3.79) from :cite:`Ahrens2012`::
-
-        D_2.5D(x0,w) =
+    Eq.(3.79) from :cite:`Ahrens2012`.
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -487,9 +493,7 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     """Point source by 2.5-dimensional SDM.
 
     The secondary sources have to be located on the x-axis (y0=0).
-    Driving funcnction from :cite:`Spors2010`, Eq.(24)::
-
-        D(x0,k) =
+    Driving funcnction from :cite:`Spors2010`, Eq.(24).
 
     """
     x0 = util.asarray_of_rows(x0)
