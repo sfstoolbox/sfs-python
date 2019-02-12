@@ -8,3 +8,6 @@
     \newcommand{\scalarprod}[2]{\left\langle#1,#2\right\rangle}
     \renewcommand{\vec}[1]{\mathbf{#1}}
     \newcommand{\wc}{\frac{\omega}{c}}
+    \newcommand{\w}{\omega}
+    \newcommand{\x}{\vec{x}}
+    \newcommand{\n}{\vec{n}}
