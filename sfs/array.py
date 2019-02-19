@@ -8,9 +8,6 @@
     plt.rcParams['figure.figsize'] = 8, 4.5  # inch
     plt.rcParams['axes.grid'] = True
 
-.. autoclass:: ArrayData
-   :members: take
-
 """
 from collections import namedtuple
 import numpy as np

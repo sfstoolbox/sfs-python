@@ -32,6 +32,7 @@ needs_sphinx = '1.3'  # for sphinx.ext.napoleon
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',  # support for NumPy-style docstrings
@@ -48,6 +49,8 @@ nbsphinx_kernel_name = 'python'
 autoclass_content = 'init'
 autodoc_member_order = 'bysource'
 autodoc_default_flags = ['members', 'undoc-members']
+
+autosummary_generate = ['api']
 
 napoleon_google_docstring = False
 napoleon_numpy_docstring = True

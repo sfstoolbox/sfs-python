@@ -1,4 +1,0 @@
-Utilities
-=========
-
-.. automodule:: sfs.util

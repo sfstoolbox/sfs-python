@@ -6,11 +6,7 @@
 
     installation
     examples/index
-    arrays
-    frequency-domain
-    time-domain
-    plotting
-    utilities
+    api
     references
     contributing
     version-history

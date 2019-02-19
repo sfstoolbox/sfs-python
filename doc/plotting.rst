@@ -1,4 +1,0 @@
-Plotting
-========
-
-.. automodule:: sfs.plot
