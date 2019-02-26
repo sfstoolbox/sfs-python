@@ -13,6 +13,9 @@ for script in cwd.glob('*.py'):
     if self == script:
         # Don't call yourself!
         continue
+    if script.name == 'ipython_kernel_config.py':
+        # This is a configuration file, not an example script
+        continue
     print('Running', script, '...')
     args = [sys.executable, str(script.relative_to(cwd))] + sys.argv[1:]
     result = subprocess.run(args, cwd=str(cwd))
