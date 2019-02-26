@@ -5,7 +5,7 @@
 .. toctree::
 
     installation
-    examples/index
+    examples
     api
     references
     contributing
