@@ -85,7 +85,7 @@ def as_secondary_source_distribution(arg, **kwargs):
 
 
 def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Linear secondary source distribution.
+    """Return linear, equidistantly sampled secondary source distribution.
 
     Parameters
     ----------
@@ -112,13 +112,15 @@ def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         x0, n0, a0 = sfs.array.linear(16, 0.2, orientation=[0, -1, 0])
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     return _linear_helper(np.arange(N) * spacing, center, orientation)
 
 
 def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Linear secondary source distribution from a list of distances.
+    """Return linear secondary source distribution from a list of distances.
 
     Parameters
     ----------
@@ -141,6 +143,8 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
                                            orientation=[0, -1, 0])
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     distances = util.asarray_1d(distances)
@@ -150,7 +154,7 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
 
 def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
                   orientation=[1, 0, 0], seed=None):
-    """Randomly sampled linear array.
+    """Return randomly sampled linear array.
 
     Parameters
     ----------
@@ -174,9 +178,14 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
     .. plot::
         :context: close-figs
 
-        x0, n0, a0 = sfs.array.linear_random(12, 0.15, 0.4, orientation=[0, -1, 0])
+        x0, n0, a0 = sfs.array.linear_random(
+            N=12,
+            min_spacing=0.15, max_spacing=0.4,
+            orientation=[0, -1, 0])
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     r = np.random.RandomState(seed)
@@ -185,7 +194,7 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
 
 
 def circular(N, R, center=[0, 0, 0]):
-    """Circular secondary source distribution parallel to the xy-plane.
+    """Return circular secondary source distribution parallel to the xy-plane.
 
     Parameters
     ----------
@@ -209,6 +218,8 @@ def circular(N, R, center=[0, 0, 0]):
         x0, n0, a0 = sfs.array.circular(16, 1)
         sfs.plot.loudspeaker_2d(x0, n0, a0, size=0.2, show_numbers=True)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     center = util.asarray_1d(center)
@@ -225,7 +236,7 @@ def circular(N, R, center=[0, 0, 0]):
 
 
 def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Rectangular secondary source distribution.
+    """Return rectangular secondary source distribution.
 
     Parameters
     ----------
@@ -253,6 +264,8 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         x0, n0, a0 = sfs.array.rectangular((4, 8), 0.2)
         sfs.plot.loudspeaker_2d(x0, n0, a0, show_numbers=True)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     N1, N2 = (N, N) if np.isscalar(N) else N
@@ -271,7 +284,7 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
 
 def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Array along the xy-axis with rounded edge at the origin.
+    """Return SSD along the xy-axis with rounded edge at the origin.
 
     Parameters
     ----------
@@ -298,6 +311,8 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
         x0, n0, a0 = sfs.array.rounded_edge(8, 5, 0.2)
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     # radius of rounded edge
@@ -343,7 +358,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
 
 
 def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Array along the xy-axis with edge at the origin.
+    """Return SSD along the xy-axis with sharp edge at the origin.
 
     Parameters
     ----------
@@ -367,6 +382,8 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
         x0, n0, a0 = sfs.array.edge(8, 0.2)
         sfs.plot.loudspeaker_2d(x0, n0, a0)
         plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
 
     """
     # array along y-axis
@@ -393,7 +410,7 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
 
 
 def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Planar secondary source distribtion.
+    """Return planar secondary source distribtion.
 
     Parameters
     ----------
@@ -412,6 +429,24 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.planar(
+            (4,3), 0.5, orientation=[0, 0, 1])  # 4 sources along y, 3 sources along x
+        x0, n0, a0 = sfs.array.planar(
+            (4,3), 0.5, orientation=[1, 0, 0])  # 4 sources along y, 3 sources along z
+
+        x0, n0, a0 = sfs.array.planar(
+            (4,3), 0.5, orientation=[0, 1, 0])  # 4 sources along x, 3 sources along z
+        sfs.plot.loudspeaker_2d(x0, n0, a0)  # plot the last ssd in 2D
+        plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
+
+
     """
     N1, N2 = (N, N) if np.isscalar(N) else N
     zcoordinates = np.arange(N2) * spacing
@@ -426,7 +461,7 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
 
 def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Cube-shaped secondary source distribtion.
+    """Return cube-shaped secondary source distribtion.
 
     Parameters
     ----------
@@ -444,6 +479,20 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     -------
     `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.cube(
+            N=2, spacing=0.5,
+            center=[0, 0, 0], orientation=[1, 0, 0])
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
+        plt.title('view onto xy-plane')
 
     """
     N1, N2, N3 = (N, N, N) if np.isscalar(N) else N
@@ -464,19 +513,48 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, directions, weights)
 
 
-def sphere_load(fname, radius, center=[0, 0, 0]):
-    """Spherical secondary source distribution loaded from datafile.
+def sphere_load(file, radius, center=[0, 0, 0]):
+    """Load spherical secondary source distribution from file.
 
-    ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 position, 1
-    weight) per secondary source located on the unit circle.
+    ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 for the cartesian
+    position vector, 1 for the integration weight) per secondary source located
+    on the unit circle which is resized by the given radius and shifted to the
+    given center.
 
     Returns
     -------
     `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
+    Examples
+    --------
+    content of ``example_array_6LS_3D.txt``::
+
+        1 0 0 1
+        -1 0 0 1
+        0 1 0 1
+        0 -1 0 1
+        0 0 1 1
+        0 0 -1 1
+
+    corresponds to the `3-dimensional 6-point spherical 3-design
+    <http://neilsloane.com/sphdesigns/dim3/des.3.6.3.txt>`_.
+
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.sphere_load(
+            '../data/arrays/example_array_6LS_3D.txt',
+            radius=2,
+            center=[0, 0, 0])
+        sfs.plot.loudspeaker_2d(x0, n0, a0, size=0.25)
+        plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
+        plt.title('view onto xy-plane')
+
     """
-    data = np.loadtxt(fname)
+    data = np.loadtxt(file)
     positions, weights = data[:, :3], data[:, 3]
     normals = -positions
     positions *= radius
@@ -484,19 +562,52 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
-    """Load secondary source positions from datafile.
+def load(file, center=[0, 0, 0], orientation=[1, 0, 0]):
+    """Load secondary source distribution from file.
 
-    Comma Seperated Values (CSV) format with 7 values
-    (3 positions, 3 normal vectors, 1 weight) per secondary source.
+    Comma Separated Values (CSV) format with 7 values
+    (3 for the cartesian position vector, 3 for the cartesian inward normal
+    vector, 1 for the integration weight) per secondary source.
 
     Returns
     -------
     `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
+    Examples
+    --------
+    content of ``example_array_4LS_2D.csv``::
+
+        1,0,0,-1,0,0,1
+        0,1,0,0,-1,0,1
+        -1,0,0,1,0,0,1
+        0,-1,0,0,1,0,1
+
+    corresponds to 4 sources at 1, j, -1, -j in the complex plane. This setup
+    is typically used for Quadraphonic audio reproduction.
+
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.load('../data/arrays/example_array_4LS_2D.csv')
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
+
+    .. plot::
+        :context: close-figs
+
+        x0, n0, a0 = sfs.array.load(
+            '../data/arrays/wfs_university_rostock_2018.csv')
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
+        plt.title('top view of 64 channel WFS system at university of Rostock')
+
     """
-    data = np.loadtxt(fname, delimiter=',')
+    data = np.loadtxt(file, delimiter=',')
     positions, normals, weights = data[:, :3], data[:, 3:6], data[:, 6]
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
@@ -515,8 +626,8 @@ def weights_midpoint(positions, closed):
     positions : (N, 3) array_like
         Sequence of secondary source positions.
 
-        .. note:: The loudspeaker positions have to be ordered on the
-                  contour!
+        .. note:: The loudspeaker positions have to be ordered along the
+                  contour.
 
     closed : bool
         ``True`` if the loudspeaker contour is closed.
@@ -525,6 +636,14 @@ def weights_midpoint(positions, closed):
     -------
     (N,) numpy.ndarray
         Weights of secondary sources.
+
+    Examples
+    --------
+    >>> import sfs
+    >>> x0, n0, a0 = sfs.array.circular(2**5, 1)
+    >>> a = sfs.array.weights_midpoint(x0, closed=True)
+    >>> max(abs(a0-a))
+    0.0003152601902411123
 
     """
     positions = util.asarray_of_rows(positions)
@@ -560,6 +679,27 @@ def _linear_helper(ycoordinates, center, orientation):
 
 
 def concatenate(*arrays):
-    """Concatenate `SecondarySourceDistribution` objects."""
+    """Concatenate `SecondarySourceDistribution` objects.
+
+    Returns
+    -------
+    `SecondarySourceDistribution`
+        Positions, orientations and weights
+        of the concatenated secondary sources.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        ssd1 = sfs.array.edge(10, 0.2)
+        ssd2 = sfs.array.edge(20, 0.1, center=[2, 2, 0], orientation=[-1, 0, 0])
+        x0, n0, a0 = sfs.array.concatenate(ssd1, ssd2)
+        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        plt.axis('equal')
+        plt.xlabel('x / m')
+        plt.ylabel('y / m')
+
+    """
     return SecondarySourceDistribution._make(np.concatenate(i)
                                              for i in zip(*arrays))

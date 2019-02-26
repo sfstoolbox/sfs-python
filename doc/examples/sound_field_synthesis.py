@@ -31,9 +31,11 @@ npw = sfs.util.direction_vector(np.radians(pw_angle))
 # === get secondary source positions ===
 #array = sfs.array.linear(N, dx, center=[-1, 0, 0])
 #array = sfs.array.linear_random(N, 0.2*dx, 5*dx)
-array = sfs.array.rectangular(N, dx, orientation=sfs.util.direction_vector(0*np.pi/4))
-#array = sfs.array.circular(N, R)
-#array = sfs.array.load('../../data/arrays/university_rostock.csv')
+#array = sfs.array.rectangular(N, dx, orientation=sfs.util.direction_vector(0*np.pi/4))
+array = sfs.array.circular(N, R)
+#array = sfs.array.load('../../data/arrays/wfs_university_rostock_2018.csv')
+#array.x[:,2] = 0  # in wfs_university_rostock_2018.csv we encode absolute height
+# which is not used here, we also could set the grid coordinate to z=1.615 m
 
 #array = sfs.array.planar(N, dx, orientation=sfs.util.direction_vector(np.radians(0), np.radians(180)))
 #array = sfs.array.cube(N, dx, orientation=sfs.util.direction_vector(0, np.pi/2))
