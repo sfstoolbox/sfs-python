@@ -1,6 +1,18 @@
 """Sound Field Synthesis Toolbox.
 
-http://sfs.rtfd.org/
+http://python.sfstoolbox.org/
+
+.. rubric:: Submodules
+
+.. autosummary::
+    :toctree:
+
+    array
+    tapering
+    mono
+    time
+    plot
+    util
 
 """
 __version__ = "0.4.0"
