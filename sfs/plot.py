@@ -20,6 +20,7 @@ def _register_cmap_clip(name, original_cmap, alpha):
     cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
     plt.cm.register_cmap(cmap=cmap)
 
+
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
 # http://www.sandia.gov/~kmorel/documents/ColorMaps/
@@ -36,6 +37,7 @@ def _register_cmap_transparent(name, color):
              'alpha': ((0, 0, 0), (1, 1, 1))}
     cmap = LinearSegmentedColormap(name, cdict)
     plt.cm.register_cmap(cmap=cmap)
+
 
 _register_cmap_transparent('blacktransparent', 'black')
 

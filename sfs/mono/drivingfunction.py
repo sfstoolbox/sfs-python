@@ -507,7 +507,8 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
         xs[1] / r * hankel2(1, k * r)
 
 
-def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
+def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
+                      c=None):
     """Plane wave by two-dimensional ESA for an edge-shaped secondary source
        distribution consisting of monopole line sources.
 
@@ -565,7 +566,8 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
     return 4*np.pi/alpha * d
 
 
-def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None, c=None):
+def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
+                             c=None):
     """Plane wave by two-dimensional ESA for an edge-shaped secondary source
        distribution consisting of dipole line sources.
 
@@ -683,7 +685,8 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     return -1j*np.pi/alpha * d
 
 
-def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None, c=None):
+def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
+                       Nc=None, c=None):
     """Point source by 2.5-dimensional ESA for an edge-shaped secondary source
        distribution constisting of monopole line sources.
 
@@ -725,7 +728,8 @@ def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi, Nc=None,
     else:
         a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
 
-    return 1j*np.sqrt(a) * esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
+    return 1j*np.sqrt(a) * esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc,
+                                            c=c)
 
 
 def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
