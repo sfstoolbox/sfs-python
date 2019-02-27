@@ -326,7 +326,7 @@ def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
 
 def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
               edgecolor='', **kwargs):
-    """Plot particle positions as scatter plot"""
+    """Plot particle positions as scatter plot."""
     XX, YY = [np.real(c) for c in x[:2]]
 
     if trim is not None:

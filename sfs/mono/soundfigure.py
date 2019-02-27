@@ -12,7 +12,6 @@ def wfs_3d_pw(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
     [Helwani et al., The Synthesis of Sound Figures, MSSP, 2013]
 
     """
-
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
     k = util.wavenumber(omega, c)

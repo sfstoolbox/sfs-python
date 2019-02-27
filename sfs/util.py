@@ -83,6 +83,7 @@ def sph2cart(alpha, beta, r):
         y-component of Cartesian coordinates
     z : float or array_like
         z-component of Cartesian coordinates
+
     """
     x = r * np.cos(alpha) * np.sin(beta)
     y = r * np.sin(alpha) * np.sin(beta)
@@ -119,6 +120,7 @@ def cart2sph(x, y, z):
             Elevation angle in radiants (with 0 denoting North pole)
     r : float or array_like
             Radius
+
     """
     r = np.sqrt(x**2 + y**2 + z**2)
     alpha = np.arctan2(y, x)
@@ -158,7 +160,7 @@ def asarray_of_rows(a, **kwargs):
 
 
 def as_xyz_components(components, **kwargs):
-    """Convert *components* to `XyzComponents` of `numpy.ndarray`\\s.
+    r"""Convert *components* to `XyzComponents` of `numpy.ndarray`\s.
 
     The *components* are first converted to NumPy arrays (using
     :func:`numpy.asarray`) which are then assembled into an
@@ -338,7 +340,7 @@ def normalize_vector(x):
 
 
 def displacement(v, omega):
-    r"""Particle displacement
+    r"""Particle displacement.
 
     .. math::
 
@@ -368,7 +370,7 @@ class XyzComponents(np.ndarray):
     """See __init__()."""
 
     def __init__(self, components):
-        """Triple (or pair) of components: x, y, and optionally z.
+        r"""Triple (or pair) of components: x, y, and optionally z.
 
         Instances of this class can be used to store coordinate grids
         (either regular grids like in `xyz_grid()` or arbitrary point
@@ -377,7 +379,7 @@ class XyzComponents(np.ndarray):
         This class is a subclass of `numpy.ndarray`.  It is
         one-dimensional (like a plain `list`) and has a length of 3 (or
         2, if no z-component is available).  It uses ``dtype=object`` in
-        order to be able to store other `numpy.ndarray`\\s of arbitrary
+        order to be able to store other `numpy.ndarray`\s of arbitrary
         shapes but also scalars, if needed.  Because it is a NumPy array
         subclass, it can be used in operations with scalars and "normal"
         NumPy arrays, as long as they have a compatible shape.  Like any
