@@ -87,7 +87,7 @@ def point(omega, x0, n0, grid, c=None):
     return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
 
 
-def point_velocity(omega, x0, n0, grid, c=None):
+def point_velocity(omega, x0, n0, grid, c=None, rho0=None):
     """Particle velocity of a point source.
 
     Parameters
@@ -103,6 +103,8 @@ def point_velocity(omega, x0, n0, grid, c=None):
         See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
+    rho0 : float, optional
+        Static density of air.
 
     Returns
     -------
@@ -124,17 +126,19 @@ def point_velocity(omega, x0, n0, grid, c=None):
     """
     if c is None:
         c = default.c
+    if rho0 is None:
+        rho0 = default.rho0
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)
     grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
     v = point(omega, x0, n0, grid, c=c)
-    v *= (1+1j*k*r) / (default.rho0 * c * 1j*k*r)
+    v *= (1+1j*k*r) / (rho0 * c * 1j*k*r)
     return util.XyzComponents([v * o / r for o in offset])
 
 
-def point_averaged_intensity(omega, x0, n0, grid, c=None):
+def point_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
     """Velocity of a point source.
 
     Parameters
@@ -150,17 +154,23 @@ def point_averaged_intensity(omega, x0, n0, grid, c=None):
         See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
+    rho0 : float, optional
+        Static density of air.
 
     Returns
     -------
     `XyzComponents`
         Averaged intensity at positions given by *grid*.
     """
+    if c is None:
+        c = default.c
+    if rho0 is None:
+        rho0 = default.rho0
     x0 = util.asarray_1d(x0)
     grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
-    i = 1 / (2 * default.rho0 * default.c)
+    i = 1 / (2 * rho0 * c)
     return util.XyzComponents([i * o / r**2 for o in offset])
 
 
@@ -444,7 +454,7 @@ def line(omega, x0, n0, grid, c=None):
     return _duplicate_zdirection(p, grid)
 
 
-def line_velocity(omega, x0, n0, grid, c=None):
+def line_velocity(omega, x0, n0, grid, c=None, rho0=None):
     """Velocity of line source parallel to the z-axis.
 
     Returns
@@ -467,13 +477,15 @@ def line_velocity(omega, x0, n0, grid, c=None):
     """
     if c is None:
         c = default.c
+    if rho0 is None:
+        rho0 = default.rho0
     k = util.wavenumber(omega, c)
     x0 = util.asarray_1d(x0)[:2]  # ignore z-component
     grid = util.as_xyz_components(grid)
 
     offset = grid[:2] - x0
     r = np.linalg.norm(offset)
-    v = -1/(4*c*default.rho0) * special.hankel2(1, k * r)
+    v = -1/(4 * c * rho0) * special.hankel2(1, k * r)
     v = [v * o / r for o in offset]
 
     assert v[0].shape == v[1].shape
@@ -620,7 +632,7 @@ def plane(omega, x0, n0, grid, c=None):
     return np.exp(-1j * k * np.inner(grid - x0, n0))
 
 
-def plane_velocity(omega, x0, n0, grid, c=None):
+def plane_velocity(omega, x0, n0, grid, c=None, rho0=None):
     r"""Velocity of a plane wave.
 
     Parameters
@@ -636,6 +648,8 @@ def plane_velocity(omega, x0, n0, grid, c=None):
         See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
+    rho0 : float, optional
+        Static density of air.
 
     Returns
     -------
@@ -663,11 +677,13 @@ def plane_velocity(omega, x0, n0, grid, c=None):
     """
     if c is None:
         c = default.c
-    v = plane(omega, x0, n0, grid, c=c) / (default.rho0 * c)
+    if rho0 is None:
+        rho0 = default.rho0
+    v = plane(omega, x0, n0, grid, c=c) / (rho0 * c)
     return util.XyzComponents([v * n for n in n0])
 
 
-def plane_averaged_intensity(omega, x0, n0, grid, c=None):
+def plane_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
     r"""Averaged intensity of a plane wave.
 
     Parameters
@@ -683,6 +699,8 @@ def plane_averaged_intensity(omega, x0, n0, grid, c=None):
         See `sfs.util.xyz_grid()`.
     c : float, optional
         Speed of sound.
+    rho0 : float, optional
+        Static density of air.
 
     Returns
     -------
@@ -698,7 +716,9 @@ def plane_averaged_intensity(omega, x0, n0, grid, c=None):
     """
     if c is None:
         c = default.c
-    i = 1 / (2 * default.rho0 * c)
+    if rho0 is None:
+        rho0 = default.rho0
+    i = 1 / (2 * rho0 * c)
     return util.XyzComponents([i * n for n in n0])
 
 
