@@ -4,6 +4,23 @@ The Green's function describes the spatial sound propagation over time.
 
 .. include:: math-definitions.rst
 
+.. plot::
+    :context: reset
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sfs
+
+    plt.rcParams['figure.figsize'] = 6, 6  # inches
+
+    xs = 1.5, 1, 0  # point source
+    t = np.linalg.norm(xs) / sfs.default.c
+
+    # Impulsive excitation
+    signal = sfs.util.DelayedSignal(np.insert(np.zeros(511), 0, 1), 44100, 0)
+
+    grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.01)
+
 """
 
 import numpy as np
@@ -44,6 +61,14 @@ def point(xs, signal, observation_time, grid, c=None):
 
         g(x-x_s,t) = \frac{1}{4 \pi |x - x_s|} \dirac{t - \frac{|x -
         x_s|}{c}}
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        p = sfs.time.source.point(xs, signal, t, grid)
+        sfs.plot.level(p, grid)
 
     """
     xs = util.asarray_1d(xs)
@@ -93,6 +118,19 @@ def point_image_sources(x0, signal, observation_time, grid, L, max_order,
     numpy.ndarray
         Scalar sound pressure field, evaluated at positions given by
         *grid*.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        room = 2, 1.5, 1.5  # room dimensions
+        order = 2  # image source order
+        coeffs = .8, .8, .6, .6, .7, .7  # wall reflection coefficients
+        grid = sfs.util.xyz_grid([0, room[0]], [0, room[1]], 0, spacing=0.01)
+        p = sfs.time.source.point_image_sources(
+                xs, signal, t, grid, room, order, coeffs)
+        sfs.plot.level(p, grid)
 
     """
     if coeffs is None:

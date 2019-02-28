@@ -2,6 +2,34 @@
 
 .. include:: math-definitions.rst
 
+.. plot::
+    :context: reset
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sfs
+
+    plt.rcParams['figure.figsize'] = 6, 6
+
+    xs = -1.5, 1.5, 0  # point source
+    npw = sfs.util.direction_vector(np.radians(-45))  # plane wave
+    xf = -0.5, 0.5, 0  # focused source
+    nf = sfs.util.direction_vector(np.radians(-45))  # normal vector for focused source
+
+    # Impulsive excitation
+    signal = sfs.util.DelayedSignal(np.insert(np.zeros(511), 0, 1), 44100, 0)
+
+    R = 1.5  # Radius of circular loudspeaker array
+
+    grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
+
+    x0, n0, a0 = sfs.array.circular(N=32, R=R)
+
+    def plot(d, selected, t=0):
+        p = sfs.time.soundfield.p_array(x0, d, selected * a0, t, grid)
+        sfs.plot.level(p, grid)
+        sfs.plot.loudspeaker_2d(x0, n0, selected * a0, size=0.15)
+
 """
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
@@ -53,6 +81,16 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     References
     ----------
     See http://sfstoolbox.org/en/latest/#equation-d.wfs.pw.2.5D
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        delays, weights = sfs.time.drivingfunction.wfs_25d_plane(x0, n0, npw)
+        d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
+        a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+        plot(d, a)
 
     """
     if c is None:
@@ -113,6 +151,16 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     References
     ----------
     See http://sfstoolbox.org/en/latest/#equation-d.wfs.ps.2.5D
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        delays, weights = sfs.time.drivingfunction.wfs_25d_point(x0, n0, xs)
+        d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
+        a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+        plot(d, a, np.linalg.norm(xs) / sfs.default.c)
 
     """
     if c is None:
@@ -176,6 +224,16 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
     References
     ----------
     See http://sfstoolbox.org/en/latest/#equation-d.wfs.fs.2.5D
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        delays, weights = sfs.time.drivingfunction.wfs_25d_focused(x0, n0, xf)
+        d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
+        a = sfs.mono.drivingfunction.source_selection_focused(nf, x0, xf)
+        plot(d, a, np.linalg.norm(xs) / sfs.default.c / 4)
 
     """
     if c is None:
