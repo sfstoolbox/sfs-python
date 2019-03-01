@@ -283,8 +283,8 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
     elif plotting_plane == 'yz':
         x, y = grid[[1, 2]]
 
-    dx = np.asscalar(np.diff(x[0, :2])) / 2
-    dy = np.asscalar(np.diff(y[:2, 0])) / 2
+    dx = 0.5 * x.ptp() / p.shape[0]
+    dy = 0.5 * y.ptp() / p.shape[1]
 
     if ax is None:
         ax = plt.gca()
