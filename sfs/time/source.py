@@ -11,15 +11,14 @@ The Green's function describes the spatial sound propagation over time.
     import numpy as np
     import sfs
 
-    plt.rcParams['figure.figsize'] = 6, 6  # inches
-
-    xs = 1.5, 1, 0  # point source
-    t = np.linalg.norm(xs) / sfs.default.c
+    xs = 1.5, 1, 0  # source position
+    rs = np.linalg.norm(xs)  # distance from origin
+    ts = rs / sfs.default.c  # time-of-arrival at origin
 
     # Impulsive excitation
-    signal = sfs.util.DelayedSignal(np.insert(np.zeros(511), 0, 1), 44100, 0)
+    signal = np.insert(np.zeros(511), 0, 1), 44100
 
-    grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.01)
+    grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
 """
 
@@ -67,7 +66,7 @@ def point(xs, signal, observation_time, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p = sfs.time.source.point(xs, signal, t, grid)
+        p = sfs.time.source.point(xs, signal, ts, grid)
         sfs.plot.level(p, grid)
 
     """
@@ -124,12 +123,12 @@ def point_image_sources(x0, signal, observation_time, grid, L, max_order,
     .. plot::
         :context: close-figs
 
-        room = 2, 1.5, 1.5  # room dimensions
+        room = 5, 3, 1.5  # room dimensions
         order = 2  # image source order
         coeffs = .8, .8, .6, .6, .7, .7  # wall reflection coefficients
         grid = sfs.util.xyz_grid([0, room[0]], [0, room[1]], 0, spacing=0.01)
         p = sfs.time.source.point_image_sources(
-                xs, signal, t, grid, room, order, coeffs)
+                xs, signal, 1.5 * ts, grid, room, order, coeffs)
         sfs.plot.level(p, grid)
 
     """

@@ -9,21 +9,29 @@
     import numpy as np
     import sfs
 
-    plt.rcParams['figure.figsize'] = 6, 6
+    # Plane wave
+    npw = sfs.util.direction_vector(np.radians(-45))
 
-    xs = -1.5, 1.5, 0  # point source
-    npw = sfs.util.direction_vector(np.radians(-45))  # plane wave
-    xf = -0.5, 0.5, 0  # focused source
-    nf = sfs.util.direction_vector(np.radians(-45))  # normal vector for focused source
+    # Point source
+    xs = -1.5, 1.5, 0
+    rs = np.linalg.norm(xs)  # distance from origin
+    ts = rs / c  # time-of-arrival at origin
+
+    # Focused source
+    xf = -0.5, 0.5, 0
+    nf = sfs.util.direction_vector(np.radians(-45))  # normal vector
+    rf = np.linalg.norm(xf)  # distance from origin
+    tf = rf / c  # time-of-arrival at origin
 
     # Impulsive excitation
-    signal = sfs.util.DelayedSignal(np.insert(np.zeros(511), 0, 1), 44100, 0)
+    signal = np.insert(np.zeros(511), 0, 1), 44100
 
-    R = 1.5  # Radius of circular loudspeaker array
+    # Circular loudspeaker array
+    N = 32  # number of loudspeakers
+    R = 1.5  # radius
+    x0, n0, a0 = sfs.array.circular(N, R)
 
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
-
-    x0, n0, a0 = sfs.array.circular(N=32, R=R)
 
     def plot(d, selected, t=0):
         p = sfs.time.soundfield.p_array(x0, d, selected * a0, t, grid)
@@ -160,7 +168,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
         delays, weights = sfs.time.drivingfunction.wfs_25d_point(x0, n0, xs)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
         a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
-        plot(d, a, np.linalg.norm(xs) / sfs.default.c)
+        plot(d, a, t=ts)
 
     """
     if c is None:
@@ -233,7 +241,7 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
         delays, weights = sfs.time.drivingfunction.wfs_25d_focused(x0, n0, xf)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
         a = sfs.mono.drivingfunction.source_selection_focused(nf, x0, xf)
-        plot(d, a, np.linalg.norm(xs) / sfs.default.c / 4)
+        plot(d, a, t=tf)
 
     """
     if c is None:
