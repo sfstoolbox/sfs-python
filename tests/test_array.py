@@ -21,17 +21,17 @@ def vector_id(vector):
 
 
 @pytest.mark.parametrize('N, spacing, result', [
-    (2, 1, sfs.array.ArrayData(
+    (2, 1, sfs.array.SecondarySourceDistribution(
         x=[[0, -0.5, 0], [0, 0.5, 0]],
         n=[[1, 0, 0], [1, 0, 0]],
         a=[1, 1],
     )),
-    (3, 1, sfs.array.ArrayData(
+    (3, 1, sfs.array.SecondarySourceDistribution(
         x=[[0, -1, 0], [0, 0, 0], [0, 1, 0]],
         n=[[1, 0, 0], [1, 0, 0], [1, 0, 0]],
         a=[1, 1, 1],
     )),
-    (3, 0.5, sfs.array.ArrayData(
+    (3, 0.5, sfs.array.SecondarySourceDistribution(
         x=[[0, -0.5, 0], [0, 0, 0], [0, 0.5, 0]],
         n=[[1, 0, 0], [1, 0, 0], [1, 0, 0]],
         a=[0.5, 0.5, 0.5],

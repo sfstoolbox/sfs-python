@@ -24,16 +24,16 @@ npw = sfs.util.direction_vector(*np.radians(pw_angle))
 grid = sfs.util.xyz_grid([-3, 3], [-3, 3], 0, spacing=0.02)
 
 # get secondary source positions
-x0, n0, a0 = sfs.array.cube(N, dx)
+array = sfs.array.cube(N, dx)
 
 # driving function for sound figure
 figure = np.array(Image.open('figures/tree.png'))  # read image from file
 figure = np.rot90(figure)  # turn 0deg to the top
-d = sfs.mono.soundfigure.wfs_3d_pw(omega, x0, n0, figure, npw=npw)
+d, selection, secondary_source = sfs.mono.soundfigure.wfs_3d_pw(
+    omega, array.x, array.n, figure, npw=npw)
 
 # compute synthesized sound field
-p = sfs.mono.synthesized.generic(omega, x0, n0, d * a0, grid,
-                                 source=sfs.mono.source.point)
+p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
 
 # plot and save synthesized sound field
 plt.figure(figsize=(10, 10))

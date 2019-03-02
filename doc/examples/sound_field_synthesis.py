@@ -25,63 +25,57 @@ grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 # angular frequency
 omega = 2 * np.pi * f
 # normal vector of plane wave
-npw = sfs.util.direction_vector(np.radians(pw_angle), np.radians(90))
+npw = sfs.util.direction_vector(np.radians(pw_angle))
 
 
 # === get secondary source positions ===
-#x0, n0, a0 = sfs.array.linear(N, dx, center=[-1, 0, 0])
-#x0, n0, a0 = sfs.array.linear_random(N, 0.2*dx, 5*dx)
-#x0, n0, a0 = sfs.array.rectangular(N, dx, orientation=sfs.util.direction_vector(0*np.pi/4, np.pi/2))
-#x0, n0, a0 = sfs.array.circular(N, R)
-x0, n0, a0 = sfs.array.load('../../data/arrays/university_rostock.csv')
+#array = sfs.array.linear(N, dx, center=[-1, 0, 0])
+#array = sfs.array.linear_random(N, 0.2*dx, 5*dx)
+array = sfs.array.rectangular(N, dx, orientation=sfs.util.direction_vector(0*np.pi/4))
+#array = sfs.array.circular(N, R)
+#array = sfs.array.load('../../data/arrays/university_rostock.csv')
 
-#x0, n0, a0 = sfs.array.planar(N, dx, orientation=sfs.util.direction_vector(np.radians(0),np.radians(180)))
-#x0, n0, a0 = sfs.array.cube(N, dx, orientation=sfs.util.direction_vector(0, np.pi/2))
+#array = sfs.array.planar(N, dx, orientation=sfs.util.direction_vector(np.radians(0), np.radians(180)))
+#array = sfs.array.cube(N, dx, orientation=sfs.util.direction_vector(0, np.pi/2))
 
-#x0, n0, a0 = sfs.array.sphere_load('/Users/spors/Documents/src/SFS/data/spherical_grids/equally_spaced_points/006561points.mat', 1, center=[.5,0,0])
+#array = sfs.array.sphere_load('/Users/spors/Documents/src/SFS/data/spherical_grids/equally_spaced_points/006561points.mat', 1, center=[.5,0,0])
 
 
-# === compute driving function ===
-#d = sfs.mono.drivingfunction.delay_3d_plane(omega, x0, n0, npw)
+# === compute driving function and determine active secondary sources ===
+#d, selection, secondary_source = sfs.mono.drivingfunction.delay_3d_plane(omega, array.x, array.n, npw)
 
-#d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
+#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_line(omega, array.x, array.n, xs)
 
-#d = sfs.mono.drivingfunction.wfs_2d_plane(omega, x0, n0, npw)
-d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref)
-#d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
+#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_plane(omega, array.x, array.n, npw)
+d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_plane(omega, array.x, array.n, npw, xref)
+#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_plane(omega, array.x, array.n, npw)
 
-#d = sfs.mono.drivingfunction.wfs_2d_point(omega, x0, n0, xs)
-#d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs)
-#d = sfs.mono.drivingfunction.wfs_3d_point(omega, x0, n0, xs)
+#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_point(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_point(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_point(omega, array.x, array.n, xs)
 
-#d = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, x0, R, npw)
+#d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, array.x, R, npw)
 
-#d = sfs.mono.drivingfunction.nfchoa_25d_point(omega, x0, R, xs)
-#d = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, x0, R, npw)
-
-# === determine active secondary sources ===
-a = sfs.util.source_selection_plane(n0, npw)
-#a = sfs.util.source_selection_point(n0, x0, xs)
-#a = sfs.util.source_selection_all(len(x0))
+#d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_point(omega, array.x, R, xs)
+#d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, array.x, R, npw)
 
 
 # === compute tapering window ===
-#twin = sfs.tapering.none(a)
-#twin = sfs.tapering.kaiser(a, 8.6)
-twin = sfs.tapering.tukey(a,.3)
+#twin = sfs.tapering.none(selection)
+#twin = sfs.tapering.kaiser(selection, 8.6)
+twin = sfs.tapering.tukey(selection, 0.3)
 
 # === compute synthesized sound field ===
-p = sfs.mono.synthesized.generic(omega, x0, n0, d * twin * a0 , grid,
-                                 source=sfs.mono.source.point)
+p = sfs.mono.synthesize(d, twin, array, secondary_source, grid=grid)
 
 
 # === plot synthesized sound field ===
 plt.figure(figsize=(10, 10))
 sfs.plot.soundfield(p, grid, [0, 0, 0])
-sfs.plot.loudspeaker_2d(x0, n0, twin)
+sfs.plot.loudspeaker_2d(array.x, array.n, twin)
 plt.grid()
 plt.savefig('soundfield.png')
 
 
-#sfs.plot.loudspeaker_3d(x0, n0, twin)
+#sfs.plot.loudspeaker_3d(array.x, array.n, twin)
 #plt.savefig('loudspeakers.png')
