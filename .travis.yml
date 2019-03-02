@@ -18,5 +18,5 @@ install:
 script:
   - python -m pytest
   - python doc/examples/run_all.py
-  # This executes the example notebooks:
-  - python -m sphinx doc/ _build/ -b dummy
+  # This executes the example notebooks and runs the doctests:
+  - python -m sphinx doc/ _build/ -b doctest
