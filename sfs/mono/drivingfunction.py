@@ -49,6 +49,8 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
             \frac{\scalarprod{\x-\x_0}{\n_0}}{|\x-\x_\text{s}|}
             \Hankel{2}{1}{\wc|\x-\x_\text{s}|}
 
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-line-source`
+
     Examples
     --------
     .. plot::
@@ -78,6 +80,8 @@ def _wfs_point(omega, x0, n0, xs, c=None):
         D(\x_0, \w) = \i\wc \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
             {|\x_0-\x_\text{s}|^{\frac{3}{2}}}
             \e{-\i\wc |\x_0-\x_\text{s}|}
+
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-point-source`
 
     Examples
     --------
@@ -112,6 +116,8 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
             \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
             {|\x_0-\x_\text{s}|^\frac{3}{2}}
             \e{-\i\wc |\x_0-\x_\text{s}|}
+
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-point-source-25d`
 
     Examples
     --------
@@ -151,6 +157,8 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
         D(\x_0,\w) = \i\wc \scalarprod{\n}{\n_0}
             \e{-\i\wc\scalarprod{\n}{\x_0}}
 
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-plane-wave`
+
     Examples
     --------
     .. plot::
@@ -182,6 +190,8 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
         D_\text{2.5D}(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
             \scalarprod{\n}{\n_0}
             \e{-\i\wc \scalarprod{\n}{\x_0}}
+
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-plane-wave-25d`
 
     Examples
     --------
@@ -218,6 +228,8 @@ def _wfs_focused(omega, x0, n0, xs, ns, c=None):
             {|\x_0-\x_\text{s}|^\frac{3}{2}}
             \e{\i\wc |\x_0-\x_\text{s}|}
 
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-focused-source`
+
     Examples
     --------
     .. plot::
@@ -252,6 +264,8 @@ def wfs_25d_focused(omega, x0, n0, xs, ns, xref=[0, 0, 0], c=None,
             \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
             {|\x_0-\x_\text{s}|^\frac{3}{2}}
             \e{\i\wc |\x_0-\x_\text{s}|}
+
+    See :sfs:`d_wfs/#equation-freq-drivingfunction-wfs-focused-source-25d`
 
     Examples
     --------
@@ -313,7 +327,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         \frac{\i^{-m}}{\Hankel{2}{m}{\wc r_0}}
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2D.
+    See :sfs:`d_nfchoa/#equation-freq-drivingfunction-nfchoa-plane-wave-2d`
 
     Examples
     --------
@@ -351,7 +365,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
         \frac{\hankel{2}{|m|}{\wc r}}{\hankel{2}{|m|}{\wc r_0}}
         \e{\i m (\phi_0 - \phi)}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.ps.2.5D.
+    See :sfs:`d_nfchoa/#equation-freq-drivingfunction-nfchoa-point-source-25d`
 
     Examples
     --------
@@ -391,7 +405,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         \frac{\i^{-|m|}}{\wc \hankel{2}{|m|}{\wc r_0}}
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2.5D.
+    See :sfs:`d_nfchoa/#equation-freq-drivingfunction-nfchoa-plane-wave-25d`
 
     Examples
     --------
@@ -424,6 +438,8 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
 
     The secondary sources have to be located on the x-axis (y0=0).
     Derived from :cite:`Spors2009`, Eq.(9), Eq.(4).
+
+    See :sfs:`d_nfchoa/#equation-freq-drivingfunction-sdm-line-source-2d`
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -459,6 +475,8 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     The secondary sources have to be located on the x-axis (y0=0).
     Eq.(3.79) from :cite:`Ahrens2012`.
 
+    See :sfs:`d_nfchoa/#equation-freq-drivingfunction-sdm-plane-wave-25d`
+
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
@@ -474,6 +492,8 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
 
     The secondary sources have to be located on the x-axis (y0=0).
     Driving funcnction from :cite:`Spors2010`, Eq.(24).
+
+    See :sfs:`d_nfchoa/#equation-freq-drivingfunction-sdm-point-source-25d`
 
     """
     x0 = util.asarray_of_rows(x0)

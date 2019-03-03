@@ -40,6 +40,7 @@ extensions = [
     'sphinx.ext.napoleon',  # support for NumPy-style docstrings
     'sphinx.ext.intersphinx',
     'sphinx.ext.doctest',
+    'sphinx.ext.extlinks',
     'sphinxcontrib.bibtex',
     'matplotlib.sphinxext.plot_directive',
     'nbsphinx',
@@ -76,6 +77,9 @@ intersphinx_mapping = {
     'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
     'matplotlib': ('http://matplotlib.org/', None),
 }
+
+extlinks = {'sfs': ('https://sfs.readthedocs.io/en/v3-equation-names/%s',
+                    'https://sfs.rtfd.io/')}
 
 plot_include_source = True
 plot_html_show_source_link = False
