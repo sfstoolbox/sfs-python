@@ -8,6 +8,7 @@
     import matplotlib.pyplot as plt
     import numpy as np
     import sfs
+    from scipy.signal import unit_impulse
 
     # Plane wave
     npw = sfs.util.direction_vector(np.radians(-45))
@@ -24,7 +25,7 @@
     tf = rf / c  # time-of-arrival at origin
 
     # Impulsive excitation
-    signal = np.insert(np.zeros(511), 0, 1), 44100
+    signal = unit_impulse(512), 44100
 
     # Circular loudspeaker array
     N = 32  # number of loudspeakers
