@@ -54,7 +54,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
-        a = sfs.mono.drivingfunction.source_selection_line(n0, x0, xs)
+        a = sfs.util.source_selection_line(n0, x0, xs)
         plot(d, a)
 
     """
@@ -82,7 +82,7 @@ def _wfs_point(omega, x0, n0, xs, c=None):
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_3d_point(omega, x0, n0, xs)
-        a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+        a = sfs.util.source_selection_point(n0, x0, xs)
         plot(d, a)
 
     """
@@ -114,7 +114,7 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs)
-        a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+        a = sfs.util.source_selection_point(n0, x0, xs)
         plot(d, a)
 
     """
@@ -150,7 +150,7 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
-        a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+        a = sfs.util.source_selection_plane(n0, npw)
         plot(d, a)
 
     """
@@ -180,7 +180,7 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw)
-        a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+        a = sfs.util.source_selection_plane(n0, npw)
         plot(d, a)
 
     """
@@ -212,7 +212,7 @@ def _wfs_focused(omega, x0, n0, xs, c=None):
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_3d_focused(omega, x0, n0, xs_focused)
-        a = sfs.mono.drivingfunction.source_selection_focused(ns, x0, xs_focused)
+        a = sfs.util.source_selection_focused(ns, x0, xs_focused)
         plot(d, a)
 
     """
@@ -244,7 +244,7 @@ def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         :context: close-figs
 
         d = sfs.mono.drivingfunction.wfs_25d_focused(omega, x0, n0, xs_focused)
-        a = sfs.mono.drivingfunction.source_selection_focused(ns, x0, xs_focused)
+        a = sfs.util.source_selection_focused(ns, x0, xs_focused)
         plot(d, a)
 
     """
@@ -281,57 +281,6 @@ def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
     return np.exp(-1j * k * np.inner(n, x0))
-
-
-def source_selection_plane(n0, n):
-    """Secondary source selection for a plane wave.
-
-    Eq.(13) from :cite:`Spors2008`
-
-    """
-    n0 = util.asarray_of_rows(n0)
-    n = util.normalize_vector(n)
-    return np.inner(n, n0) >= default.selection_tolerance
-
-
-def source_selection_point(n0, x0, xs):
-    """Secondary source selection for a point source.
-
-    Eq.(15) from :cite:`Spors2008`
-
-    """
-    n0 = util.asarray_of_rows(n0)
-    x0 = util.asarray_of_rows(x0)
-    xs = util.asarray_1d(xs)
-    ds = x0 - xs
-    return inner1d(ds, n0) >= default.selection_tolerance
-
-
-def source_selection_line(n0, x0, xs):
-    """Secondary source selection for a line source.
-
-    compare Eq.(15) from :cite:`Spors2008`
-
-    """
-    return source_selection_point(n0, x0, xs)
-
-
-def source_selection_focused(ns, x0, xs):
-    """Secondary source selection for a focused source.
-
-    Eq.(2.78) from :cite:`Wierstorf2014`
-
-    """
-    x0 = util.asarray_of_rows(x0)
-    xs = util.asarray_1d(xs)
-    ns = util.normalize_vector(ns)
-    ds = xs - x0
-    return inner1d(ns, ds) >= default.selection_tolerance
-
-
-def source_selection_all(N):
-    """Select all secondary sources."""
-    return np.ones(N, dtype=bool)
 
 
 def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):

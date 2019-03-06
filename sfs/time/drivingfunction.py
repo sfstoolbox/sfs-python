@@ -98,7 +98,7 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
         delays, weights = sfs.time.drivingfunction.wfs_25d_plane(x0, n0, npw)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+        a = sfs.util.source_selection_plane(n0, npw)
         plot(d, a)
 
     """
@@ -168,7 +168,7 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
 
         delays, weights = sfs.time.drivingfunction.wfs_25d_point(x0, n0, xs)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+        a = sfs.util.source_selection_point(n0, x0, xs)
         plot(d, a, t=ts)
 
     """
@@ -241,7 +241,7 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
 
         delays, weights = sfs.time.drivingfunction.wfs_25d_focused(x0, n0, xf)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        a = sfs.mono.drivingfunction.source_selection_focused(nf, x0, xf)
+        a = sfs.util.source_selection_focused(nf, x0, xf)
         plot(d, a, t=tf)
 
     """

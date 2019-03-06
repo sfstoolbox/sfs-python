@@ -28,7 +28,7 @@ d_delay, d_weight = sfs.time.drivingfunction.wfs_25d_point(x0, n0, xs)
 d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
-a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+a = sfs.util.source_selection_point(n0, x0, xs)
 twin = sfs.tapering.tukey(a, .3)
 p = sfs.time.soundfield.p_array(x0, d, twin * a0, t, grid)
 p = p * 100  # scale absolute amplitude
@@ -51,7 +51,7 @@ d_delay, d_weight = sfs.time.drivingfunction.wfs_25d_plane(x0, n0, npw)
 d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.util.source_selection_plane(n0, npw)
 twin = sfs.tapering.tukey(a, .3)
 p = sfs.time.soundfield.p_array(x0, d, twin * a0, t, grid)
 
@@ -72,7 +72,7 @@ d_delay, d_weight = sfs.time.drivingfunction.wfs_25d_focused(x0, n0, xs)
 d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
-a = sfs.mono.drivingfunction.source_selection_focused(nfs, x0, xs)
+a = sfs.util.source_selection_focused(nfs, x0, xs)
 twin = sfs.tapering.tukey(a, .3)
 p = sfs.time.soundfield.p_array(x0, d, twin * a0, t, grid)
 p = p * 100  # scale absolute amplitude

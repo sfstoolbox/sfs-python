@@ -48,7 +48,7 @@ def compute_and_plot_soundfield(title):
 x0, n0, a0 = sfs.array.linear(N, dx, center=acenter, orientation=anormal)
 
 sourcetype = sfs.mono.source.point
-a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+a = sfs.util.source_selection_point(n0, x0, xs)
 
 d = sfs.mono.drivingfunction.wfs_3d_point(omega, x0, n0, xs)
 compute_and_plot_soundfield('linear_ps_wfs_3d_point')
@@ -67,7 +67,7 @@ compute_and_plot_soundfield('linear_ls_wfs_2d_line')
 
 # linear array, secondary point sources, virtual plane wave
 sourcetype = sfs.mono.source.point
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.util.source_selection_plane(n0, npw)
 
 d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
 compute_and_plot_soundfield('linear_ps_wfs_3d_plane')
@@ -84,11 +84,11 @@ x0, n0, a0 = sfs.array.linear_diff(N//3 * [dx] + N//3 * [dx/2] + N//3 * [dx],
                                    center=acenter, orientation=anormal)
 
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+a = sfs.util.source_selection_point(n0, x0, xs)
 compute_and_plot_soundfield('linear_nested_ps_wfs_25d_point')
 
 d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.util.source_selection_plane(n0, npw)
 compute_and_plot_soundfield('linear_nested_ps_wfs_25d_plane')
 
 
@@ -97,22 +97,22 @@ x0, n0, a0 = sfs.array.linear_random(N, dx/2, 1.5*dx, center=acenter,
                                      orientation=anormal)
 
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+a = sfs.util.source_selection_point(n0, x0, xs)
 compute_and_plot_soundfield('linear_random_ps_wfs_25d_point')
 
 d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.util.source_selection_plane(n0, npw)
 compute_and_plot_soundfield('linear_random_ps_wfs_25d_plane')
 
 
 # rectangular array, secondary point sources
 x0, n0, a0 = sfs.array.rectangular((N, N//2), dx, center=acenter, orientation=anormal)
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+a = sfs.util.source_selection_point(n0, x0, xs)
 compute_and_plot_soundfield('rectangular_ps_wfs_25d_point')
 
 d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.util.source_selection_plane(n0, npw)
 compute_and_plot_soundfield('rectangular_ps_wfs_25d_plane')
 
 
@@ -120,11 +120,11 @@ compute_and_plot_soundfield('rectangular_ps_wfs_25d_plane')
 N = 60
 x0, n0, a0 = sfs.array.circular(N, 1, center=acenter)
 d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
+a = sfs.util.source_selection_point(n0, x0, xs)
 compute_and_plot_soundfield('circular_ps_wfs_25d_point')
 
 d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref=xnorm)
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
+a = sfs.util.source_selection_plane(n0, npw)
 compute_and_plot_soundfield('circular_ps_wfs_25d_plane')
 
 
@@ -135,7 +135,7 @@ talpha = 0  # switches off tapering
 sourcetype = sfs.mono.source.line
 
 d = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, x0, 1, npw)
-a = sfs.mono.drivingfunction.source_selection_all(N)
+a = sfs.util.source_selection_all(N)
 compute_and_plot_soundfield('circular_ls_nfchoa_2d_plane')
 
 
@@ -146,9 +146,9 @@ talpha = 0  # switches off tapering
 sourcetype = sfs.mono.source.point
 
 d = sfs.mono.drivingfunction.nfchoa_25d_point(omega, x0, 1, xs)
-a = sfs.mono.drivingfunction.source_selection_all(N)
+a = sfs.util.source_selection_all(N)
 compute_and_plot_soundfield('circular_ps_nfchoa_25d_point')
 
 d = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, x0, 1, npw)
-a = sfs.mono.drivingfunction.source_selection_all(N)
+a = sfs.util.source_selection_all(N)
 compute_and_plot_soundfield('circular_ps_nfchoa_25d_plane')

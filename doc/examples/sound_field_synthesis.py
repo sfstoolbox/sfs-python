@@ -60,9 +60,9 @@ d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw, xref)
 #d = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, x0, R, npw)
 
 # === determine active secondary sources ===
-a = sfs.mono.drivingfunction.source_selection_plane(n0, npw)
-#a = sfs.mono.drivingfunction.source_selection_point(n0, x0, xs)
-#a = sfs.mono.drivingfunction.source_selection_all(len(x0))
+a = sfs.util.source_selection_plane(n0, npw)
+#a = sfs.util.source_selection_point(n0, x0, xs)
+#a = sfs.util.source_selection_all(len(x0))
 
 
 # === compute tapering window ===

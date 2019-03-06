@@ -6,6 +6,7 @@
 
 import collections
 import numpy as np
+from numpy.core.umath_tests import inner1d
 from scipy.special import spherical_jn, spherical_yn
 from . import default
 
@@ -564,3 +565,54 @@ def spherical_hn2(n, z):
 
     """
     return spherical_jn(n, z) - 1j * spherical_yn(n, z)
+
+
+def source_selection_plane(n0, n):
+    """Secondary source selection for a plane wave.
+
+    Eq.(13) from :cite:`Spors2008`
+
+    """
+    n0 = asarray_of_rows(n0)
+    n = normalize_vector(n)
+    return np.inner(n, n0) >= default.selection_tolerance
+
+
+def source_selection_point(n0, x0, xs):
+    """Secondary source selection for a point source.
+
+    Eq.(15) from :cite:`Spors2008`
+
+    """
+    n0 = asarray_of_rows(n0)
+    x0 = asarray_of_rows(x0)
+    xs = asarray_1d(xs)
+    ds = x0 - xs
+    return inner1d(ds, n0) >= default.selection_tolerance
+
+
+def source_selection_line(n0, x0, xs):
+    """Secondary source selection for a line source.
+
+    compare Eq.(15) from :cite:`Spors2008`
+
+    """
+    return source_selection_point(n0, x0, xs)
+
+
+def source_selection_focused(ns, x0, xs):
+    """Secondary source selection for a focused source.
+
+    Eq.(2.78) from :cite:`Wierstorf2014`
+
+    """
+    x0 = asarray_of_rows(x0)
+    xs = asarray_1d(xs)
+    ns = normalize_vector(ns)
+    ds = xs - x0
+    return inner1d(ns, ds) >= default.selection_tolerance
+
+
+def source_selection_all(N):
+    """Select all secondary sources."""
+    return np.ones(N, dtype=bool)
