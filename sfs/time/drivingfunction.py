@@ -16,13 +16,13 @@
     # Point source
     xs = -1.5, 1.5, 0
     rs = np.linalg.norm(xs)  # distance from origin
-    ts = rs / c  # time-of-arrival at origin
+    ts = rs / sfs.default.c  # time-of-arrival at origin
 
     # Focused source
     xf = -0.5, 0.5, 0
     nf = sfs.util.direction_vector(np.radians(-45))  # normal vector
     rf = np.linalg.norm(xf)  # distance from origin
-    tf = rf / c  # time-of-arrival at origin
+    tf = rf / sfs.default.c  # time-of-arrival at origin
 
     # Impulsive excitation
     signal = unit_impulse(512), 44100
