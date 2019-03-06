@@ -7,8 +7,8 @@
 
     import matplotlib.pyplot as plt
     import numpy as np
-    import sfs
     from scipy.signal import unit_impulse
+    import sfs
 
     # Plane wave
     npw = sfs.util.direction_vector(np.radians(-45))

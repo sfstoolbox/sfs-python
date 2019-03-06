@@ -9,6 +9,7 @@ The Green's function describes the spatial sound propagation over time.
 
     import matplotlib.pyplot as plt
     import numpy as np
+    from scipy.signal import unit_impulse
     import sfs
 
     xs = 1.5, 1, 0  # source position
@@ -16,7 +17,7 @@ The Green's function describes the spatial sound propagation over time.
     ts = rs / sfs.default.c  # time-of-arrival at origin
 
     # Impulsive excitation
-    signal = np.insert(np.zeros(511), 0, 1), 44100
+    signal = unit_impulse(512), 44100
 
     grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
