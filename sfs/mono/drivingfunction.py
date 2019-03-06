@@ -41,8 +41,34 @@ from . import source as _source
 
 
 def wfs_2d_line(omega, x0, n0, xs, c=None):
-    r"""Line source by 2-dimensional WFS.
+    r"""Driving function for 2-dimensional WFS for a virtual line source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of line source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of virtual line source.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\x_0,\w) = \frac{\i}{2} \wc
@@ -71,8 +97,34 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
 
 
 def _wfs_point(omega, x0, n0, xs, c=None):
-    r"""Point source by two- or three-dimensional WFS.
+    r"""Driving function for 2/3-dimensional WFS for a virtual point source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of virtual point source.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\x_0, \w) = \i\wc \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
@@ -104,8 +156,36 @@ wfs_2d_point = _wfs_point
 
 
 def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
-    r"""Point source by 2.5-dimensional WFS.
+    r"""Driving function for 2.5-dimensional WFS for a virtual point source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of virtual point source.
+    xref : (3,) array_like, optional
+        Reference point for synthesized sound field.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
@@ -142,8 +222,34 @@ wfs_3d_point = _wfs_point
 
 
 def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
-    r"""Plane wave by two- or three-dimensional WFS.
+    r"""Driving function for 2/3-dimensional WFS for a virtual plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of plane wave.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    n : (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     Eq.(17) from :cite:`Spors2008`:
 
     .. math::
@@ -175,8 +281,38 @@ wfs_2d_plane = _wfs_plane
 
 def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
                   omalias=None):
-    r"""Plane wave by 2.5-dimensional WFS.
+    r"""Driving function for 2.5-dimensional WFS for a virtual plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of plane wave.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    n : (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    xref : (3,) array_like, optional
+        Reference point for synthesized sound field.
+    c : float, optional
+        Speed of sound.
+    omalias: float, optional
+        Angular frequency where spatial aliasing becomes prominent.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D_\text{2.5D}(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
@@ -210,8 +346,36 @@ wfs_3d_plane = _wfs_plane
 
 
 def _wfs_focused(omega, x0, n0, xs, ns, c=None):
-    r"""Focused source by two- or three-dimensional WFS.
+    r"""Driving function for 2/3-dimensional WFS for a focused source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of focused source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of focused source.
+    ns :  (3,) array_like
+        Direction of focused source.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\x_0,\w) = \i\wc \frac{\scalarprod{\x_0-\x_\text{s}}{\n_0}}
@@ -244,8 +408,40 @@ wfs_2d_focused = _wfs_focused
 
 def wfs_25d_focused(omega, x0, n0, xs, ns, xref=[0, 0, 0], c=None,
                     omalias=None):
-    r"""Focused source by 2.5-dimensional WFS.
+    r"""Driving function for 2.5-dimensional WFS for a focused source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of focused source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of focused source.
+    ns :  (3,) array_like
+        Direction of focused source.
+    xref : (3,) array_like, optional
+        Reference point for synthesized sound field.
+    c : float, optional
+        Speed of sound.
+    omalias: float, optional
+        Angular frequency where spatial aliasing becomes prominent.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
@@ -282,7 +478,32 @@ wfs_3d_focused = _wfs_focused
 
 
 def wfs_25d_preeq(omega, omalias, c):
-    """Preqeualization for 2.5D WFS."""
+    r"""Pre-equalization filter for 2.5-dimensional WFS.
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    omalias: float
+        Angular frequency where spatial aliasing becomes prominent.
+    c : float
+        Speed of sound.
+
+    Returns
+    -------
+    float
+        Complex weight for given angular frequency.
+
+    Notes
+    -----
+    .. math::
+
+        H(\w) = \begin{cases}
+            \sqrt{\i \wc} & \text{for } \w \leq \w_\text{alias} \\
+            \sqrt{\i \frac{\w_\text{alias}}{c}} & \text{for } \w > \w_\text{alias}
+            \end{cases}
+
+    """
     if omalias is None:
         return np.sqrt(1j * util.wavenumber(omega, c))
     else:
@@ -293,7 +514,48 @@ def wfs_25d_preeq(omega, omalias, c):
 
 
 def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
-    """Plane wave by simple delay of secondary sources."""
+    r"""Delay-only driving function for a virtual plane wave.
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of plane wave.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    n : (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    .. math::
+
+        D(\x_0,\w) = \e{-\i\wc\scalarprod{\n}{\x_0}}
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.mono.drivingfunction.delay_3d_plane(
+            omega, array.x, array.n, npw)
+        plot(d, selection, secondary_source)
+
+    """
     x0 = util.asarray_of_rows(x0)
     n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
@@ -303,8 +565,36 @@ def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 
 
 def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
-    r"""Plane wave by two-dimensional NFC-HOA.
+    r"""Driving function for 2-dimensional NFC-HOA for a virtual plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of plane wave.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    r0 : float
+        Radius of circular secondary source distribution.
+    n : (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    max_order : float, optional
+        Maximum order of circular harmonics used for the calculation.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\phi_0, \omega) =
@@ -341,8 +631,36 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
 
 
 def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
-    r"""Point source by 2.5-dimensional NFC-HOA.
+    r"""Driving function for 2.5-dimensional NFC-HOA for a virtual point source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    r0 : float
+        Radius of circular secondary source distribution.
+    xs : (3,) array_like
+        Position of point source.
+    max_order : float, optional
+        Maximum order of circular harmonics used for the calculation.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\phi_0, \omega) =
@@ -381,8 +699,36 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
 
 
 def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
-    r"""Plane wave by 2.5-dimensional NFC-HOA.
+    r"""Driving function for 2.5-dimensional NFC-HOA for a virtual plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    r0 : float
+        Radius of circular secondary source distribution.
+    n : (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    max_order : float, optional
+        Maximum order of circular harmonics used for the calculation.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     .. math::
 
         D(\phi_0, \omega) =
@@ -420,10 +766,46 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
 
 
 def sdm_2d_line(omega, x0, n0, xs, c=None):
-    """Line source by two-dimensional SDM.
+    r"""Driving function for 2-dimensional SDM for a virtual line source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of line source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of line source.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     The secondary sources have to be located on the x-axis (y0=0).
     Derived from :cite:`Spors2009`, Eq.(9), Eq.(4).
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
+        d, selection, secondary_source = sfs.mono.drivingfunction.sdm_2d_line(
+            omega, array.x, array.n, xs)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -432,12 +814,40 @@ def sdm_2d_line(omega, x0, n0, xs, c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return - 1j/2 * k * xs[1] / r * hankel2(1, k * r)
+    d = - 1j/2 * k * xs[1] / r * hankel2(1, k * r)
+    selection = util.source_selection_all(len(x0))
+    return d, selection, secondary_source_line(omega, c)
 
 
 def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
-    r"""Plane wave by two-dimensional SDM.
+    r"""Driving function for 2-dimensional SDM for a virtual plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of plane wave.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    n: (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     The secondary sources have to be located on the x-axis (y0=0).
     Derived from :cite:`Ahrens2012`, Eq.(3.73), Eq.(C.5), Eq.(C.11):
 
@@ -445,19 +855,70 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
 
         D(\x_0,k) = k_\text{pw,y} \e{-\i k_\text{pw,x} x}
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
+        d, selection, secondary_source = sfs.mono.drivingfunction.sdm_2d_plane(
+            omega, array.x, array.n, npw)
+        plot(d, selection, secondary_source)
+
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
     n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
-    return k * n[1] * np.exp(-1j * k * n[0] * x0[:, 0])
+    d = k * n[1] * np.exp(-1j * k * n[0] * x0[:, 0])
+    selection = util.source_selection_all(len(x0))
+    return d, selection, secondary_source_line(omega, c)
 
 
 def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
-    """Plane wave by 2.5-dimensional SDM.
+    r"""Driving function for 2.5-dimensional SDM for a virtual plane wave.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of plane wave.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    n: (3,) array_like, optional
+        Normal vector (traveling direction) of plane wave.
+    xref : (3,) array_like, optional
+        Reference point for synthesized sound field.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     The secondary sources have to be located on the x-axis (y0=0).
     Eq.(3.79) from :cite:`Ahrens2012`.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
+        d, selection, secondary_source = (
+            sfs.mono.drivingfunction.sdm_25d_plane(
+                omega, array.x, array.n, npw, [0, -1, 0]))
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -465,15 +926,56 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n = util.normalize_vector(n)
     xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
-    return 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
+    d = 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
         np.exp(-1j*k*n[0]*x0[:, 0])
+    selection = util.source_selection_all(len(x0))
+    return d, selection, secondary_source_point(omega, c)
 
 
 def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
-    """Point source by 2.5-dimensional SDM.
+    r"""Driving function for 2.5-dimensional SDM for a virtual point source.
 
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs: (3,) array_like
+        Position of virtual point source.
+    xref : (3,) array_like, optional
+        Reference point for synthesized sound field.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
     The secondary sources have to be located on the x-axis (y0=0).
-    Driving funcnction from :cite:`Spors2010`, Eq.(24).
+    Driving function from :cite:`Spors2010`, Eq.(24).
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
+        d, selection, secondary_source = (
+            sfs.mono.drivingfunction.sdm_25d_point(
+                omega, array.x, array.n, xs, [0, -1, 0]))
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -483,19 +985,19 @@ def sdm_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return 1/2 * 1j * k * np.sqrt(xref[1] / (xref[1] - xs[1])) * \
+    d = 1/2 * 1j * k * np.sqrt(xref[1] / (xref[1] - xs[1])) * \
         xs[1] / r * hankel2(1, k * r)
+    selection = util.source_selection_all(len(x0))
+    return d, selection, secondary_source_point(omega, c)
 
 
 def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
                       c=None):
-    """Plane wave by two-dimensional ESA for an edge-shaped secondary source
-       distribution consisting of monopole line sources.
+    r"""Driving function for 2-dimensional plane wave with edge ESA.
 
-    One leg of the secondary sources has to be located on the x-axis (y0=0),
-    the edge at the origin.
-
-    Derived from :cite:`Spors2016`
+    Driving function for a virtual plane wave using the 2-dimensional ESA
+    for an edge-shaped secondary source distribution consisting of
+    monopole line sources.
 
     Parameters
     ----------
@@ -515,8 +1017,21 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
 
     Returns
     -------
-    (N,) numpy.ndarray
+    d : (N,) numpy.ndarray
         Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from :cite:`Spors2016`
 
     """
     x0 = np.asarray(x0)
@@ -543,18 +1058,17 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
 
     d[phi > 0] = -d[phi > 0]
 
-    return 4*np.pi/alpha * d
+    selection = util.source_selection_all(len(x0))
+    return 4*np.pi/alpha * d, selection, secondary_source_line(omega, c)
 
 
 def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
                              c=None):
-    """Plane wave by two-dimensional ESA for an edge-shaped secondary source
-       distribution consisting of dipole line sources.
+    r"""Driving function for 2-dimensional plane wave with edge dipole ESA.
 
-    One leg of the secondary sources has to be located on the x-axis (y0=0),
-    the edge at the origin.
-
-    Derived from :cite:`Spors2016`
+    Driving function for a virtual plane wave using the 2-dimensional ESA
+    for an edge-shaped secondary source distribution consisting of
+    dipole line sources.
 
     Parameters
     ----------
@@ -574,8 +1088,21 @@ def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
 
     Returns
     -------
-    (N,) numpy.ndarray
+    d : (N,) numpy.ndarray
         Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from :cite:`Spors2016`
 
     """
     x0 = np.asarray(x0)
@@ -604,13 +1131,11 @@ def esa_edge_dipole_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
 
 
 def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
-    """Line source by two-dimensional ESA for an edge-shaped secondary source
-       distribution constisting of monopole line sources.
+    r"""Driving function for 2-dimensional line source with edge ESA.
 
-    One leg of the secondary sources have to be located on the x-axis (y0=0),
-    the edge at the origin.
-
-    Derived from :cite:`Spors2016`
+    Driving function for a virtual line source using the 2-dimensional ESA
+    for an edge-shaped secondary source distribution consisting of line
+    sources.
 
     Parameters
     ----------
@@ -630,8 +1155,21 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
 
     Returns
     -------
-    (N,) numpy.ndarray
+    d : (N,) numpy.ndarray
         Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from :cite:`Spors2016`
 
     """
     x0 = np.asarray(x0)
@@ -662,64 +1200,16 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
 
     d[phi > 0] = -d[phi > 0]
 
-    return -1j*np.pi/alpha * d
-
-
-def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
-                       Nc=None, c=None):
-    """Point source by 2.5-dimensional ESA for an edge-shaped secondary source
-       distribution constisting of monopole line sources.
-
-    One leg of the secondary sources have to be located on the x-axis (y0=0),
-    the edge at the origin.
-
-    Derived from :cite:`Spors2016`
-
-    Parameters
-    ----------
-    omega : float
-        Angular frequency.
-    x0 : int(N, 3) array_like
-        Sequence of secondary source positions.
-    xs : (3,) array_like
-        Position of synthesized line source.
-    xref: (3,) array_like or float
-        Reference position or reference distance
-    alpha : float, optional
-        Outer angle of edge.
-    Nc : int, optional
-        Number of elements for series expansion of driving function. Estimated
-        if not given.
-    c : float, optional
-        Speed of sound
-
-    Returns
-    -------
-    (N,) numpy.ndarray
-        Complex weights of secondary sources.
-
-    """
-    x0 = np.asarray(x0)
-    xs = np.asarray(xs)
-    xref = np.asarray(xref)
-
-    if np.isscalar(xref):
-        a = np.linalg.norm(xref)/np.linalg.norm(xref-xs)
-    else:
-        a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
-
-    return 1j*np.sqrt(a) * esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc,
-                                            c=c)
+    selection = util.source_selection_all(len(x0))
+    return -1j*np.pi/alpha * d, selection, secondary_source_line(omega, c)
 
 
 def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
-    """Line source by two-dimensional ESA for an edge-shaped secondary source
-       distribution constisting of dipole line sources.
+    r"""Driving function for 2-dimensional line source with edge dipole ESA.
 
-    One leg of the secondary sources have to be located on the x-axis (y0=0),
-    the edge at the origin.
-
-    Derived from :cite:`Spors2016`
+    Driving function for a virtual line source using the 2-dimensional ESA
+    for an edge-shaped secondary source distribution consisting of dipole line
+    sources.
 
     Parameters
     ----------
@@ -739,8 +1229,21 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
 
     Returns
     -------
-    (N,) numpy.ndarray
+    d : (N,) numpy.ndarray
         Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from :cite:`Spors2016`
 
     """
     x0 = np.asarray(x0)
@@ -770,6 +1273,64 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
         d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
 
     return -1j*np.pi/alpha * d
+
+
+def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
+                       Nc=None, c=None):
+    r"""Driving function for 2.5-dimensional point source with edge ESA.
+
+    Driving function for a virtual point source using the 2.5-dimensional
+    ESA for an edge-shaped secondary source distribution consisting of point
+    sources.
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency.
+    x0 : int(N, 3) array_like
+        Sequence of secondary source positions.
+    xs : (3,) array_like
+        Position of synthesized line source.
+    xref: (3,) array_like or float
+        Reference position or reference distance
+    alpha : float, optional
+        Outer angle of edge.
+    Nc : int, optional
+        Number of elements for series expansion of driving function. Estimated
+        if not given.
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    One leg of the secondary sources has to be located on the x-axis (y0=0),
+    the edge at the origin.
+
+    Derived from :cite:`Spors2016`
+
+    """
+    x0 = np.asarray(x0)
+    xs = np.asarray(xs)
+    xref = np.asarray(xref)
+
+    if np.isscalar(xref):
+        a = np.linalg.norm(xref)/np.linalg.norm(xref-xs)
+    else:
+        a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
+
+    d, selection, _ = esa_edge_2d_line(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
+    return 1j*np.sqrt(a) * d, selection, secondary_source_point(omega, c)
 
 
 def secondary_source_point(omega, c):
