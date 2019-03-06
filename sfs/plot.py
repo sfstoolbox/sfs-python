@@ -283,6 +283,9 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
     elif plotting_plane == 'yz':
         x, y = grid[[1, 2]]
 
+    dx = 0.5 * x.ptp() / p.shape[0]
+    dy = 0.5 * y.ptp() / p.shape[1]
+
     if ax is None:
         ax = plt.gca()
 
@@ -291,7 +294,7 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
         p = np.clip(p, -1e15, 1e15)  # clip to float64 range
 
     im = ax.imshow(np.real(p), cmap=cmap, origin='lower',
-                   extent=[x.min(), x.max(), y.min(), y.max()],
+                   extent=[x.min()-dx, x.max()+dx, y.min()-dy, y.max()+dy],
                    vmax=vmax, vmin=vmin, **kwargs)
     if xlabel is None:
         xlabel = plotting_plane[0] + ' / m'
