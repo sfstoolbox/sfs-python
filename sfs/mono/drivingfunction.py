@@ -45,7 +45,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of line source.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
@@ -62,9 +62,6 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
 
     Notes
     -----
-    .. math::
-
-        V(\x,\w) = \frac{1}{\rho c} \e{-\i\wc\n\x} \n
     .. math::
 
         D(\x_0,\w) = \frac{\i}{2} \wc
@@ -96,7 +93,7 @@ def _wfs_point(omega, x0, n0, xs, c=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of point source.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
@@ -147,14 +144,14 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of point source.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
     xs : (3,) array_like
         Position of virtual point source.
-    xref : (3,) array_like
+    xref : (3,) array_like, optional
         Reference point for synthesized sound field.
     c : float, optional
         Speed of sound.
@@ -205,12 +202,12 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of plane wave.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
-    n : (3,) array_like
+    n : (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
     c : float, optional
         Speed of sound.
@@ -256,14 +253,14 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of plane wave.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
-    n : (3,) array_like
+    n : (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
-    xref : (3,) array_like
+    xref : (3,) array_like, optional
         Reference point for synthesized sound field.
     c : float, optional
         Speed of sound.
@@ -312,7 +309,7 @@ def _wfs_focused(omega, x0, n0, xs, c=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of focused source.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
@@ -363,14 +360,14 @@ def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of focused source.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
     xs : (3,) array_like
         Position of focused source.
-    xref : (3,) array_like
+    xref : (3,) array_like, optional
         Reference point for synthesized sound field.
     c : float, optional
         Speed of sound.
@@ -459,12 +456,12 @@ def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     Parameters
     ----------
     omega : float
-        Frequency of line source.
+        Angular frequency of plane wave.
     x0 : (N, 3) array_like
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
-    n : (3,) array_like
+    n : (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
     c : float, optional
         Speed of sound.
@@ -609,6 +606,14 @@ def source_selection_all(N):
     -------
     (N,) numpy.ndarray
         Active secondary sources.
+
+    Notes
+    -----
+
+    .. math::
+
+        a(\x_0) = 1
+
     """
     return np.ones(N, dtype=bool)
 
@@ -624,7 +629,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         Sequence of secondary source positions.
     r0 : float
         Radius of circular secondary source distribution.
-    n : (3,) array_like
+    n : (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
     max_order : float, optional
         Maximum order of circular harmonics used for the calculation.
@@ -739,7 +744,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         Sequence of secondary source positions.
     r0 : float
         Radius of circular secondary source distribution.
-    n : (3,) array_like
+    n : (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
     max_order : float, optional
         Maximum order of circular harmonics used for the calculation.
@@ -792,14 +797,14 @@ def _max_order_circular_harmonics(N, max_order):
     Parameters
     ----------
     N : int
-        Number of secondary sources.
+        Total number of secondary sources.
     max_order : int
         Maximum order of expansion. If None maximum order is calculated.
 
     Returns
     -------
     int
-        Maximum order.
+        Order.
 
     """
     return N // 2 if max_order is None else max_order
@@ -862,7 +867,7 @@ def sdm_2d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
-    n: (3,) array_like
+    n: (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
     c : float, optional
         Speed of sound.
@@ -910,7 +915,7 @@ def sdm_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         Sequence of secondary source positions.
     n0 : (N, 3) array_like
         Sequence of normal vectors of secondary sources.
-    n: (3,) array_like
+    n: (3,) array_like, optional
         Normal vector (traveling direction) of plane wave.
     xref : (3,) array_like, optional
         Reference point for synthesized sound field.
