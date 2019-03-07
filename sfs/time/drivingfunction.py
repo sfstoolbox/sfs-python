@@ -30,20 +30,22 @@
     # Circular loudspeaker array
     N = 32  # number of loudspeakers
     R = 1.5  # radius
-    x0, n0, a0 = sfs.array.circular(N, R)
+    array = sfs.array.circular(N, R)
 
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
-    def plot(d, selected, t=0):
-        p = sfs.time.soundfield.p_array(x0, d, selected * a0, t, grid)
+    def plot(d, selection, secondary_source, t=0):
+        p = sfs.time.synthesize(d, selection, array, secondary_source, grid=grid,
+                                observation_time=t)
         sfs.plot.level(p, grid)
-        sfs.plot.loudspeaker_2d(x0, n0, selected * a0, size=0.15)
+        sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
 
 """
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
 from .. import default
 from .. import util
+from . import source as _source
 
 
 def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
@@ -66,8 +68,14 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     -------
     delays : (N,) numpy.ndarray
         Delays of secondary sources in seconds.
-    weights: (N,) numpy.ndarray
+    weights : (N,) numpy.ndarray
         Weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     Notes
     -----
@@ -96,10 +104,10 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        delays, weights = sfs.time.drivingfunction.wfs_25d_plane(x0, n0, npw)
+        delays, weights, selection, secondary_source = \
+            sfs.time.drivingfunction.wfs_25d_plane(array.x, array.n, npw)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        a = sfs.util.source_selection_plane(n0, npw)
-        plot(d, a)
+        plot(d, selection, secondary_source)
 
     """
     if c is None:
@@ -111,7 +119,8 @@ def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
     delays = inner1d(n, x0) / c
     weights = 2 * g0 * inner1d(n, n0)
-    return delays, weights
+    selection = util.source_selection_plane(n0, n)
+    return delays, weights, selection, secondary_source_point(c)
 
 
 def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
@@ -136,6 +145,12 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
         Delays of secondary sources in seconds.
     weights: (N,) numpy.ndarray
         Weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     Notes
     -----
@@ -166,10 +181,10 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        delays, weights = sfs.time.drivingfunction.wfs_25d_point(x0, n0, xs)
+        delays, weights, selection, secondary_source = \
+            sfs.time.drivingfunction.wfs_25d_point(array.x, array.n, xs)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        a = sfs.util.source_selection_point(n0, x0, xs)
-        plot(d, a, t=ts)
+        plot(d, selection, secondary_source, t=ts)
 
     """
     if c is None:
@@ -183,10 +198,11 @@ def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
     r = np.linalg.norm(ds, axis=1)
     delays = r/c
     weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
-    return delays, weights
+    selection = util.source_selection_point(n0, x0, xs)
+    return delays, weights, selection, secondary_source_point(c)
 
 
-def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
+def wfs_25d_focused(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
     r"""Point source by 2.5-dimensional WFS.
 
     Parameters
@@ -197,6 +213,10 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
         Sequence of secondary source orientations.
     xs : (3,) array_like
         Virtual source position.
+    ns : (3,) array_like
+        Normal vector (propagation direction) of focused source.
+        This is used for secondary source selection,
+        see `sfs.util.source_selection_focused()`.
     xref : (3,) array_like, optional
         Reference position
     c : float, optional
@@ -208,6 +228,12 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
         Delays of secondary sources in seconds.
     weights: (N,) numpy.ndarray
         Weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     Notes
     -----
@@ -239,10 +265,10 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        delays, weights = sfs.time.drivingfunction.wfs_25d_focused(x0, n0, xf)
+        delays, weights, selection, secondary_source = \
+            sfs.time.drivingfunction.wfs_25d_focused(array.x, array.n, xf, nf)
         d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        a = sfs.util.source_selection_focused(nf, x0, xf)
-        plot(d, a, t=tf)
+        plot(d, selection, secondary_source, t=tf)
 
     """
     if c is None:
@@ -257,7 +283,8 @@ def wfs_25d_focused(x0, n0, xs, xref=[0, 0, 0], c=None):
                  / (np.linalg.norm(xref - x0, axis=1) + r))
     delays = -r/c
     weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
-    return delays, weights
+    selection = util.source_selection_focused(ns, x0, xs)
+    return delays, weights, selection, secondary_source_point(c)
 
 
 def driving_signals(delays, weights, signal):
@@ -321,3 +348,12 @@ def apply_delays(signal, delays):
     for column, row in enumerate(delays_samples):
         out[row:row + len(data), column] = data
     return util.DelayedSignal(out, samplerate, offset_samples / samplerate)
+
+
+def secondary_source_point(c):
+    """Create a point source for use in `sfs.time.synthesize()`."""
+
+    def secondary_source(position, _, signal, observation_time, grid):
+        return _source.point(position, signal, observation_time, grid, c=c)
+
+    return secondary_source

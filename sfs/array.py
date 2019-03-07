@@ -14,7 +14,8 @@ import numpy as np
 from . import util
 
 
-class ArrayData(namedtuple('ArrayData', 'x n a')):
+class SecondarySourceDistribution(namedtuple('SecondarySourceDistribution',
+                                             'x n a')):
     """Named tuple returned by array functions.
 
     See `collections.namedtuple`.
@@ -33,13 +34,54 @@ class ArrayData(namedtuple('ArrayData', 'x n a')):
     __slots__ = ()
 
     def __repr__(self):
-        return 'ArrayData(\n' + ',\n'.join(
+        return 'SecondarySourceDistribution(\n' + ',\n'.join(
             '    {}={}'.format(name, repr(data).replace('\n', '\n      '))
             for name, data in zip('xna', self)) + ')'
 
     def take(self, indices):
         """Return a sub-array given by *indices*."""
-        return ArrayData(self.x[indices], self.n[indices], self.a[indices])
+        return SecondarySourceDistribution(
+            self.x[indices], self.n[indices], self.a[indices])
+
+
+def as_secondary_source_distribution(arg, **kwargs):
+    r"""Create a `SecondarySourceDistribution`.
+
+    Parameters
+    ----------
+    arg : sequence of between 1 and 3 array_like objects
+        All elements are converted to NumPy arrays.
+        If only 1 element is given, all normal vectors are set to *NaN*.
+        If only 1 or 2 elements are given, all weights are set to ``1.0``.
+    **kwargs
+        All keyword arguments are forwarded to :func:`numpy.asarray`.
+
+    Returns
+    -------
+    `SecondarySourceDistribution`
+        A named tuple consisting of three `numpy.ndarray`\s containing
+        positions, normal vectors and weights.
+
+    """
+    if len(arg) == 3:
+        x, n, a = arg
+    elif len(arg) == 2:
+        x, n = arg
+        a = 1.0
+    elif len(arg) == 1:
+        x, = arg
+        n = np.nan, np.nan, np.nan
+        a = 1.0
+    else:
+        raise TypeError('Between 1 and 3 elements are required')
+    x = util.asarray_of_rows(x, **kwargs)
+    n = util.asarray_of_rows(n, **kwargs)
+    if len(n) == 1:
+        n = np.tile(n, (len(x), 1))
+    a = util.asarray_1d(a, **kwargs)
+    if len(a) == 1:
+        a = np.tile(a, len(x))
+    return SecondarySourceDistribution(x, n, a)
 
 
 def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -59,7 +101,7 @@ def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -87,7 +129,7 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -124,7 +166,7 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -156,7 +198,7 @@ def circular(N, R, center=[0, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -179,7 +221,7 @@ def circular(N, R, center=[0, 0, 0]):
     normals[:, 0] = np.cos(alpha + np.pi)
     normals[:, 1] = np.sin(alpha + np.pi)
     weights = np.ones(N) * 2 * np.pi * R / N
-    return ArrayData(positions, normals, weights)
+    return SecondarySourceDistribution(positions, normals, weights)
 
 
 def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -200,7 +242,7 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -225,7 +267,7 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
     positions += center
-    return ArrayData(positions, normals, weights)
+    return SecondarySourceDistribution(positions, normals, weights)
 
 
 def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -245,7 +287,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -297,7 +339,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
                                           [1, 0, 0], orientation)
     # shift array to desired position
     positions += center
-    return ArrayData(positions, directions, weights)
+    return SecondarySourceDistribution(positions, directions, weights)
 
 
 def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -314,7 +356,7 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     Examples
@@ -347,7 +389,7 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
                                           [1, 0, 0], orientation)
     # shift array to desired position
     positions += center
-    return ArrayData(positions, directions, weights)
+    return SecondarySourceDistribution(positions, directions, weights)
 
 
 def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -367,7 +409,7 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     """
@@ -380,7 +422,7 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
     positions += center
-    return ArrayData(positions, normals, weights)
+    return SecondarySourceDistribution(positions, normals, weights)
 
 
 def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -400,7 +442,7 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     """
@@ -419,7 +461,7 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     positions, directions = _rotate_array(positions, directions,
                                           [1, 0, 0], orientation)
     positions += center
-    return ArrayData(positions, directions, weights)
+    return SecondarySourceDistribution(positions, directions, weights)
 
 
 def sphere_load(fname, radius, center=[0, 0, 0]):
@@ -430,7 +472,7 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     """
@@ -439,7 +481,7 @@ def sphere_load(fname, radius, center=[0, 0, 0]):
     normals = -positions
     positions *= radius
     positions += center
-    return ArrayData(positions, normals, weights)
+    return SecondarySourceDistribution(positions, normals, weights)
 
 
 def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -450,7 +492,7 @@ def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     Returns
     -------
-    `ArrayData`
+    `SecondarySourceDistribution`
         Positions, orientations and weights of secondary sources.
 
     """
@@ -459,7 +501,7 @@ def load(fname, center=[0, 0, 0], orientation=[1, 0, 0]):
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
     positions += center
-    return ArrayData(positions, normals, weights)
+    return SecondarySourceDistribution(positions, normals, weights)
 
 
 def weights_midpoint(positions, closed):
@@ -514,9 +556,10 @@ def _linear_helper(ycoordinates, center, orientation):
     positions += center
     normals = np.tile(normals, (N, 1))
     weights = weights_midpoint(positions, closed=False)
-    return ArrayData(positions, normals, weights)
+    return SecondarySourceDistribution(positions, normals, weights)
 
 
 def concatenate(*arrays):
-    """Concatenate `ArrayData` objects."""
-    return ArrayData._make(np.concatenate(i) for i in zip(*arrays))
+    """Concatenate `SecondarySourceDistribution` objects."""
+    return SecondarySourceDistribution._make(np.concatenate(i)
+                                             for i in zip(*arrays))

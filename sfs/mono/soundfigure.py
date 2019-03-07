@@ -2,7 +2,7 @@
 
 import numpy as np
 from .. import util
-from . import drivingfunction
+from .drivingfunction import wfs_3d_plane
 
 
 def wfs_3d_pw(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
@@ -39,8 +39,8 @@ def wfs_3d_pw(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
                 npw = 1/k * np.asarray([kx[n], ky[m], kz])
                 npw = npw / np.linalg.norm(npw)
                 # driving function of plane wave with positive kz
-                a = util.source_selection_plane(n0, npw)
-                a = a * figure[n, m]
-                d += a * drivingfunction.wfs_3d_plane(omega, x0, n0, npw, c)
+                d_component, selection, secondary_source = wfs_3d_plane(
+                    omega, x0, n0, npw, c)
+                d += selection * figure[n, m] * d_component
 
-    return d
+    return d, util.source_selection_all(len(d)), secondary_source

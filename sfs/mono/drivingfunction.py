@@ -16,19 +16,19 @@
     # normal vector for plane wave:
     npw = sfs.util.direction_vector(np.radians(-45))
     # normal vector for focused source:
-    ns = sfs.util.direction_vector(np.radians(-45))
+    ns_focused = sfs.util.direction_vector(np.radians(-45))
     f = 300  # Hz
     omega = 2 * np.pi * f
     R = 1.5  # Radius of circular loudspeaker array
 
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
-    x0, n0, a0 = sfs.array.circular(N=32, R=R)
+    array = sfs.array.circular(N=32, R=R)
 
-    def plot(d, selected):
-        p = sfs.mono.synthesized.generic(omega, x0, n0, d * selected * a0 , grid)
+    def plot(d, selection, secondary_source):
+        p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
         sfs.plot.soundfield(p, grid)
-        sfs.plot.loudspeaker_2d(x0, n0, selected * a0, size=0.15)
+        sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
 
 """
 
@@ -37,6 +37,7 @@ from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import jn, hankel2
 from .. import util
 from .. import default
+from . import source as _source
 
 
 def wfs_2d_line(omega, x0, n0, xs, c=None):
@@ -53,9 +54,9 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_2d_line(omega, x0, n0, xs)
-        a = sfs.util.source_selection_line(n0, x0, xs)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_line(
+            omega, array.x, array.n, xs)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -64,7 +65,9 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return -1j/2 * k * inner1d(ds, n0) / r * hankel2(1, k * r)
+    d = -1j/2 * k * inner1d(ds, n0) / r * hankel2(1, k * r)
+    selection = util.source_selection_line(n0, x0, xs)
+    return d, selection, secondary_source_line(omega, c)
 
 
 def _wfs_point(omega, x0, n0, xs, c=None):
@@ -81,9 +84,9 @@ def _wfs_point(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_3d_point(omega, x0, n0, xs)
-        a = sfs.util.source_selection_point(n0, x0, xs)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_point(
+            omega, array.x, array.n, xs)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -92,7 +95,9 @@ def _wfs_point(omega, x0, n0, xs, c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(-1j * k * r)
+    d = 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(-1j * k * r)
+    selection = util.source_selection_point(n0, x0, xs)
+    return d, selection, secondary_source_point(omega, c)
 
 
 wfs_2d_point = _wfs_point
@@ -113,9 +118,9 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_25d_point(omega, x0, n0, xs)
-        a = sfs.util.source_selection_point(n0, x0, xs)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_point(
+            omega, array.x, array.n, xs)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -125,10 +130,12 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-
-    return wfs_25d_preeq(omega, omalias, c) * \
-        np.sqrt(np.linalg.norm(xref - x0)) * inner1d(ds, n0) / \
-        r ** (3 / 2) * np.exp(-1j * k * r)
+    d = (
+        wfs_25d_preeq(omega, omalias, c) *
+        np.sqrt(np.linalg.norm(xref - x0)) * inner1d(ds, n0) /
+        r ** (3 / 2) * np.exp(-1j * k * r))
+    selection = util.source_selection_point(n0, x0, xs)
+    return d, selection, secondary_source_point(omega, c)
 
 
 wfs_3d_point = _wfs_point
@@ -149,16 +156,18 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_3d_plane(omega, x0, n0, npw)
-        a = sfs.util.source_selection_plane(n0, npw)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_plane(
+            omega, array.x, array.n, npw)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
     n0 = util.asarray_of_rows(n0)
     n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
-    return 2j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
+    d = 2j * k * np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
+    selection = util.source_selection_plane(n0, n)
+    return d, selection, secondary_source_point(omega, c)
 
 
 wfs_2d_plane = _wfs_plane
@@ -179,9 +188,9 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_25d_plane(omega, x0, n0, npw)
-        a = sfs.util.source_selection_plane(n0, npw)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_plane(
+            omega, array.x, array.n, npw)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -189,15 +198,18 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     n = util.normalize_vector(n)
     xref = util.asarray_1d(xref)
     k = util.wavenumber(omega, c)
-    return wfs_25d_preeq(omega, omalias, c) * \
-        np.sqrt(8*np.pi * np.linalg.norm(xref - x0, axis=-1)) * \
-        np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0))
+    d = (
+        wfs_25d_preeq(omega, omalias, c) *
+        np.sqrt(8*np.pi * np.linalg.norm(xref - x0, axis=-1)) *
+        np.inner(n, n0) * np.exp(-1j * k * np.inner(n, x0)))
+    selection = util.source_selection_plane(n0, n)
+    return d, selection, secondary_source_point(omega, c)
 
 
 wfs_3d_plane = _wfs_plane
 
 
-def _wfs_focused(omega, x0, n0, xs, c=None):
+def _wfs_focused(omega, x0, n0, xs, ns, c=None):
     r"""Focused source by two- or three-dimensional WFS.
 
     .. math::
@@ -211,9 +223,9 @@ def _wfs_focused(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_3d_focused(omega, x0, n0, xs_focused)
-        a = sfs.util.source_selection_focused(ns, x0, xs_focused)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_focused(
+            omega, array.x, array.n, xs_focused, ns_focused)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -222,13 +234,16 @@ def _wfs_focused(omega, x0, n0, xs, c=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-    return 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(1j * k * r)
+    d = 1j * k * inner1d(ds, n0) / r ** (3 / 2) * np.exp(1j * k * r)
+    selection = util.source_selection_focused(ns, x0, xs)
+    return d, selection, secondary_source_point(omega, c)
 
 
 wfs_2d_focused = _wfs_focused
 
 
-def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
+def wfs_25d_focused(omega, x0, n0, xs, ns, xref=[0, 0, 0], c=None,
+                    omalias=None):
     r"""Focused source by 2.5-dimensional WFS.
 
     .. math::
@@ -243,9 +258,9 @@ def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.wfs_25d_focused(omega, x0, n0, xs_focused)
-        a = sfs.util.source_selection_focused(ns, x0, xs_focused)
-        plot(d, a)
+        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_focused(
+            omega, array.x, array.n, xs_focused, ns_focused)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -255,10 +270,12 @@ def wfs_25d_focused(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     k = util.wavenumber(omega, c)
     ds = x0 - xs
     r = np.linalg.norm(ds, axis=1)
-
-    return wfs_25d_preeq(omega, omalias, c) * \
-        np.sqrt(np.linalg.norm(xref - x0)) * inner1d(ds, n0) / \
-        r ** (3 / 2) * np.exp(1j * k * r)
+    d = (
+        wfs_25d_preeq(omega, omalias, c) *
+        np.sqrt(np.linalg.norm(xref - x0)) * inner1d(ds, n0) /
+        r ** (3 / 2) * np.exp(1j * k * r))
+    selection = util.source_selection_focused(ns, x0, xs)
+    return d, selection, secondary_source_point(omega, c)
 
 
 wfs_3d_focused = _wfs_focused
@@ -280,7 +297,9 @@ def delay_3d_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     x0 = util.asarray_of_rows(x0)
     n = util.normalize_vector(n)
     k = util.wavenumber(omega, c)
-    return np.exp(-1j * k * np.inner(n, x0))
+    d = np.exp(-1j * k * np.inner(n, x0))
+    selection = util.source_selection_plane(n0, n)
+    return d, selection, secondary_source_point(omega, c)
 
 
 def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
@@ -301,8 +320,9 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, x0, R, npw)
-        plot(d, 1)
+        d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_2d_plane(
+            omega, array.x, R, npw)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -314,7 +334,8 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     d = 0
     for m in range(-M, M + 1):
         d += 1j**-m / hankel2(m, k * r0) * np.exp(1j * m * (phi0 - phi))
-    return -2j / (np.pi*r0) * d
+    selection = util.source_selection_all(len(x0))
+    return -2j / (np.pi*r0) * d, selection, secondary_source_point(omega, c)
 
 
 def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
@@ -335,8 +356,9 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.nfchoa_25d_point(omega, x0, R, xs)
-        plot(d, 1)
+        d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_point(
+            omega, array.x, R, xs)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -350,7 +372,8 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
     d = 0
     for m in range(-M, M + 1):
         d += hr[abs(m)] / hr0[abs(m)] * np.exp(1j * m * (phi0 - phi))
-    return d / (2 * np.pi * r0)
+    selection = util.source_selection_all(len(x0))
+    return d / (2 * np.pi * r0), selection, secondary_source_point(omega, c)
 
 
 def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
@@ -371,8 +394,9 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, x0, R, npw)
-        plot(d, 1)
+        d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_plane(
+            omega, array.x, R, npw)
+        plot(d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -385,7 +409,8 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     hn2 = util.spherical_hn2(range(0, M + 1), k * r0)
     for m in range(-M, M + 1):
         d += (-1j)**abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
-    return 2*1j / r0 * d
+    selection = util.source_selection_all(len(x0))
+    return 2*1j / r0 * d, selection, secondary_source_point(omega, c)
 
 
 def sdm_2d_line(omega, x0, n0, xs, c=None):
@@ -739,6 +764,24 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
         d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
 
     return -1j*np.pi/alpha * d
+
+
+def secondary_source_point(omega, c):
+    """Create a point source for use in `sfs.mono.synthesize()`."""
+
+    def secondary_source(position, _, grid):
+        return _source.point(omega, position, grid, c)
+
+    return secondary_source
+
+
+def secondary_source_line(omega, c):
+    """Create a line source for use in `sfs.mono.synthesize()`."""
+
+    def secondary_source(position, _, grid):
+        return _source.line(omega, position, grid, c)
+
+    return secondary_source
 
 
 def _max_order_circular_harmonics(N, max_order):

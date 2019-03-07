@@ -32,7 +32,7 @@ from .. import util
 from .. import default
 
 
-def point(omega, x0, n0, grid, c=None):
+def point(omega, x0, grid, c=None):
     r"""Sound pressure of a point source.
 
     Parameters
@@ -41,8 +41,6 @@ def point(omega, x0, n0, grid, c=None):
         Frequency of source.
     x0 : (3,) array_like
         Position of source.
-    n0 : (3,) array_like
-        Normal vector (direction) of source. Only for compatibilty, not used.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
@@ -65,7 +63,7 @@ def point(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p = sfs.mono.source.point(omega, x0, None, grid)
+        p = sfs.mono.source.point(omega, x0, grid)
         sfs.plot.soundfield(p, grid)
         plt.title("Point Source at {} m".format(x0))
 
@@ -87,7 +85,7 @@ def point(omega, x0, n0, grid, c=None):
     return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
 
 
-def point_velocity(omega, x0, n0, grid, c=None, rho0=None):
+def point_velocity(omega, x0, grid, c=None, rho0=None):
     """Particle velocity of a point source.
 
     Parameters
@@ -96,8 +94,6 @@ def point_velocity(omega, x0, n0, grid, c=None, rho0=None):
         Frequency of source.
     x0 : (3,) array_like
         Position of source.
-    n0 : (3,) array_like
-        Normal vector (direction) of source. Only for compatibilty, not used.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
@@ -118,7 +114,7 @@ def point_velocity(omega, x0, n0, grid, c=None, rho0=None):
     .. plot::
         :context: close-figs
 
-        v = sfs.mono.source.point_velocity(omega, x0, None, vgrid)
+        v = sfs.mono.source.point_velocity(omega, x0, vgrid)
         sfs.plot.soundfield(p * normalization_point, grid)
         sfs.plot.vectors(v * normalization_point, vgrid)
         plt.title("Sound Pressure and Particle Velocity")
@@ -133,12 +129,12 @@ def point_velocity(omega, x0, n0, grid, c=None, rho0=None):
     grid = util.as_xyz_components(grid)
     offset = grid - x0
     r = np.linalg.norm(offset)
-    v = point(omega, x0, n0, grid, c=c)
+    v = point(omega, x0, grid, c=c)
     v *= (1+1j*k*r) / (rho0 * c * 1j*k*r)
     return util.XyzComponents([v * o / r for o in offset])
 
 
-def point_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
+def point_averaged_intensity(omega, x0, grid, c=None, rho0=None):
     """Velocity of a point source.
 
     Parameters
@@ -147,8 +143,6 @@ def point_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
         Frequency of source.
     x0 : (3,) array_like
         Position of source.
-    n0 : (3,) array_like
-        Normal vector (direction) of source. Only for compatibilty, not used.
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
@@ -227,7 +221,7 @@ def point_dipole(omega, x0, n0, grid, c=None):
         np.power(r, 2) * np.exp(-1j * k * r)
 
 
-def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
+def point_modal(omega, x0, grid, L, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
 
     Parameters
@@ -236,9 +230,6 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         Frequency of source.
     x0 : (3,) array_like
         Position of source.
-    n0 : (3,) array_like
-        Normal vector (direction) of source (only required for
-        compatibility).
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
@@ -295,7 +286,7 @@ def point_modal(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     return p
 
 
-def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
+def point_modal_velocity(omega, x0, grid, L, N=None, deltan=0, c=None):
     """Velocity of point source in a rectangular room using a modal room model.
 
     Parameters
@@ -304,9 +295,6 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
         Frequency of source.
     x0 : (3,) array_like
         Position of source.
-    n0 : (3,) array_like
-        Normal vector (direction) of source (only required for
-        compatibility).
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
@@ -370,8 +358,7 @@ def point_modal_velocity(omega, x0, n0, grid, L, N=None, deltan=0, c=None):
     return util.XyzComponents([vx, vy, vz])
 
 
-def point_image_sources(omega, x0, n0, grid, L, max_order, coeffs=None,
-                        c=None):
+def point_image_sources(omega, x0, grid, L, max_order, coeffs=None, c=None):
     """Point source in a rectangular room using the mirror image source model.
 
     Parameters
@@ -380,9 +367,6 @@ def point_image_sources(omega, x0, n0, grid, L, max_order, coeffs=None,
         Frequency of source.
     x0 : (3,) array_like
         Position of source.
-    n0 : (3,) array_like
-        Normal vector (direction) of source (only required for
-        compatibility).
     grid : triple of array_like
         The grid that is used for the sound field calculations.
         See `sfs.util.xyz_grid()`.
@@ -411,12 +395,12 @@ def point_image_sources(omega, x0, n0, grid, L, max_order, coeffs=None,
     p = 0
     for position, strength in zip(xs, source_strengths):
         if strength != 0:
-            p += strength * point(omega, position, n0, grid, c)
+            p += strength * point(omega, position, grid, c)
 
     return p
 
 
-def line(omega, x0, n0, grid, c=None):
+def line(omega, x0, grid, c=None):
     r"""Line source parallel to the z-axis.
 
     Note: third component of x0 is ignored.
@@ -432,7 +416,7 @@ def line(omega, x0, n0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p = sfs.mono.source.line(omega, x0, None, grid)
+        p = sfs.mono.source.line(omega, x0, grid)
         sfs.plot.soundfield(p, grid)
         plt.title("Line Source at {} m".format(x0[:2]))
 
@@ -455,7 +439,7 @@ def line(omega, x0, n0, grid, c=None):
     return _duplicate_zdirection(p, grid)
 
 
-def line_velocity(omega, x0, n0, grid, c=None, rho0=None):
+def line_velocity(omega, x0, grid, c=None, rho0=None):
     """Velocity of line source parallel to the z-axis.
 
     Returns
@@ -470,7 +454,7 @@ def line_velocity(omega, x0, n0, grid, c=None, rho0=None):
     .. plot::
         :context: close-figs
 
-        v = sfs.mono.source.line_velocity(omega, x0, None, vgrid)
+        v = sfs.mono.source.line_velocity(omega, x0, vgrid)
         sfs.plot.soundfield(p * normalization_line, grid)
         sfs.plot.vectors(v * normalization_line, vgrid)
         plt.title("Sound Pressure and Particle Velocity")
