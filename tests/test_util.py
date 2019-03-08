@@ -3,16 +3,16 @@ from numpy.testing import assert_allclose
 import pytest
 import sfs
 
+
 cart_sph_data = [
     ((1, 1, 1), (np.pi / 4, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
-    ((-1, 1, 1), (np.arctan2(1, -1), np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, 1, 1), (3 / 4 * np.pi, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
     ((1, -1, 1), (-np.pi / 4, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
-    ((-1, -1, 1), (np.arctan2(-1, -1), np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, -1, 1), (-3 / 4 * np.pi, np.arccos(1 / np.sqrt(3)), np.sqrt(3))),
     ((1, 1, -1), (np.pi / 4, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
-    ((-1, 1, -1), (np.arctan2(1, -1), np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, 1, -1), (3 / 4 * np.pi, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
     ((1, -1, -1), (-np.pi / 4, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
-    ((-1, -1, -1), (np.arctan2(-1, -1),
-                    np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
+    ((-1, -1, -1), (-3 / 4 * np.pi, np.arccos(-1 / np.sqrt(3)), np.sqrt(3))),
 ]
 
 
