@@ -72,7 +72,7 @@ def sph2cart(alpha, beta, r):
     alpha : float or array_like
             Azimuth angle in radiants
     beta : float or array_like
-            Elevation angle in radiants (with 0 denoting North pole)
+            Colatitude angle in radiants (with 0 denoting North pole)
     r : float or array_like
             Radius
 
@@ -118,7 +118,7 @@ def cart2sph(x, y, z):
     alpha : float or array_like
             Azimuth angle in radiants
     beta : float or array_like
-            Elevation angle in radiants (with 0 denoting North pole)
+            Colatitude angle in radiants (with 0 denoting North pole)
     r : float or array_like
             Radius
 
