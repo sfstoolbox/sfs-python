@@ -102,7 +102,7 @@ def cart2sph(x, y, z):
         \beta = \arccos \left( \frac{z}{r} \right) \\
         r = \sqrt{x^2 + y^2 + z^2}
 
-    with :math:`\alpha \in [0, 2\pi), \beta \in [0, \pi], r \geq 0`
+    with :math:`\alpha \in [-pi, pi], \beta \in [0, \pi], r \geq 0`
 
     Parameters
     ----------
