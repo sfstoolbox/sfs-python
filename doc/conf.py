@@ -107,7 +107,7 @@ master_doc = 'index'
 # General information about the project.
 authors = 'SFS Toolbox Developers'
 project = 'SFS Toolbox'
-copyright = '2017, ' + authors
+copyright = '2019, ' + authors
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
