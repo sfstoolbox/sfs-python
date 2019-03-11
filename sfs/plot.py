@@ -152,7 +152,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
         for idx, (x00, n00) in enumerate(util.broadcast_zip(x0, n0)):
             x, y = x00[:2] - 1.2 * size * n00[:2]
             ax.text(x, y, idx + 1, horizontalalignment='center',
-                    verticalalignment='center')
+                    verticalalignment='center', clip_on=True)
 
 
 def _visible_secondarysources_2d(x0, n0, grid):
