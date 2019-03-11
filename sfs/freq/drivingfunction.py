@@ -26,7 +26,7 @@
     array = sfs.array.circular(N=32, R=R)
 
     def plot(d, selection, secondary_source):
-        p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
+        p = sfs.freq.synthesize(d, selection, array, secondary_source, grid=grid)
         sfs.plot.soundfield(p, grid)
         sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
 
@@ -80,7 +80,7 @@ def wfs_2d_line(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_line(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_2d_line(
             omega, array.x, array.n, xs)
         plot(d, selection, secondary_source)
 
@@ -136,7 +136,7 @@ def _wfs_point(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_point(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_3d_point(
             omega, array.x, array.n, xs)
         plot(d, selection, secondary_source)
 
@@ -198,7 +198,7 @@ def wfs_25d_point(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_point(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_25d_point(
             omega, array.x, array.n, xs)
         plot(d, selection, secondary_source)
 
@@ -262,7 +262,7 @@ def _wfs_plane(omega, x0, n0, n=[0, 1, 0], c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_plane(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_3d_plane(
             omega, array.x, array.n, npw)
         plot(d, selection, secondary_source)
 
@@ -324,7 +324,7 @@ def wfs_25d_plane(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_plane(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_25d_plane(
             omega, array.x, array.n, npw)
         plot(d, selection, secondary_source)
 
@@ -387,7 +387,7 @@ def _wfs_focused(omega, x0, n0, xs, ns, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_focused(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_3d_focused(
             omega, array.x, array.n, xs_focused, ns_focused)
         plot(d, selection, secondary_source)
 
@@ -454,7 +454,7 @@ def wfs_25d_focused(omega, x0, n0, xs, ns, xref=[0, 0, 0], c=None,
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_focused(
+        d, selection, secondary_source = sfs.freq.drivingfunction.wfs_25d_focused(
             omega, array.x, array.n, xs_focused, ns_focused)
         plot(d, selection, secondary_source)
 
@@ -610,7 +610,7 @@ def nfchoa_2d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_2d_plane(
+        d, selection, secondary_source = sfs.freq.drivingfunction.nfchoa_2d_plane(
             omega, array.x, R, npw)
         plot(d, selection, secondary_source)
 
@@ -676,7 +676,7 @@ def nfchoa_25d_point(omega, x0, r0, xs, max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_point(
+        d, selection, secondary_source = sfs.freq.drivingfunction.nfchoa_25d_point(
             omega, array.x, R, xs)
         plot(d, selection, secondary_source)
 
@@ -744,7 +744,7 @@ def nfchoa_25d_plane(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_plane(
+        d, selection, secondary_source = sfs.freq.drivingfunction.nfchoa_25d_plane(
             omega, array.x, R, npw)
         plot(d, selection, secondary_source)
 
@@ -1334,7 +1334,7 @@ def esa_edge_25d_point(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
 
 
 def secondary_source_point(omega, c):
-    """Create a point source for use in `sfs.mono.synthesize()`."""
+    """Create a point source for use in `sfs.freq.synthesize()`."""
 
     def secondary_source(position, _, grid):
         return _source.point(omega, position, grid, c)
@@ -1343,7 +1343,7 @@ def secondary_source_point(omega, c):
 
 
 def secondary_source_line(omega, c):
-    """Create a line source for use in `sfs.mono.synthesize()`."""
+    """Create a line source for use in `sfs.freq.synthesize()`."""
 
     def secondary_source(position, _, grid):
         return _source.line(omega, position, grid, c)

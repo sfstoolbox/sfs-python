@@ -9,7 +9,7 @@ http://python.sfstoolbox.org/
 
     array
     tapering
-    mono
+    freq
     time
     plot
     util
@@ -63,5 +63,5 @@ try:
 except ImportError:
     pass
 
-from . import mono
+from . import freq
 from . import time
