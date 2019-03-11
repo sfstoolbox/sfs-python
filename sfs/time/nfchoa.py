@@ -131,6 +131,12 @@ def plane_25d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
         Second-order section filters :func:`scipy.signal.sosfilt`.
     phaseshift : (N,) numpy.ndarray
         Phase shift in radians.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     Examples
     --------
@@ -221,6 +227,12 @@ def point_25d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
         Second-order section filters :func:`scipy.signal.sosfilt`.
     phaseshift : (N,) numpy.ndarray
         Phase shift in radians.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     Examples
     --------
@@ -312,6 +324,12 @@ def plane_3d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
         Second-order section filters :func:`scipy.signal.sosfilt`.
     phaseshift : (N,) numpy.ndarray
         Phase shift in radians.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     """
     if max_order is None:
@@ -393,6 +411,12 @@ def point_3d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
         Second-order section filters :func:`scipy.signal.sosfilt`.
     phaseshift : (N,) numpy.ndarray
         Phase shift in radians.
+    selection : (N,) numpy.ndarray
+        Boolean array containing only ``True`` indicating that
+        all secondary source are "active" for NFC-HOA.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.time.synthesize()`.
 
     """
     if max_order is None:
