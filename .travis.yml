@@ -1,10 +1,10 @@
 language: python
+dist: xenial
 matrix:
   include:
     - python: "3.5"
     - python: "3.6"
     - python: "3.7"
-      dist: xenial # 3.7 requires Xenial on Travis
 addons:
   apt:
     packages:
