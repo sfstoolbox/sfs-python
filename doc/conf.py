@@ -74,7 +74,7 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'numpy': ('https://docs.scipy.org/doc/numpy/', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
-    'matplotlib': ('http://matplotlib.org/', None),
+    'matplotlib': ('https://matplotlib.org/', None),
 }
 
 plot_include_source = True

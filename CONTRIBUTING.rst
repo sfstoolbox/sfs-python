@@ -81,6 +81,6 @@ New releases are made using the following steps:
 #. Check that the new release was built correctly on RTD_, delete the "stable"
    version and select the new release as default version
 
-.. _twine: https://pypi.python.org/pypi/twine
+.. _twine: https://pypi.org/project/twine/
 .. _add release notes: https://github.com/sfstoolbox/sfs-python/tags
 .. _RTD: http://readthedocs.org/projects/sfs-python/builds/

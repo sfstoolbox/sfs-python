@@ -546,7 +546,7 @@ def image_sources_for_box(x, L, N, prune=True):
 def spherical_hn2(n, z):
     r"""Spherical Hankel function of 2nd kind.
 
-    Defined as http://dlmf.nist.gov/10.47.E6,
+    Defined as https://dlmf.nist.gov/10.47.E6,
 
     .. math::
 
