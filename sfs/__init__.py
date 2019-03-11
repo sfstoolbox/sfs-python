@@ -55,8 +55,8 @@ if not getattr(_sys.modules.get('sphinx'), 'SFS_DOCS_ARE_BEING_BUILT', False):
     # This object shadows the 'default' class, except when the docs are built:
     default = default()
 
-from . import tapering
 from . import array
+from . import tapering
 from . import util
 try:
     from . import plot

@@ -7,7 +7,7 @@ images are located in the "figures/" directory.
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-import sfs
+import sfs.mono as sfs
 
 dx = 0.10  # secondary source distance
 N = 60  # number of secondary sources
@@ -29,11 +29,11 @@ array = sfs.array.cube(N, dx)
 # driving function for sound figure
 figure = np.array(Image.open('figures/tree.png'))  # read image from file
 figure = np.rot90(figure)  # turn 0deg to the top
-d, selection, secondary_source = sfs.mono.wfs.soundfigure_3d(
+d, selection, secondary_source = sfs.wfs.soundfigure_3d(
     omega, array.x, array.n, figure, npw=npw)
 
 # compute synthesized sound field
-p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
+p = sfs.synthesize(d, selection, array, secondary_source, grid=grid)
 
 # plot and save synthesized sound field
 plt.figure(figsize=(10, 10))

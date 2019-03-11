@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs
+import sfs.time as sfs
 from scipy.signal import unit_impulse
 
 # Parameters
@@ -20,11 +20,11 @@ max_order = None
 npw = [0, -1, 0]  # propagating direction
 t = 0  # observation time
 delay, weight, sos, phaseshift, selection, secondary_source = \
-    sfs.time.nfchoa.plane_25d(array.x, R, npw, fs, max_order)
-d = sfs.time.nfchoa.driving_signals_25d(
+    sfs.nfchoa.plane_25d(array.x, R, npw, fs, max_order)
+d = sfs.nfchoa.driving_signals_25d(
         delay, weight, sos, phaseshift, signal)
-p = sfs.time.synthesize(d, selection, array, secondary_source,
-                        observation_time=t, grid=grid)
+p = sfs.synthesize(d, selection, array, secondary_source,
+                   observation_time=t, grid=grid)
 
 plt.figure()
 sfs.plot.level(p, grid)
@@ -37,10 +37,10 @@ max_order = 100
 xs = [1.5, 1.5, 0]  # position
 t = np.linalg.norm(xs) / sfs.default.c  # observation time
 delay, weight, sos, phaseshift, selection, secondary_source = \
-    sfs.time.nfchoa.point_25d(array.x, R, xs, fs, max_order)
-d = sfs.time.nfchoa.driving_signals_25d(
+    sfs.nfchoa.point_25d(array.x, R, xs, fs, max_order)
+d = sfs.nfchoa.driving_signals_25d(
         delay, weight, sos, phaseshift, signal)
-p = sfs.time.synthesize(d, selection, array, secondary_source,
+p = sfs.synthesize(d, selection, array, secondary_source,
                         observation_time=t, grid=grid)
 
 plt.figure()

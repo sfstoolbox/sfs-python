@@ -9,10 +9,10 @@
     nfchoa
 
 """
-from .. import array as _array
-import numpy as np
+import numpy as _np
 from . import source
-from .. import util as _util
+from .. import util
+from .. import array
 
 
 def synthesize(signals, weights, ssd, secondary_source_function, **kwargs):
@@ -50,9 +50,9 @@ def synthesize(signals, weights, ssd, secondary_source_function, **kwargs):
         Sound pressure at grid positions.
 
     """
-    ssd = _array.as_secondary_source_distribution(ssd)
-    data, samplerate, signal_offset = _util.as_delayed_signal(signals)
-    weights = _util.asarray_1d(weights)
+    ssd = array.as_secondary_source_distribution(ssd)
+    data, samplerate, signal_offset = util.as_delayed_signal(signals)
+    weights = util.asarray_1d(weights)
     channels = data.T
     if not (len(ssd.x) == len(ssd.n) == len(ssd.a) == len(channels) ==
             len(weights)):
@@ -85,18 +85,18 @@ def apply_delays(signal, delays):
         and a (possibly negative) time offset (in seconds).
 
     """
-    data, samplerate, initial_offset = _util.as_delayed_signal(signal)
-    data = _util.asarray_1d(data)
-    delays = _util.asarray_1d(delays)
+    data, samplerate, initial_offset = util.as_delayed_signal(signal)
+    data = util.asarray_1d(data)
+    delays = util.asarray_1d(delays)
     delays += initial_offset
 
-    delays_samples = np.rint(samplerate * delays).astype(int)
+    delays_samples = _np.rint(samplerate * delays).astype(int)
     offset_samples = delays_samples.min()
     delays_samples -= offset_samples
-    out = np.zeros((delays_samples.max() + len(data), len(delays_samples)))
+    out = _np.zeros((delays_samples.max() + len(data), len(delays_samples)))
     for column, row in enumerate(delays_samples):
         out[row:row + len(data), column] = data
-    return _util.DelayedSignal(out, samplerate, offset_samples / samplerate)
+    return util.DelayedSignal(out, samplerate, offset_samples / samplerate)
 
 
 def secondary_source_point(c):
@@ -110,3 +110,10 @@ def secondary_source_point(c):
 
 from . import nfchoa
 from . import wfs
+
+from .. import default
+from .. import tapering
+try:
+    from .. import plot
+except ImportError:
+    pass

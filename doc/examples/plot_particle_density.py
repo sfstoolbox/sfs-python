@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs
+import sfs.mono as sfs
 
 # simulation parameters
 pw_angle = 45  # traveling direction of plane wave
@@ -31,16 +31,16 @@ def plot_particle_displacement(title):
 
 
 # point source
-v = sfs.mono.source.point_velocity(omega, xs, grid)
+v = sfs.source.point_velocity(omega, xs, grid)
 amplitude = 1.5e6
 plot_particle_displacement('particle_displacement_point_source')
 
 # line source
-v = sfs.mono.source.line_velocity(omega, xs, grid)
+v = sfs.source.line_velocity(omega, xs, grid)
 amplitude = 1.3e6
 plot_particle_displacement('particle_displacement_line_source')
 
 # plane wave
-v = sfs.mono.source.plane_velocity(omega, xs, npw, grid)
+v = sfs.source.plane_velocity(omega, xs, npw, grid)
 amplitude = 1e5
 plot_particle_displacement('particle_displacement_plane_wave')

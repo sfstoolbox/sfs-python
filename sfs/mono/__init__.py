@@ -11,9 +11,9 @@
     esa
 
 """
-from . import source
-from .. import array as _array
 import numpy as _np
+from . import source
+from .. import array
 
 
 def shiftphase(p, phase):
@@ -48,7 +48,7 @@ def synthesize(d, weights, ssd, secondary_source_function, **kwargs):
         This is typically used to pass the *grid* argument.
 
     """
-    ssd = _array.as_secondary_source_distribution(ssd)
+    ssd = array.as_secondary_source_distribution(ssd)
     if not (len(ssd.x) == len(ssd.n) == len(ssd.a) == len(d) ==
             len(weights)):
         raise ValueError("length mismatch")
@@ -81,3 +81,11 @@ from . import esa
 from . import nfchoa
 from . import sdm
 from . import wfs
+
+from .. import default
+from .. import tapering
+from .. import util
+try:
+    from .. import plot
+except ImportError:
+    pass
