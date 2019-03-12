@@ -2,7 +2,7 @@
 
 import numpy as np
 from .. import util
-from .drivingfunction import wfs_3d_plane
+from .wfs import plane_3d
 
 
 def wfs_3d_pw(omega, x0, n0, figure, npw=[0, 0, 1], c=None):

@@ -3,14 +3,23 @@
 .. autosummary::
     :toctree:
 
-    drivingfunction
+    esaedge
+    nfchoa
+    sdm
+    wfs
+
     source
     soundfigure
 
 """
 import numpy as _np
 
-from . import drivingfunction
+
+from . import esaedge
+from . import nfchoa
+from . import sdm
+from . import wfs
+
 from . import source
 from . import soundfigure
 
