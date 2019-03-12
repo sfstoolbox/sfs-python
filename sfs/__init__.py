@@ -1,6 +1,6 @@
 """Sound Field Synthesis Toolbox.
 
-http://python.sfstoolbox.org/
+https://sfs-python.readthedocs.io/
 
 .. rubric:: Submodules
 
