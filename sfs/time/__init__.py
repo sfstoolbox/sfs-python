@@ -3,11 +3,15 @@
 .. autosummary::
     :toctree:
 
-    drivingfunction
+    nfchoa
+    wfs
+
     source
 
 """
-from . import drivingfunction
+from . import nfchoa
+from . import wfs
+
 from . import source
 
 from .. import util as _util
