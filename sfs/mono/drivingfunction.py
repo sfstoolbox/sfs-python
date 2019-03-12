@@ -1033,6 +1033,17 @@ def esa_edge_2d_plane(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
 
     Derived from :cite:`Spors2016`
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.edge(2**6, 0.2, center=[0, 0, 0], orientation=[0, -1, 0])
+        d, selection, secondary_source = (
+            sfs.mono.drivingfunction.esa_edge_2d_plane(
+                omega, array.x, npw, alpha=3/2*np.pi))
+        plot(np.nan_to_num(d), selection, secondary_source)
+
     """
     x0 = np.asarray(x0)
     n = util.normalize_vector(n)
@@ -1171,6 +1182,17 @@ def esa_edge_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
 
     Derived from :cite:`Spors2016`
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.edge(2**6, 0.2, center=[0, 0, 0], orientation=[0, -1, 0])
+        d, selection, secondary_source = (
+            sfs.mono.drivingfunction.esa_edge_2d_line(
+                omega, array.x, xs, alpha=3/2*np.pi))
+        plot(np.nan_to_num(d), selection, secondary_source)
+
     """
     x0 = np.asarray(x0)
     k = util.wavenumber(omega, c)
@@ -1244,6 +1266,17 @@ def esa_edge_dipole_2d_line(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     the edge at the origin.
 
     Derived from :cite:`Spors2016`
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        array = sfs.array.edge(2**6, 0.2, center=[0, 0, 0], orientation=[0, -1, 0])
+        d, selection, secondary_source = (
+            sfs.mono.drivingfunction.esa_edge_25d_point(
+                omega, array.x, xs, xref=[2, -2, 0], alpha=3/2*np.pi))
+        plot(np.nan_to_num(d), selection, secondary_source)
 
     """
     x0 = np.asarray(x0)
