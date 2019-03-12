@@ -33,11 +33,9 @@
 """
 
 import numpy as np
-from numpy.core.umath_tests import inner1d  # element-wise inner product
-from scipy.special import jn, hankel2
+from scipy.special import hankel2
 from .. import util
-from .. import default
-from . import source as _source
+from . import secondary_source_line, secondary_source_point
 
 
 def line_2d(omega, x0, n0, xs, c=None):
@@ -190,9 +188,8 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         :context: close-figs
 
         array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
-        d, selection, secondary_source = (
-            sfs.mono.sdm._25d(
-                omega, array.x, array.n, npw, [0, -1, 0]))
+        d, selection, secondary_source = sfs.mono.sdm.plane_25d(
+            omega, array.x, array.n, npw, [0, -1, 0])
         plot(d, selection, secondary_source)
 
     """
@@ -264,21 +261,3 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
         xs[1] / r * hankel2(1, k * r)
     selection = util.source_selection_all(len(x0))
     return d, selection, secondary_source_point(omega, c)
-
-
-def secondary_source_point(omega, c):
-    """Create a point source for use in `sfs.mono.synthesize()`."""
-
-    def secondary_source(position, _, grid):
-        return _source.point(omega, position, grid, c)
-
-    return secondary_source
-
-
-def secondary_source_line(omega, c):
-    """Create a line source for use in `sfs.mono.synthesize()`."""
-
-    def secondary_source(position, _, grid):
-        return _source.line(omega, position, grid, c)
-
-    return secondary_source

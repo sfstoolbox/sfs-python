@@ -34,10 +34,9 @@
 
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
-from scipy.special import jn, hankel2
+from scipy.special import hankel2
 from .. import util
-from .. import default
-from . import source as _source
+from . import secondary_source_line, secondary_source_point
 
 
 def line_2d(omega, x0, n0, xs, c=None):
@@ -564,19 +563,42 @@ def plane_3d_delay(omega, x0, n0, n=[0, 1, 0], c=None):
     return d, selection, secondary_source_point(omega, c)
 
 
-def secondary_source_point(omega, c):
-    """Create a point source for use in `sfs.mono.synthesize()`."""
+def soundfigure_2d(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
+    """Compute driving function for a 2D sound figure.
 
-    def secondary_source(position, _, grid):
-        return _source.point(omega, position, grid, c)
+    Based on
+    [Helwani et al., The Synthesis of Sound Figures, MSSP, 2013]
 
-    return secondary_source
+    """
+    x0 = np.asarray(x0)
+    n0 = np.asarray(n0)
+    k = util.wavenumber(omega, c)
+    nx, ny = figure.shape
 
+    # 2D spatial DFT of image
+    figure = np.fft.fftshift(figure, axes=(0, 1))  # sign of spatial DFT
+    figure = np.fft.fft2(figure)
+    # wavenumbers
+    kx = np.fft.fftfreq(nx, 1./nx)
+    ky = np.fft.fftfreq(ny, 1./ny)
+    # shift spectrum due to desired plane wave
+    figure = np.roll(figure, int(k*npw[0]), axis=0)
+    figure = np.roll(figure, int(k*npw[1]), axis=1)
+    # search and iterate over propagating plane wave components
+    kxx, kyy = np.meshgrid(kx, ky, sparse=True)
+    rho = np.sqrt((kxx) ** 2 + (kyy) ** 2)
+    d = 0
+    for n in range(nx):
+        for m in range(ny):
+            if(rho[n, m] < k):
+                # dispertion relation
+                kz = np.sqrt(k**2 - rho[n, m]**2)
+                # normal vector of plane wave
+                npw = 1/k * np.asarray([kx[n], ky[m], kz])
+                npw = npw / np.linalg.norm(npw)
+                # driving function of plane wave with positive kz
+                d_component, selection, secondary_source = plane_3d(
+                    omega, x0, n0, npw, c)
+                d += selection * figure[n, m] * d_component
 
-def secondary_source_line(omega, c):
-    """Create a line source for use in `sfs.mono.synthesize()`."""
-
-    def secondary_source(position, _, grid):
-        return _source.line(omega, position, grid, c)
-
-    return secondary_source
+    return d, util.source_selection_all(len(d)), secondary_source

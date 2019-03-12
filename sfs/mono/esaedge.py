@@ -37,7 +37,7 @@ from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.special import jn, hankel2
 from .. import util
 from .. import default
-from . import source as _source
+from . import secondary_source_line, secondary_source_point
 
 
 def plane_2d(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
@@ -380,21 +380,3 @@ def point_25d(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
 
     d, selection, _ = line_2d(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
     return 1j*np.sqrt(a) * d, selection, secondary_source_point(omega, c)
-
-
-def secondary_source_point(omega, c):
-    """Create a point source for use in `sfs.mono.synthesize()`."""
-
-    def secondary_source(position, _, grid):
-        return _source.point(omega, position, grid, c)
-
-    return secondary_source
-
-
-def secondary_source_line(omega, c):
-    """Create a line source for use in `sfs.mono.synthesize()`."""
-
-    def secondary_source(position, _, grid):
-        return _source.line(omega, position, grid, c)
-
-    return secondary_source
