@@ -43,21 +43,11 @@
 
 """
 import numpy as np
-from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.signal import besselap, sosfilt, zpk2sos
 from scipy.special import eval_legendre as legendre
 from .. import default
 from .. import util
-from . import source as _source
-
-
-def secondary_source_point(c):
-    """Create a point source for use in `sfs.time.synthesize()`."""
-
-    def secondary_source(position, _, signal, observation_time, grid):
-        return _source.point(position, signal, observation_time, grid, c=c)
-
-    return secondary_source
+from . import secondary_source_point
 
 
 def matchedz_zpk(s_zeros, s_poles, s_gain, fs):
@@ -96,8 +86,7 @@ def matchedz_zpk(s_zeros, s_poles, s_gain, fs):
     return z_zeros, z_poles, np.real(s_gain)
 
 
-def plane_25d(x0, r0, npw, fs, max_order=None, c=None,
-                     s2z=matchedz_zpk):
+def plane_25d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
     r"""Virtual plane wave by 2.5-dimensional NFC-HOA.
 
     .. math::

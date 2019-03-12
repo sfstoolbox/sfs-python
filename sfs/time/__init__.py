@@ -9,12 +9,58 @@
     source
 
 """
-from . import nfchoa
-from . import wfs
+from . import source as _source
+from .. import util as _util
+import numpy as np
+
+
+def secondary_source_point(c):
+    """Create a point source for use in `sfs.time.synthesize()`."""
+
+    def secondary_source(position, _, signal, observation_time, grid):
+        return _source.point(position, signal, observation_time, grid, c=c)
+
+    return secondary_source
+
+
+def apply_delays(signal, delays):
+    """Apply delays for every channel.
+
+    Parameters
+    ----------
+    signal : (N,) array_like + float
+        Excitation signal consisting of (mono) audio data and a sampling
+        rate (in Hertz).  A `DelayedSignal` object can also be used.
+    delays : (C,) array_like
+        Delay in seconds for each channel (C), negative values allowed.
+
+    Returns
+    -------
+    `DelayedSignal`
+        A tuple containing the delayed signals (in a `numpy.ndarray`
+        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
+        and a (possibly negative) time offset (in seconds).
+
+    """
+    data, samplerate, initial_offset = _util.as_delayed_signal(signal)
+    data = _util.asarray_1d(data)
+    delays = _util.asarray_1d(delays)
+    delays += initial_offset
+
+    delays_samples = np.rint(samplerate * delays).astype(int)
+    offset_samples = delays_samples.min()
+    delays_samples -= offset_samples
+    out = np.zeros((delays_samples.max() + len(data), len(delays_samples)))
+    for column, row in enumerate(delays_samples):
+        out[row:row + len(data), column] = data
+    return _util.DelayedSignal(out, samplerate, offset_samples / samplerate)
+
 
 from . import source
 
-from .. import util as _util
+from . import nfchoa
+from . import wfs
+
 from .. import array as _array
 
 
