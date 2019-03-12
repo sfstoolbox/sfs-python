@@ -9,23 +9,21 @@ Contributions are always welcome!
 Development Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Instead of pip-installing the latest release from PyPI, you should get the
+Instead of pip-installing the latest release from PyPI_, you should get the
 newest development version from Github_::
 
    git clone https://github.com/sfstoolbox/sfs-python.git
    cd sfs-python
-   python3 setup.py develop --user
+   python3 -m pip install --user -e .
 
-.. _Github: https://github.com/sfstoolbox/sfs-python/
+... where ``-e`` stands for ``--editable``.
 
 This way, your installation always stays up-to-date, even if you pull new
 changes from the Github repository.
 
-If you prefer, you can also replace the last command with::
+.. _PyPI: https://pypi.org/project/sfs/
+.. _Github: https://github.com/sfstoolbox/sfs-python/
 
-   python3 -m pip install --user -e .
-
-... where ``-e`` stands for ``--editable``.
 
 Building the Documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,12 +73,12 @@ New releases are made using the following steps:
 #. Create a source distribution with ``python3 setup.py sdist``
 #. Create a wheel distribution with ``python3 setup.py bdist_wheel``
 #. Check that both files have the correct content
-#. Upload them to PyPI with twine_: ``twine upload dist/*``
+#. Upload them to PyPI_ with twine_: ``python3 -m twine upload dist/*``
 #. Push the commit and the tag to Github and `add release notes`_ containing a
    link to PyPI and the bullet points from ``NEWS.rst``
-#. Check that the new release was built correctly on RTD_, delete the "stable"
-   version and select the new release as default version
+#. Check that the new release was built correctly on RTD_
+   and select the new release as default version
 
-.. _twine: https://pypi.org/project/twine/
+.. _twine: https://twine.readthedocs.io/
 .. _add release notes: https://github.com/sfstoolbox/sfs-python/tags
-.. _RTD: http://readthedocs.org/projects/sfs-python/builds/
+.. _RTD: https://readthedocs.org/projects/sfs-python/builds/
