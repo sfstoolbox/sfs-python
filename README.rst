@@ -1,29 +1,25 @@
-Sound Field Synthesis Toolbox for Python
-========================================
+Sound Field Synthesis (SFS) Toolbox for Python
+==============================================
 
-The Sound Field Synthesis Toolbox for Python gives you the possibility to create
-numercial simulations of sound field synthesis methods like wave field synthesis
-(WFS) or near-field compensated higher order Ambisonics (NFC-HOA).
-
-Theory:
-    http://sfstoolbox.org/
+A Python library for creating numercial simulations of sound field synthesis
+methods like Wave Field Synthesis (WFS) or Near-Field Compensated Higher Order
+Ambisonics (NFC-HOA).
 
 Documentation:
-    http://python.sfstoolbox.org/
+    https://sfs-python.readthedocs.io/
 
 Source code and issue tracker:
     https://github.com/sfstoolbox/sfs-python/
-
-Python Package Index:
-    https://pypi.python.org/pypi/sfs/
-
-SFS Toolbox for Matlab:
-    http://matlab.sfstoolbox.org/
 
 License:
     MIT -- see the file ``LICENSE`` for details.
 
 Quick start:
-    * Install NumPy, SciPy and Matplotlib
+    * Install Python 3, NumPy, SciPy and Matplotlib
     * ``python3 -m pip install sfs --user``
-    * ``python3 doc/examples/horizontal_plane_arrays.py``
+    * Check out the examples in the documentation
+
+More information about the underlying theory can be found at
+https://sfs.readthedocs.io/.
+There is also a Sound Field Synthesis Toolbox for Octave/Matlab, see
+https://sfs-matlab.readthedocs.io/.
