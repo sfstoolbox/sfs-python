@@ -10,5 +10,6 @@ dependencies:
   - matplotlib>=1.5
   - ipykernel
   - pandoc
+  - ffmpeg
   - pip:
     - nbsphinx
