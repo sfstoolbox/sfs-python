@@ -1,4 +1,4 @@
-"""Compute time based driving functions for various systems.
+"""Compute NFC-HOA driving functions.
 
 .. include:: math-definitions.rst
 
@@ -17,12 +17,6 @@
     xs = -1.5, 1.5, 0
     rs = np.linalg.norm(xs)  # distance from origin
     ts = rs / sfs.default.c  # time-of-arrival at origin
-
-    # Focused source
-    xf = -0.5, 0.5, 0
-    nf = sfs.util.direction_vector(np.radians(-45))  # normal vector
-    rf = np.linalg.norm(xf)  # distance from origin
-    tf = rf / sfs.default.c  # time-of-arrival at origin
 
     # Impulsive excitation
     fs = 44100

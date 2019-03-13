@@ -1,4 +1,4 @@
-"""Compute time based driving functions for various systems.
+"""Compute WFS driving functions.
 
 .. include:: math-definitions.rst
 
