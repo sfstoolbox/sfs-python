@@ -1,12 +1,12 @@
 """Compute ESA driving functions for various systems.
 
-    ESA is abbreviation for equivalent scattering approach.
+ESA is abbreviation for equivalent scattering approach.
 
-    ESA driving functions for an edge-shaped SSD are provided below.
-    Further ESA for different geometries might be added here.
+ESA driving functions for an edge-shaped SSD are provided below.
+Further ESA for different geometries might be added here.
 
-    Note that mode-matching (such as NFC-HOA, SDM) are equivalent
-    to ESA in their specific geometries (spherical/circular, planar/linear).
+Note that mode-matching (such as NFC-HOA, SDM) are equivalent
+to ESA in their specific geometries (spherical/circular, planar/linear).
 
 """
 
