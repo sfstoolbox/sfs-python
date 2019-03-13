@@ -236,9 +236,8 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = (
-            sfs.mono.sdm.point_25d(
-                omega, array.x, array.n, xs, [0, -1, 0]))
+        d, selection, secondary_source = sfs.mono.sdm.point_25d(
+            omega, array.x, array.n, xs, [0, -1, 0])
         plot(d, selection, secondary_source)
 
     """
