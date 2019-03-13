@@ -3,10 +3,10 @@
 .. autosummary::
     :toctree:
 
+    source
+
     wfs
     nfchoa
-
-    source
 
 """
 from .. import array as _array
