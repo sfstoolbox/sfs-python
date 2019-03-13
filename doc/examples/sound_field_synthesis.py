@@ -44,22 +44,22 @@ array = sfs.array.circular(N, R)
 
 
 # === compute driving function and determine active secondary sources ===
-#d, selection, secondary_source = sfs.mono.drivingfunction.delay_3d_plane(omega, array.x, array.n, npw)
+#d, selection, secondary_source = sfs.mono.wfs.plane_3d_delay(omega, array.x, array.n, npw)
 
-#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_line(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.mono.wfs.line_2d(omega, array.x, array.n, xs)
 
-#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_plane(omega, array.x, array.n, npw)
-d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_plane(omega, array.x, array.n, npw, xref)
-#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_plane(omega, array.x, array.n, npw)
+#d, selection, secondary_source = sfs.mono.wfs.plane_2d(omega, array.x, array.n, npw)
+d, selection, secondary_source = sfs.mono.wfs.plane_25d(omega, array.x, array.n, npw, xref)
+#d, selection, secondary_source = sfs.mono.wfs.plane_3d(omega, array.x, array.n, npw)
 
-#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_2d_point(omega, array.x, array.n, xs)
-#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_25d_point(omega, array.x, array.n, xs)
-#d, selection, secondary_source = sfs.mono.drivingfunction.wfs_3d_point(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.mono.wfs.point_2d(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.mono.wfs.point_25d(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.mono.wfs.point_3d(omega, array.x, array.n, xs)
 
-#d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_2d_plane(omega, array.x, R, npw)
+#d, selection, secondary_source = sfs.mono.nfchoa.plane_2d(omega, array.x, R, npw)
 
-#d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_point(omega, array.x, R, xs)
-#d, selection, secondary_source = sfs.mono.drivingfunction.nfchoa_25d_plane(omega, array.x, R, npw)
+#d, selection, secondary_source = sfs.mono.nfchoa.point_25d(omega, array.x, R, xs)
+#d, selection, secondary_source = sfs.mono.nfchoa.plane_25d(omega, array.x, R, npw)
 
 
 # === compute tapering window ===

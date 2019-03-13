@@ -3,18 +3,17 @@
 .. autosummary::
     :toctree:
 
-    drivingfunction
     source
-    soundfigure
+
+    wfs
+    nfchoa
+    sdm
+    esa
 
 """
-import numpy as _np
-
-from . import drivingfunction
 from . import source
-from . import soundfigure
-
 from .. import array as _array
+import numpy as _np
 
 
 def shiftphase(p, phase):
@@ -58,3 +57,27 @@ def synthesize(d, weights, ssd, secondary_source_function, **kwargs):
         if weight != 0:
             p += a * weight * d * secondary_source_function(x, n, **kwargs)
     return p
+
+
+def secondary_source_point(omega, c):
+    """Create a point source for use in `sfs.mono.synthesize()`."""
+
+    def secondary_source(position, _, grid):
+        return source.point(omega, position, grid, c)
+
+    return secondary_source
+
+
+def secondary_source_line(omega, c):
+    """Create a line source for use in `sfs.mono.synthesize()`."""
+
+    def secondary_source(position, _, grid):
+        return source.line(omega, position, grid, c)
+
+    return secondary_source
+
+
+from . import esa
+from . import nfchoa
+from . import sdm
+from . import wfs
