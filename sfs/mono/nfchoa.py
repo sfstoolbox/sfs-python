@@ -1,4 +1,4 @@
-"""Compute driving functions for various systems.
+"""Compute NFC-HOA driving functions.
 
 .. include:: math-definitions.rst
 
@@ -12,11 +12,8 @@
     plt.rcParams['figure.figsize'] = 6, 6
 
     xs = -1.5, 1.5, 0
-    xs_focused = -0.5, 0.5, 0
     # normal vector for plane wave:
     npw = sfs.util.direction_vector(np.radians(-45))
-    # normal vector for focused source:
-    ns_focused = sfs.util.direction_vector(np.radians(-45))
     f = 300  # Hz
     omega = 2 * np.pi * f
     R = 1.5  # Radius of circular loudspeaker array
