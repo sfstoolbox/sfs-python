@@ -4,10 +4,10 @@ dependencies:
   - sphinx_rtd_theme
   - numpy
   - scipy
+  - matplotlib==2.2.*
   - ipykernel
   - pandoc
   - ffmpeg
   - pip:
-    - matplotlib>=1.5
     - nbsphinx
     - sphinxcontrib-bibtex
