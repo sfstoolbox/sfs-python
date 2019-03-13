@@ -1,36 +1,4 @@
-"""Compute driving functions for various systems.
-
-.. include:: math-definitions.rst
-
-.. plot::
-    :context: reset
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sfs
-
-    plt.rcParams['figure.figsize'] = 6, 6
-
-    xs = -1.5, 1.5, 0
-    xs_focused = -0.5, 0.5, 0
-    # normal vector for plane wave:
-    npw = sfs.util.direction_vector(np.radians(-45))
-    # normal vector for focused source:
-    ns_focused = sfs.util.direction_vector(np.radians(-45))
-    f = 300  # Hz
-    omega = 2 * np.pi * f
-    R = 1.5  # Radius of circular loudspeaker array
-
-    grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
-
-    array = sfs.array.circular(N=32, R=R)
-
-    def plot(d, selection, secondary_source):
-        p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
-        sfs.plot.soundfield(p, grid)
-        sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
-
-"""
+"""Compute ESA EDGE driving functions for various systems."""
 
 import numpy as np
 from numpy.core.umath_tests import inner1d  # element-wise inner product
