@@ -1,4 +1,14 @@
-"""Compute ESA EDGE driving functions for various systems."""
+"""Compute ESA driving functions for various systems.
+
+    ESA is abbreviation for equivalent scattering approach.
+
+    ESA driving functions for an edge-shaped SSD are provided below.
+    Further ESA for different geometries might be added here.
+
+    Note that mode-matching (such as NFC-HOA, SDM) are equivalent
+    to ESA in their specific geometries (spherical/circular, planar/linear).
+
+"""
 
 import numpy as np
 from scipy.special import jn, hankel2
@@ -6,7 +16,7 @@ from .. import util
 from . import secondary_source_line, secondary_source_point
 
 
-def plane_2d(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
+def plane_2d_edge(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
              c=None):
     r"""Driving function for 2-dimensional plane wave with edge ESA.
 
@@ -77,7 +87,7 @@ def plane_2d(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
     return 4*np.pi/alpha * d, selection, secondary_source_line(omega, c)
 
 
-def plane_2d_with_dipole_ssd(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
+def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
                              c=None):
     r"""Driving function for 2-dimensional plane wave with edge dipole ESA.
 
@@ -145,7 +155,7 @@ def plane_2d_with_dipole_ssd(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
     return 4*np.pi/alpha * d
 
 
-def line_2d(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
+def line_2d_edge(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     r"""Driving function for 2-dimensional line source with edge ESA.
 
     Driving function for a virtual line source using the 2-dimensional ESA
@@ -219,7 +229,7 @@ def line_2d(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     return -1j*np.pi/alpha * d, selection, secondary_source_line(omega, c)
 
 
-def line_2d_with_dipole_ssd(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
+def line_2d_edge_dipole_ssd(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     r"""Driving function for 2-dimensional line source with edge dipole ESA.
 
     Driving function for a virtual line source using the 2-dimensional ESA
@@ -290,7 +300,7 @@ def line_2d_with_dipole_ssd(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     return -1j*np.pi/alpha * d
 
 
-def point_25d(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
+def point_25d_edge(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
               Nc=None, c=None):
     r"""Driving function for 2.5-dimensional point source with edge ESA.
 
@@ -344,5 +354,5 @@ def point_25d(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
     else:
         a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
 
-    d, selection, _ = line_2d(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
+    d, selection, _ = line_2d_edge(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
     return 1j*np.sqrt(a) * d, selection, secondary_source_point(omega, c)

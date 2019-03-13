@@ -8,7 +8,7 @@
     wfs
     nfchoa
     sdm
-    esaedge
+    esa
 
 """
 from . import source
@@ -36,7 +36,7 @@ def secondary_source_line(omega, c):
     return secondary_source
 
 
-from . import esaedge
+from . import esa
 from . import nfchoa
 from . import sdm
 from . import wfs
