@@ -8,7 +8,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs.mono as sfs
+import sfs.fd as sfs
 
 
 # simulation parameters

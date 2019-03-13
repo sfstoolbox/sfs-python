@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs.time as sfs
+import sfs.td as sfs
 from scipy.signal import unit_impulse
 
 # Parameters

@@ -30,7 +30,7 @@
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
     def plot(d, selection, secondary_source, t=0):
-        p = sfs.time.synthesize(d, selection, array, secondary_source, grid=grid,
+        p = sfs.td.synthesize(d, selection, array, secondary_source, grid=grid,
                                 observation_time=t)
         sfs.plot.level(p, grid)
         sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
@@ -138,8 +138,8 @@ def plane_25d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
         :context: close-figs
 
         delay, weight, sos, phaseshift, selection, secondary_source = \
-            sfs.time.nfchoa.plane_25d(array.x, R, npw, fs)
-        d = sfs.time.nfchoa.driving_signals_25d(
+            sfs.td.nfchoa.plane_25d(array.x, R, npw, fs)
+        d = sfs.td.nfchoa.driving_signals_25d(
                 delay, weight, sos, phaseshift, signal)
         plot(d, selection, secondary_source)
 
@@ -228,8 +228,8 @@ def point_25d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
         :context: close-figs
 
         delay, weight, sos, phaseshift, selection, secondary_source = \
-            sfs.time.nfchoa.point_25d(array.x, R, xs, fs)
-        d = sfs.time.nfchoa.driving_signals_25d(
+            sfs.td.nfchoa.point_25d(array.x, R, xs, fs)
+        d = sfs.td.nfchoa.driving_signals_25d(
                 delay, weight, sos, phaseshift, signal)
         plot(d, selection, secondary_source, t=ts)
 
