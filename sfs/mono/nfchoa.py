@@ -253,7 +253,7 @@ def point_25d_HF(omega, x0, r0, xs, M=None, c=None,
 
         d, selection, secondary_source = sfs.mono.nfchoa.point_25d_HF(
             omega, array.x, R, xs)
-        plot(d, selection, secondary_source)
+        plot(d * np.linalg.norm(xs)*4*np.pi, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -298,7 +298,7 @@ def plane_25d_HF(omega, x0, r0, n=[0, 1, 0], M=None, c=None,
         :context: close-figs
 
         d, selection, secondary_source = sfs.mono.nfchoa.plane_25d_HF(
-            omega, array.x, R, xs)
+            omega, array.x, R, npw)
         plot(d, selection, secondary_source)
 
     """
