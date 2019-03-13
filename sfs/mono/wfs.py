@@ -563,7 +563,7 @@ def plane_3d_delay(omega, x0, n0, n=[0, 1, 0], c=None):
     return d, selection, secondary_source_point(omega, c)
 
 
-def soundfigure_2d(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
+def soundfigure_3d(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
     """Compute driving function for a 2D sound figure.
 
     Based on

@@ -29,7 +29,7 @@ array = sfs.array.cube(N, dx)
 # driving function for sound figure
 figure = np.array(Image.open('figures/tree.png'))  # read image from file
 figure = np.rot90(figure)  # turn 0deg to the top
-d, selection, secondary_source = sfs.mono.soundfigure.wfs_3d_pw(
+d, selection, secondary_source = sfs.mono.wfs.soundfigure_3d(
     omega, array.x, array.n, figure, npw=npw)
 
 # compute synthesized sound field
