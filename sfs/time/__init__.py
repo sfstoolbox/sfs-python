@@ -3,8 +3,8 @@
 .. autosummary::
     :toctree:
 
-    nfchoa
     wfs
+    nfchoa
 
     source
 
