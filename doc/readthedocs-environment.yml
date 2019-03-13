@@ -1,5 +1,3 @@
-channels:
-  - cdat-forge
 dependencies:
   - python>=3
   - sphinx>=1.3.6
