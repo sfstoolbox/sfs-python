@@ -234,3 +234,90 @@ def plane_25d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         d += (-1j)**abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
     selection = util.source_selection_all(len(x0))
     return 2*1j / r0 * d, selection, secondary_source_point(omega, c)
+
+
+def point_25d_HF(omega, x0, r0, xs, M=None, c=None,
+                 DirichletKernelFlag=True):
+    """Compute point source driving function for NFC-InfiniteOA.
+
+    This only theoretically useful driving function is used in
+
+    https://github.com/spatialaudio/sfs-with-local-wavenumber-vector-concept
+
+    For a continous SSD only one secondary source is active.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.mono.nfchoa.point_25d_HF(
+            omega, array.x, R, xs)
+        plot(d, selection, secondary_source)
+
+    """
+    x0 = util.asarray_of_rows(x0)
+    k = util.wavenumber(omega, c)
+    xs = util.asarray_1d(xs)
+    phi, _, r = util.cart2sph(*xs)
+    phi0 = util.cart2sph(*x0.T)[0]
+    if M is None:
+        M = util.max_order_circular_harmonics(len(x0))
+    d = 0
+
+    if DirichletKernelFlag is True:
+        for m in range(-M, M + 1):
+            d += np.exp(-1j * k * r) / np.exp(-1j * k * r0) * \
+                 r0 / r * \
+                 np.exp(-1j * m * (phi0 - phi))
+        d = d / (2 * np.pi * r0)
+    else:  # this is the analytic solution for m=oo and requires an exact
+        # stationary phase source within phi0, i.e. phi==phi0 in exactly one
+        # index
+        d = (np.exp(-1j * k * r) / np.exp(-1j * k * r0) *
+             r0 / r / r0 *
+             len(x0)/2/np.pi *
+             (phi == phi0))  # choose exactly one sec source
+    selection = util.source_selection_all(len(x0))
+    return d, selection, secondary_source_point(omega, c)
+
+
+def plane_25d_HF(omega, x0, r0, n=[0, 1, 0], M=None, c=None,
+                 DirichletKernelFlag=True):
+    """Compute plane wave driving function for NFC-InfiniteOA.
+
+    This only theoretically useful driving function is used in
+
+    https://github.com/spatialaudio/sfs-with-local-wavenumber-vector-concept
+
+    For a continous SSD only one secondary source is active.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.mono.nfchoa.plane_25d_HF(
+            omega, array.x, R, xs)
+        plot(d, selection, secondary_source)
+
+    """
+    x0 = util.asarray_of_rows(x0)
+    k = util.wavenumber(omega, c)
+    n = util.normalize_vector(n)
+    phi, _, r = util.cart2sph(*n)
+    phi0 = util.cart2sph(*x0.T)[0]
+    if M is None:
+        M = util.max_order_circular_harmonics(len(x0))
+    d = 0
+
+    if DirichletKernelFlag is True:
+        for m in range(-M, M + 1):
+            d += np.exp(1j*np.pi*m) * np.exp(1j*m*(phi0 - phi))
+        d *= (2/r0) * (r0/np.exp(-1j*k*r0))
+    else:
+        d = (1/r0 * 4*np.pi*r0 / np.exp(-1j*k*r0) *
+             len(x0)/2/np.pi *
+             (phi == (phi0-np.pi)))  # choose exactly one sec source
+    selection = util.source_selection_all(len(x0))
+    return d, selection, secondary_source_point(omega, c)

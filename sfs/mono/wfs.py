@@ -217,6 +217,85 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     return d, selection, secondary_source_point(omega, c)
 
 
+def point_25d_Unified_WIP(omega, x0, n0, xs, xref=[0, 0, 0],
+                          c=None, omalias=None):
+    r"""Driving function for 2.5-dimensional WFS of a virtual point source.
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of virtual point source.
+    xref : (3,) array_like, optional
+        Reference point xref or contour xref(x0) for amplitude correct synthesis.
+    c : float, optional
+        Speed of sound in m/s.
+    omalias : float, optional
+        Cut angular frequency for prefilter.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    Eq. (3.10), (3.11) Start, E.W. (1997): "Direct sound enhancement by wave
+    field synthesis", doctoral thesis, TU Delft
+
+    Eq. (2.137) from Schultz, F. (2016): https://doi.org/10.18453/rosdok_id00001765
+
+    .. math::
+
+        D(\x_0,\w) = \sqrt{8 \pi \, \i\wc}
+            \sqrt{\frac{|\x_\text{ref}-\x_0| \cdot
+            |\x_0-\x_\text{s}|}{|\x_\text{ref}-\x_0| + |\x_0-\x_\text{s}|}}
+            \scalarprod{\frac{\x_0-\x_\text{s}}{|\x_0-\x_\text{s}|}}{\n_0}
+            \frac{\e{-\i\wc |\x_0-\x_\text{s}|}}{4\pi\,|\x_0-\x_\text{s}|}
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = (
+            sfs.mono.wfs.point_25d_Unified_WIP(
+                omega, array.x, array.n, xs))
+        plot(4*np.pi*np.linalg.norm(xs) * d, selection, secondary_source)
+
+    """
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
+    k = util.wavenumber(omega, c)
+
+    ds = x0 - xs
+    dr = xref - x0
+    s = np.linalg.norm(ds, axis=1)
+    r = np.linalg.norm(dr, axis=1)
+
+    d = (
+        preeq_25d(omega, omalias, c) *
+        np.sqrt(8 * np.pi) *
+        np.sqrt((r * s) / (r + s)) *
+        inner1d(n0, ds) / s *
+        np.exp(-1j * k * s) / (4 * np.pi * s))
+    selection = util.source_selection_point(n0, x0, xs)
+    return d, selection, secondary_source_point(omega, c)
+
+
 point_3d = _point
 
 
