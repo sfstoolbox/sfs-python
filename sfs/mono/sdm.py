@@ -1,4 +1,4 @@
-"""Compute driving functions for various systems.
+"""Compute SDM driving functions.
 
 .. include:: math-definitions.rst
 
@@ -12,18 +12,14 @@
     plt.rcParams['figure.figsize'] = 6, 6
 
     xs = -1.5, 1.5, 0
-    xs_focused = -0.5, 0.5, 0
     # normal vector for plane wave:
     npw = sfs.util.direction_vector(np.radians(-45))
-    # normal vector for focused source:
-    ns_focused = sfs.util.direction_vector(np.radians(-45))
     f = 300  # Hz
     omega = 2 * np.pi * f
-    R = 1.5  # Radius of circular loudspeaker array
 
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
-    array = sfs.array.circular(N=32, R=R)
+    array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
 
     def plot(d, selection, secondary_source):
         p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
@@ -75,7 +71,6 @@ def line_2d(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
         d, selection, secondary_source = sfs.mono.sdm.line_2d(
             omega, array.x, array.n, xs)
         plot(d, selection, secondary_source)
@@ -133,7 +128,6 @@ def plane_2d(omega, x0, n0, n=[0, 1, 0], c=None):
     .. plot::
         :context: close-figs
 
-        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
         d, selection, secondary_source = sfs.mono.sdm.plane_2d(
             omega, array.x, array.n, npw)
         plot(d, selection, secondary_source)
@@ -187,7 +181,6 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
         d, selection, secondary_source = sfs.mono.sdm.plane_25d(
             omega, array.x, array.n, npw, [0, -1, 0])
         plot(d, selection, secondary_source)
@@ -243,7 +236,6 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
         d, selection, secondary_source = (
             sfs.mono.sdm.point_25d(
                 omega, array.x, array.n, xs, [0, -1, 0]))
