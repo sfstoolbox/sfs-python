@@ -625,7 +625,7 @@ def max_order_circular_harmonics(N):
     It is given on page 132 of [Ahrens2012]_ as
 
     .. math::
-        \text{max\_order} =
+        \mathtt{max\_order} =
             \begin{cases}
                 N/2 - 1 & \text{even}\;N \\
                 (N-1)/2 & \text{odd}\;N,
@@ -634,7 +634,7 @@ def max_order_circular_harmonics(N):
     which is equivalent to
 
     .. math::
-        \text{max\_order} = \big\lfloor \frac{N - 1}{2} \big\rfloor.
+        \mathtt{max\_order} = \big\lfloor \frac{N - 1}{2} \big\rfloor.
 
     Parameters
     ----------
@@ -649,7 +649,7 @@ def max_order_spherical_harmonics(N):
     r"""Maximum order of 3D HOA.
 
     .. math::
-        \text{max\_order} = \lfloor \sqrt{N} \rfloor - 1.
+        \mathtt{max\_order} = \lfloor \sqrt{N} \rfloor - 1.
 
     Parameters
     ----------
