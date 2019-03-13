@@ -5,7 +5,7 @@
 .. rst-class:: hidden
 .. math::
 
-    \gdef\dirac#1{\operatorname{\delta}\left(#1\right)}
+    \gdef\dirac#1{\mathop{{}\delta}\left(#1\right)}
     \gdef\e#1{\operatorname{e}^{#1}}
     \gdef\Hankel#1#2#3{\mathop{{}H_{#2}^{(#1)}}\!\left(#3\right)}
     \gdef\hankel#1#2#3{\mathop{{}h_{#2}^{(#1)}}\!\left(#3\right)}
