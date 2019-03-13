@@ -25,8 +25,8 @@ xs = 2, 2, 0  # position of virtual source
 t = 0.008
 # compute driving signals
 d_delay, d_weight, selection, secondary_source = \
-    sfs.time.drivingfunction.wfs_25d_point(array.x, array.n, xs)
-d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
+    sfs.time.wfs.point_25d(array.x, array.n, xs)
+d = sfs.time.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
 twin = sfs.tapering.tukey(selection, .3)
@@ -50,8 +50,8 @@ t = -0.001
 
 # compute driving signals
 d_delay, d_weight, selection, secondary_source = \
-    sfs.time.drivingfunction.wfs_25d_plane(array.x, array.n, npw)
-d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
+    sfs.time.wfs.plane_25d(array.x, array.n, npw)
+d = sfs.time.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
 twin = sfs.tapering.tukey(selection, .3)
@@ -72,8 +72,8 @@ xref = np.r_[0, 0, 0]
 nfs = sfs.util.normalize_vector(xref - xs)  # main n of fsource
 t = 0.003  # compute driving signals
 d_delay, d_weight, selection, secondary_source = \
-    sfs.time.drivingfunction.wfs_25d_focused(array.x, array.n, xs, nfs)
-d = sfs.time.drivingfunction.driving_signals(d_delay, d_weight, signal)
+    sfs.time.wfs.focused_25d(array.x, array.n, xs, nfs)
+d = sfs.time.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
 twin = sfs.tapering.tukey(selection, .3)

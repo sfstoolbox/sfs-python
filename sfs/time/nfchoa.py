@@ -1,4 +1,4 @@
-"""Compute time based driving functions for various systems.
+"""Compute NFC-HOA driving functions.
 
 .. include:: math-definitions.rst
 
@@ -17,12 +17,6 @@
     xs = -1.5, 1.5, 0
     rs = np.linalg.norm(xs)  # distance from origin
     ts = rs / sfs.default.c  # time-of-arrival at origin
-
-    # Focused source
-    xf = -0.5, 0.5, 0
-    nf = sfs.util.direction_vector(np.radians(-45))  # normal vector
-    rf = np.linalg.norm(xf)  # distance from origin
-    tf = rf / sfs.default.c  # time-of-arrival at origin
 
     # Impulsive excitation
     fs = 44100
@@ -43,323 +37,11 @@
 
 """
 import numpy as np
-from numpy.core.umath_tests import inner1d  # element-wise inner product
 from scipy.signal import besselap, sosfilt, zpk2sos
 from scipy.special import eval_legendre as legendre
 from .. import default
 from .. import util
-from . import source as _source
-
-
-def wfs_25d_plane(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
-    r"""Plane wave model by 2.5-dimensional WFS.
-
-    Parameters
-    ----------
-    x0 : (N, 3) array_like
-        Sequence of secondary source positions.
-    n0 : (N, 3) array_like
-        Sequence of secondary source orientations.
-    n : (3,) array_like, optional
-        Normal vector (propagation direction) of synthesized plane wave.
-    xref : (3,) array_like, optional
-        Reference position
-    c : float, optional
-        Speed of sound
-
-    Returns
-    -------
-    delays : (N,) numpy.ndarray
-        Delays of secondary sources in seconds.
-    weights : (N,) numpy.ndarray
-        Weights of secondary sources.
-    selection : (N,) numpy.ndarray
-        Boolean array containing ``True`` or ``False`` depending on
-        whether the corresponding secondary source is "active" or not.
-    secondary_source_function : callable
-        A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.time.synthesize()`.
-
-    Notes
-    -----
-    2.5D correction factor
-
-    .. math::
-
-        g_0 = \sqrt{2 \pi |x_\mathrm{ref} - x_0|}
-
-    d using a plane wave as source model
-
-    .. math::
-
-        d_{2.5D}(x_0,t) = h(t)
-        2 g_0 \scalarprod{n}{n_0}
-        \dirac{t - \frac{1}{c} \scalarprod{n}{x_0}}
-
-    with wfs(2.5D) prefilter h(t), which is not implemented yet.
-
-    References
-    ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.pw.2.5D
-
-    Examples
-    --------
-    .. plot::
-        :context: close-figs
-
-        delays, weights, selection, secondary_source = \
-            sfs.time.drivingfunction.wfs_25d_plane(array.x, array.n, npw)
-        d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        plot(d, selection, secondary_source)
-
-    """
-    if c is None:
-        c = default.c
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    n = util.normalize_vector(n)
-    xref = util.asarray_1d(xref)
-    g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
-    delays = inner1d(n, x0) / c
-    weights = 2 * g0 * inner1d(n, n0)
-    selection = util.source_selection_plane(n0, n)
-    return delays, weights, selection, secondary_source_point(c)
-
-
-def wfs_25d_point(x0, n0, xs, xref=[0, 0, 0], c=None):
-    r"""Point source by 2.5-dimensional WFS.
-
-    Parameters
-    ----------
-    x0 : (N, 3) array_like
-        Sequence of secondary source positions.
-    n0 : (N, 3) array_like
-        Sequence of secondary source orientations.
-    xs : (3,) array_like
-        Virtual source position.
-    xref : (3,) array_like, optional
-        Reference position
-    c : float, optional
-        Speed of sound
-
-    Returns
-    -------
-    delays : (N,) numpy.ndarray
-        Delays of secondary sources in seconds.
-    weights: (N,) numpy.ndarray
-        Weights of secondary sources.
-    selection : (N,) numpy.ndarray
-        Boolean array containing ``True`` or ``False`` depending on
-        whether the corresponding secondary source is "active" or not.
-    secondary_source_function : callable
-        A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.time.synthesize()`.
-
-    Notes
-    -----
-    2.5D correction factor
-
-    .. math::
-
-         g_0 = \sqrt{2 \pi |x_\mathrm{ref} - x_0|}
-
-
-    d using a point source as source model
-
-    .. math::
-
-         d_{2.5D}(x_0,t) = h(t)
-         \frac{g_0  \scalarprod{(x_0 - x_s)}{n_0}}
-         {2\pi |x_0 - x_s|^{3/2}}
-         \dirac{t - \frac{|x_0 - x_s|}{c}}
-
-    with wfs(2.5D) prefilter h(t), which is not implemented yet.
-
-    References
-    ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.ps.2.5D
-
-    Examples
-    --------
-    .. plot::
-        :context: close-figs
-
-        delays, weights, selection, secondary_source = \
-            sfs.time.drivingfunction.wfs_25d_point(array.x, array.n, xs)
-        d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        plot(d, selection, secondary_source, t=ts)
-
-    """
-    if c is None:
-        c = default.c
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    xs = util.asarray_1d(xs)
-    xref = util.asarray_1d(xref)
-    g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
-    ds = x0 - xs
-    r = np.linalg.norm(ds, axis=1)
-    delays = r/c
-    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
-    selection = util.source_selection_point(n0, x0, xs)
-    return delays, weights, selection, secondary_source_point(c)
-
-
-def wfs_25d_focused(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
-    r"""Point source by 2.5-dimensional WFS.
-
-    Parameters
-    ----------
-    x0 : (N, 3) array_like
-        Sequence of secondary source positions.
-    n0 : (N, 3) array_like
-        Sequence of secondary source orientations.
-    xs : (3,) array_like
-        Virtual source position.
-    ns : (3,) array_like
-        Normal vector (propagation direction) of focused source.
-        This is used for secondary source selection,
-        see `sfs.util.source_selection_focused()`.
-    xref : (3,) array_like, optional
-        Reference position
-    c : float, optional
-        Speed of sound
-
-    Returns
-    -------
-    delays : (N,) numpy.ndarray
-        Delays of secondary sources in seconds.
-    weights: (N,) numpy.ndarray
-        Weights of secondary sources.
-    selection : (N,) numpy.ndarray
-        Boolean array containing ``True`` or ``False`` depending on
-        whether the corresponding secondary source is "active" or not.
-    secondary_source_function : callable
-        A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.time.synthesize()`.
-
-    Notes
-    -----
-    2.5D correction factor
-
-    .. math::
-
-         g_0 = \sqrt{\frac{|x_\mathrm{ref} - x_0|}
-         {|x_0-x_s| + |x_\mathrm{ref}-x_0|}}
-
-
-    d using a point source as source model
-
-    .. math::
-
-         d_{2.5D}(x_0,t) = h(t)
-         \frac{g_0  \scalarprod{(x_0 - x_s)}{n_0}}
-         {|x_0 - x_s|^{3/2}}
-         \dirac{t + \frac{|x_0 - x_s|}{c}}
-
-    with wfs(2.5D) prefilter h(t), which is not implemented yet.
-
-    References
-    ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.fs.2.5D
-
-    Examples
-    --------
-    .. plot::
-        :context: close-figs
-
-        delays, weights, selection, secondary_source = \
-            sfs.time.drivingfunction.wfs_25d_focused(array.x, array.n, xf, nf)
-        d = sfs.time.drivingfunction.driving_signals(delays, weights, signal)
-        plot(d, selection, secondary_source, t=tf)
-
-    """
-    if c is None:
-        c = default.c
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    xs = util.asarray_1d(xs)
-    xref = util.asarray_1d(xref)
-    ds = x0 - xs
-    r = np.linalg.norm(ds, axis=1)
-    g0 = np.sqrt(np.linalg.norm(xref - x0, axis=1)
-                 / (np.linalg.norm(xref - x0, axis=1) + r))
-    delays = -r/c
-    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
-    selection = util.source_selection_focused(ns, x0, xs)
-    return delays, weights, selection, secondary_source_point(c)
-
-
-def driving_signals(delays, weights, signal):
-    """Get driving signals per secondary source.
-
-    Returned signals are the delayed and weighted mono input signal
-    (with N samples) per channel (C).
-
-    Parameters
-    ----------
-    delays : (C,) array_like
-        Delay in seconds for each channel, negative values allowed.
-    weights : (C,) array_like
-        Amplitude weighting factor for each channel.
-    signal : (N,) array_like + float
-        Excitation signal consisting of (mono) audio data and a sampling
-        rate (in Hertz).  A `DelayedSignal` object can also be used.
-
-    Returns
-    -------
-    `DelayedSignal`
-        A tuple containing the driving signals (in a `numpy.ndarray`
-        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
-        and a (possibly negative) time offset (in seconds).
-
-    """
-    delays = util.asarray_1d(delays)
-    weights = util.asarray_1d(weights)
-    data, samplerate, signal_offset = apply_delays(signal, delays)
-    return util.DelayedSignal(data * weights, samplerate, signal_offset)
-
-
-def apply_delays(signal, delays):
-    """Apply delays for every channel.
-
-    Parameters
-    ----------
-    signal : (N,) array_like + float
-        Excitation signal consisting of (mono) audio data and a sampling
-        rate (in Hertz).  A `DelayedSignal` object can also be used.
-    delays : (C,) array_like
-        Delay in seconds for each channel (C), negative values allowed.
-
-    Returns
-    -------
-    `DelayedSignal`
-        A tuple containing the delayed signals (in a `numpy.ndarray`
-        with shape ``(N, C)``), followed by the sampling rate (in Hertz)
-        and a (possibly negative) time offset (in seconds).
-
-    """
-    data, samplerate, initial_offset = util.as_delayed_signal(signal)
-    data = util.asarray_1d(data)
-    delays = util.asarray_1d(delays)
-    delays += initial_offset
-
-    delays_samples = np.rint(samplerate * delays).astype(int)
-    offset_samples = delays_samples.min()
-    delays_samples -= offset_samples
-    out = np.zeros((delays_samples.max() + len(data), len(delays_samples)))
-    for column, row in enumerate(delays_samples):
-        out[row:row + len(data), column] = data
-    return util.DelayedSignal(out, samplerate, offset_samples / samplerate)
-
-
-def secondary_source_point(c):
-    """Create a point source for use in `sfs.time.synthesize()`."""
-
-    def secondary_source(position, _, signal, observation_time, grid):
-        return _source.point(position, signal, observation_time, grid, c=c)
-
-    return secondary_source
+from . import secondary_source_point
 
 
 def matchedz_zpk(s_zeros, s_poles, s_gain, fs):
@@ -398,8 +80,7 @@ def matchedz_zpk(s_zeros, s_poles, s_gain, fs):
     return z_zeros, z_poles, np.real(s_gain)
 
 
-def nfchoa_25d_plane(x0, r0, npw, fs, max_order=None, c=None,
-                     s2z=matchedz_zpk):
+def plane_25d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
     r"""Virtual plane wave by 2.5-dimensional NFC-HOA.
 
     .. math::
@@ -457,8 +138,8 @@ def nfchoa_25d_plane(x0, r0, npw, fs, max_order=None, c=None,
         :context: close-figs
 
         delay, weight, sos, phaseshift, selection, secondary_source = \
-            sfs.time.drivingfunction.nfchoa_25d_plane(array.x, R, npw, fs)
-        d = sfs.time.drivingfunction.nfchoa_25d_driving_signals(
+            sfs.time.nfchoa.plane_25d(array.x, R, npw, fs)
+        d = sfs.time.nfchoa.driving_signals_25d(
                 delay, weight, sos, phaseshift, signal)
         plot(d, selection, secondary_source)
 
@@ -488,7 +169,7 @@ def nfchoa_25d_plane(x0, r0, npw, fs, max_order=None, c=None,
     return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
 
 
-def nfchoa_25d_point(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
+def point_25d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
     r"""Virtual Point source by 2.5-dimensional NFC-HOA.
 
     .. math::
@@ -547,8 +228,8 @@ def nfchoa_25d_point(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
         :context: close-figs
 
         delay, weight, sos, phaseshift, selection, secondary_source = \
-            sfs.time.drivingfunction.nfchoa_25d_point(array.x, R, xs, fs)
-        d = sfs.time.drivingfunction.nfchoa_25d_driving_signals(
+            sfs.time.nfchoa.point_25d(array.x, R, xs, fs)
+        d = sfs.time.nfchoa.driving_signals_25d(
                 delay, weight, sos, phaseshift, signal)
         plot(d, selection, secondary_source, t=ts)
 
@@ -578,7 +259,7 @@ def nfchoa_25d_point(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
     return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
 
 
-def nfchoa_3d_plane(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
+def plane_3d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
     r"""Virtual plane wave by 3-dimensional NFC-HOA.
 
     .. math::
@@ -658,7 +339,7 @@ def nfchoa_3d_plane(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
     return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
 
 
-def nfchoa_3d_point(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
+def point_3d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
     r"""Virtual point source by 3-dimensional NFC-HOA.
 
     .. math::
@@ -739,7 +420,7 @@ def nfchoa_3d_point(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
     return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
 
 
-def nfchoa_25d_driving_signals(delay, weight, sos, phaseshift, signal):
+def driving_signals_25d(delay, weight, sos, phaseshift, signal):
     """Get 2.5-dimensional NFC-HOA driving signals.
 
     Parameters
@@ -773,7 +454,7 @@ def nfchoa_25d_driving_signals(delay, weight, sos, phaseshift, signal):
     return util.DelayedSignal(2 * weight * out, fs, t_offset + delay)
 
 
-def nfchoa_3d_driving_signals(delay, weight, sos, phaseshift, signal):
+def driving_signals_3d(delay, weight, sos, phaseshift, signal):
     """Get 3-dimensional NFC-HOA driving signals.
 
     Parameters
