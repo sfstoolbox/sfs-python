@@ -3,22 +3,26 @@
 .. autosummary::
     :toctree:
 
-    esaedge
-    nfchoa
-    sdm
-    wfs
-
     source
 
+    wfs
+    nfchoa
+    sdm
+    esaedge
+
 """
-from . import source as _source
+from . import source
+
+
+import numpy as _np
+from .. import array as _array
 
 
 def secondary_source_point(omega, c):
     """Create a point source for use in `sfs.mono.synthesize()`."""
 
     def secondary_source(position, _, grid):
-        return _source.point(omega, position, grid, c)
+        return source.point(omega, position, grid, c)
 
     return secondary_source
 
@@ -27,21 +31,15 @@ def secondary_source_line(omega, c):
     """Create a line source for use in `sfs.mono.synthesize()`."""
 
     def secondary_source(position, _, grid):
-        return _source.line(omega, position, grid, c)
+        return source.line(omega, position, grid, c)
 
     return secondary_source
 
-
-import numpy as _np
-
-from . import source
 
 from . import esaedge
 from . import nfchoa
 from . import sdm
 from . import wfs
-
-from .. import array as _array
 
 
 def shiftphase(p, phase):
