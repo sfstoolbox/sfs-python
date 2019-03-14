@@ -22,7 +22,8 @@
     array = sfs.array.linear(32, 0.2, orientation=[0, -1, 0])
 
     def plot(d, selection, secondary_source):
-        p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
+        p = sfs.frequency.synthesize(d, selection, array, secondary_source,
+                                     grid=grid)
         sfs.plot.soundfield(p, grid)
         sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
 
@@ -59,7 +60,7 @@ def line_2d(omega, x0, n0, xs, c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -71,7 +72,7 @@ def line_2d(omega, x0, n0, xs, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.sdm.line_2d(
+        d, selection, secondary_source = sfs.frequency.sdm.line_2d(
             omega, array.x, array.n, xs)
         plot(d, selection, secondary_source)
 
@@ -112,7 +113,7 @@ def plane_2d(omega, x0, n0, n=[0, 1, 0], c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -128,7 +129,7 @@ def plane_2d(omega, x0, n0, n=[0, 1, 0], c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.sdm.plane_2d(
+        d, selection, secondary_source = sfs.frequency.sdm.plane_2d(
             omega, array.x, array.n, npw)
         plot(d, selection, secondary_source)
 
@@ -169,7 +170,7 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -181,7 +182,7 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.sdm.plane_25d(
+        d, selection, secondary_source = sfs.frequency.sdm.plane_25d(
             omega, array.x, array.n, npw, [0, -1, 0])
         plot(d, selection, secondary_source)
 
@@ -224,7 +225,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -236,7 +237,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.sdm.point_25d(
+        d, selection, secondary_source = sfs.frequency.sdm.point_25d(
             omega, array.x, array.n, xs, [0, -1, 0])
         plot(d, selection, secondary_source)
 

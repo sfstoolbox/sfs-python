@@ -60,7 +60,7 @@ def synthesize(d, weights, ssd, secondary_source_function, **kwargs):
 
 
 def secondary_source_point(omega, c):
-    """Create a point source for use in `sfs.mono.synthesize()`."""
+    """Create a point source for use in `sfs.frequency.synthesize()`."""
 
     def secondary_source(position, _, grid):
         return source.point(omega, position, grid, c)
@@ -69,7 +69,7 @@ def secondary_source_point(omega, c):
 
 
 def secondary_source_line(omega, c):
-    """Create a line source for use in `sfs.mono.synthesize()`."""
+    """Create a line source for use in `sfs.frequency.synthesize()`."""
 
     def secondary_source(position, _, grid):
         return source.line(omega, position, grid, c)

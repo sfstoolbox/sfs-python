@@ -7,10 +7,10 @@ https://sfs-python.readthedocs.io/
 .. autosummary::
     :toctree:
 
+    frequency
+    time
     array
     tapering
-    mono
-    time
     plot
     util
 
@@ -63,5 +63,5 @@ try:
 except ImportError:
     pass
 
-from . import mono
+from . import frequency
 from . import time

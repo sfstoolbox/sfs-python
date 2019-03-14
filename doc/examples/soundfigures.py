@@ -7,7 +7,7 @@ images are located in the "figures/" directory.
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-import sfs.mono as sfs
+import sfs.frequency as sfs
 
 dx = 0.10  # secondary source distance
 N = 60  # number of secondary sources

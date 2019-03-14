@@ -23,7 +23,8 @@
     array = sfs.array.circular(N=32, R=R)
 
     def plot(d, selection, secondary_source):
-        p = sfs.mono.synthesize(d, selection, array, secondary_source, grid=grid)
+        p = sfs.frequency.synthesize(d, selection, array, secondary_source,
+                                     grid=grid)
         sfs.plot.soundfield(p, grid)
         sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
 
@@ -62,7 +63,7 @@ def plane_2d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         all secondary source are "active" for NFC-HOA.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -81,7 +82,7 @@ def plane_2d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.nfchoa.plane_2d(
+        d, selection, secondary_source = sfs.frequency.nfchoa.plane_2d(
             omega, array.x, R, npw)
         plot(d, selection, secondary_source)
 
@@ -128,7 +129,7 @@ def point_25d(omega, x0, r0, xs, max_order=None, c=None):
         all secondary source are "active" for NFC-HOA.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -147,7 +148,7 @@ def point_25d(omega, x0, r0, xs, max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.nfchoa.point_25d(
+        d, selection, secondary_source = sfs.frequency.nfchoa.point_25d(
             omega, array.x, R, xs)
         plot(d, selection, secondary_source)
 
@@ -196,7 +197,7 @@ def plane_25d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
         all secondary source are "active" for NFC-HOA.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.frequency.synthesize()`.
 
     Notes
     -----
@@ -215,7 +216,7 @@ def plane_25d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.nfchoa.plane_25d(
+        d, selection, secondary_source = sfs.frequency.nfchoa.plane_25d(
             omega, array.x, R, npw)
         plot(d, selection, secondary_source)
 

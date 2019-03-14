@@ -63,7 +63,7 @@ def point(omega, x0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p = sfs.mono.source.point(omega, x0, grid)
+        p = sfs.frequency.source.point(omega, x0, grid)
         sfs.plot.soundfield(p, grid)
         plt.title("Point Source at {} m".format(x0))
 
@@ -114,7 +114,7 @@ def point_velocity(omega, x0, grid, c=None, rho0=None):
     .. plot::
         :context: close-figs
 
-        v = sfs.mono.source.point_velocity(omega, x0, vgrid)
+        v = sfs.frequency.source.point_velocity(omega, x0, vgrid)
         sfs.plot.soundfield(p * normalization_point, grid)
         sfs.plot.vectors(v * normalization_point, vgrid)
         plt.title("Sound Pressure and Particle Velocity")
@@ -205,7 +205,7 @@ def point_dipole(omega, x0, n0, grid, c=None):
         :context: close-figs
 
         n0 = 0, 1, 0
-        p = sfs.mono.source.point_dipole(omega, x0, n0, grid)
+        p = sfs.frequency.source.point_dipole(omega, x0, n0, grid)
         sfs.plot.soundfield(p, grid)
         plt.title("Dipole Point Source at {} m".format(x0))
 
@@ -416,7 +416,7 @@ def line(omega, x0, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p = sfs.mono.source.line(omega, x0, grid)
+        p = sfs.frequency.source.line(omega, x0, grid)
         sfs.plot.soundfield(p, grid)
         plt.title("Line Source at {} m".format(x0[:2]))
 
@@ -454,7 +454,7 @@ def line_velocity(omega, x0, grid, c=None, rho0=None):
     .. plot::
         :context: close-figs
 
-        v = sfs.mono.source.line_velocity(omega, x0, vgrid)
+        v = sfs.frequency.source.line_velocity(omega, x0, vgrid)
         sfs.plot.soundfield(p * normalization_line, grid)
         sfs.plot.vectors(v * normalization_line, vgrid)
         plt.title("Sound Pressure and Particle Velocity")
@@ -605,7 +605,7 @@ def plane(omega, x0, n0, grid, c=None):
 
         direction = 45  # degree
         n0 = sfs.util.direction_vector(np.radians(direction))
-        p = sfs.mono.source.plane(omega, x0, n0, grid)
+        p = sfs.frequency.source.plane(omega, x0, n0, grid)
         sfs.plot.soundfield(p, grid, colorbar_kwargs=dict(label="p / Pa"))
         plt.title("Plane wave with direction {} degree".format(direction))
 
@@ -654,7 +654,7 @@ def plane_velocity(omega, x0, n0, grid, c=None, rho0=None):
     .. plot::
         :context: close-figs
 
-        v = sfs.mono.source.plane_velocity(omega, x0, n0, vgrid)
+        v = sfs.frequency.source.plane_velocity(omega, x0, n0, vgrid)
         sfs.plot.soundfield(p, grid)
         sfs.plot.vectors(v, vgrid)
         plt.title("Sound Pressure and Particle Velocity")
@@ -744,7 +744,7 @@ def pulsating_sphere(omega, center, radius, amplitude, grid, inside=False,
 
         radius = 0.25
         amplitude = 1 / (radius * omega * sfs.default.rho0 * sfs.default.c)
-        p = sfs.mono.source.pulsating_sphere(omega, x0, radius, amplitude, grid)
+        p = sfs.frequency.source.pulsating_sphere(omega, x0, radius, amplitude, grid)
         sfs.plot.soundfield(p, grid)
         plt.title("Sound Pressure of a Pulsating Sphere")
 
@@ -796,7 +796,8 @@ def pulsating_sphere_velocity(omega, center, radius, amplitude, grid, c=None):
     .. plot::
         :context: close-figs
 
-        v = sfs.mono.source.pulsating_sphere_velocity(omega, x0, radius, amplitude, vgrid)
+        v = sfs.frequency.source.pulsating_sphere_velocity(
+            omega, x0, radius, amplitude, vgrid)
         sfs.plot.soundfield(p, grid)
         sfs.plot.vectors(v, vgrid)
         plt.title("Sound Pressure and Particle Velocity of a Pulsating Sphere")
