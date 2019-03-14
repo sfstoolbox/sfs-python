@@ -7,10 +7,10 @@ https://sfs-python.readthedocs.io/
 .. autosummary::
     :toctree:
 
+    monochromatic
+    broadband
     array
     tapering
-    mono
-    time
     plot
     util
 
@@ -63,5 +63,5 @@ try:
 except ImportError:
     pass
 
-from . import mono
-from . import time
+from . import monochromatic
+from . import broadband

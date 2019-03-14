@@ -36,8 +36,8 @@
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
     def plot(d, selection, secondary_source, t=0):
-        p = sfs.time.synthesize(d, selection, array, secondary_source, grid=grid,
-                                observation_time=t)
+        p = sfs.broadband.synthesize(d, selection, array, secondary_source,
+                                     grid=grid, observation_time=t)
         sfs.plot.level(p, grid)
         sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
 
@@ -76,7 +76,7 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.time.synthesize()`.
+        single secondary source.  See `sfs.broadband.synthesize()`.
 
     Notes
     -----
@@ -106,8 +106,8 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         :context: close-figs
 
         delays, weights, selection, secondary_source = \
-            sfs.time.wfs.plane_25d(array.x, array.n, npw)
-        d = sfs.time.wfs.driving_signals(delays, weights, signal)
+            sfs.broadband.wfs.plane_25d(array.x, array.n, npw)
+        d = sfs.broadband.wfs.driving_signals(delays, weights, signal)
         plot(d, selection, secondary_source)
 
     """
@@ -151,7 +151,7 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.time.synthesize()`.
+        single secondary source.  See `sfs.broadband.synthesize()`.
 
     Notes
     -----
@@ -183,8 +183,8 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
         :context: close-figs
 
         delays, weights, selection, secondary_source = \
-            sfs.time.wfs.point_25d(array.x, array.n, xs)
-        d = sfs.time.wfs.driving_signals(delays, weights, signal)
+            sfs.broadband.wfs.point_25d(array.x, array.n, xs)
+        d = sfs.broadband.wfs.driving_signals(delays, weights, signal)
         plot(d, selection, secondary_source, t=ts)
 
     """
@@ -234,7 +234,7 @@ def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.time.synthesize()`.
+        single secondary source.  See `sfs.broadband.synthesize()`.
 
     Notes
     -----
@@ -267,8 +267,8 @@ def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
         :context: close-figs
 
         delays, weights, selection, secondary_source = \
-            sfs.time.wfs.focused_25d(array.x, array.n, xf, nf)
-        d = sfs.time.wfs.driving_signals(delays, weights, signal)
+            sfs.broadband.wfs.focused_25d(array.x, array.n, xf, nf)
+        d = sfs.broadband.wfs.driving_signals(delays, weights, signal)
         plot(d, selection, secondary_source, t=tf)
 
     """

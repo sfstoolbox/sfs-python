@@ -4,7 +4,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs.mono as sfs
+import sfs.monochromatic as sfs
 
 
 dx = 0.1  # secondary source distance

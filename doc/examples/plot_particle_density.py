@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs.mono as sfs
+import sfs.monochromatic as sfs
 
 # simulation parameters
 pw_angle = 45  # traveling direction of plane wave

@@ -7,7 +7,7 @@ Simulate and plot impulse behavior for Wave Field Synthesis.
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sfs.time as sfs
+import sfs.broadband as sfs
 
 # simulation parameters
 grid = sfs.util.xyz_grid([-3, 3], [-3, 3], 0, spacing=0.01)

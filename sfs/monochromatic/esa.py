@@ -49,7 +49,7 @@ def plane_2d_edge(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.monochromatic.synthesize()`.
 
     Notes
     -----
@@ -120,7 +120,7 @@ def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.monochromatic.synthesize()`.
 
     Notes
     -----
@@ -187,7 +187,7 @@ def line_2d_edge(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.monochromatic.synthesize()`.
 
     Notes
     -----
@@ -261,7 +261,7 @@ def line_2d_edge_dipole_ssd(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.monochromatic.synthesize()`.
 
     Notes
     -----
@@ -335,7 +335,7 @@ def point_25d_edge(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
         whether the corresponding secondary source is "active" or not.
     secondary_source_function : callable
         A function that can be used to create the sound field of a
-        single secondary source.  See `sfs.mono.synthesize()`.
+        single secondary source.  See `sfs.monochromatic.synthesize()`.
 
     Notes
     -----

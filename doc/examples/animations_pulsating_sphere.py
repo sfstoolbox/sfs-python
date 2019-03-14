@@ -1,5 +1,5 @@
 """Animations of pulsating sphere."""
-import sfs.mono as sfs
+import sfs.monochromatic as sfs
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation

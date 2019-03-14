@@ -100,7 +100,7 @@ def apply_delays(signal, delays):
 
 
 def secondary_source_point(c):
-    """Create a point source for use in `sfs.time.synthesize()`."""
+    """Create a point source for use in `sfs.broadband.synthesize()`."""
 
     def secondary_source(position, _, signal, observation_time, grid):
         return source.point(position, signal, observation_time, grid, c=c)

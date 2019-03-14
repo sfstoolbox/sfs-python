@@ -68,7 +68,7 @@ def point(xs, signal, observation_time, grid, c=None):
     .. plot::
         :context: close-figs
 
-        p = sfs.time.source.point(xs, signal, ts, grid)
+        p = sfs.broadband.source.point(xs, signal, ts, grid)
         sfs.plot.level(p, grid)
 
     """
@@ -129,7 +129,7 @@ def point_image_sources(x0, signal, observation_time, grid, L, max_order,
         order = 2  # image source order
         coeffs = .8, .8, .6, .6, .7, .7  # wall reflection coefficients
         grid = sfs.util.xyz_grid([0, room[0]], [0, room[1]], 0, spacing=0.01)
-        p = sfs.time.source.point_image_sources(
+        p = sfs.broadband.source.point_image_sources(
                 xs, signal, 1.5 * ts, grid, room, order, coeffs)
         sfs.plot.level(p, grid)
 
