@@ -40,11 +40,28 @@ To create the HTML pages, use::
 
 The generated files will be available in the directory ``build/sphinx/html/``.
 
+To create the EPUB file, use::
+
+   python3 setup.py build_sphinx -b epub
+
+The generated EPUB file will be available in the directory
+``build/sphinx/epub/``.
+
+To create the PDF file, use::
+
+   python3 setup.py build_sphinx -b latex
+
+Afterwards go to the folder ``build/sphinx/latex/`` and run LaTeX to create the
+PDF file. If you don’t know how to create a PDF file from the LaTeX output, you
+should have a look at Latexmk_ (see also this `Latexmk tutorial`_).
+
 It is also possible to automatically check if all links are still valid::
 
    python3 setup.py build_sphinx -b linkcheck
 
 .. _Sphinx: http://sphinx-doc.org/
+.. _Latexmk: http://personal.psu.edu/jcc8/software/latexmk-jcc/
+.. _Latexmk tutorial: https://mg.readthedocs.io/latexmk.html
 
 Running the Tests
 ^^^^^^^^^^^^^^^^^
