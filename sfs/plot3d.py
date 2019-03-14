@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def secondary_sources(x0, n0, a0=None, w=0.08, h=0.08):
+def secondary_sources(x0, n0, a0=None, *, w=0.08, h=0.08):
     """Plot positions and normals of a 3D secondary source distribution."""
     fig = plt.figure(figsize=(15, 15))
     ax = fig.add_subplot(111, projection='3d')

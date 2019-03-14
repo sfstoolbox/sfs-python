@@ -34,7 +34,7 @@ from .. import util
 from . import secondary_source_line, secondary_source_point
 
 
-def line_2d(omega, x0, n0, xs, c=None):
+def line_2d(omega, x0, n0, xs, *, c=None):
     r"""Driving function for 2-dimensional SDM for a virtual line source.
 
     Parameters
@@ -87,7 +87,7 @@ def line_2d(omega, x0, n0, xs, c=None):
     return d, selection, secondary_source_line(omega, c)
 
 
-def plane_2d(omega, x0, n0, n=[0, 1, 0], c=None):
+def plane_2d(omega, x0, n0, n=[0, 1, 0], *, c=None):
     r"""Driving function for 2-dimensional SDM for a virtual plane wave.
 
     Parameters
@@ -142,7 +142,7 @@ def plane_2d(omega, x0, n0, n=[0, 1, 0], c=None):
     return d, selection, secondary_source_line(omega, c)
 
 
-def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
+def plane_25d(omega, x0, n0, n=[0, 1, 0], *, xref=[0, 0, 0], c=None):
     r"""Driving function for 2.5-dimensional SDM for a virtual plane wave.
 
     Parameters
@@ -182,7 +182,7 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
         :context: close-figs
 
         d, selection, secondary_source = sfs.fd.sdm.plane_25d(
-            omega, array.x, array.n, npw, [0, -1, 0])
+            omega, array.x, array.n, npw, xref=[0, -1, 0])
         plot(d, selection, secondary_source)
 
     """
@@ -197,7 +197,7 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     return d, selection, secondary_source_point(omega, c)
 
 
-def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
+def point_25d(omega, x0, n0, xs, *, xref=[0, 0, 0], c=None):
     r"""Driving function for 2.5-dimensional SDM for a virtual point source.
 
     Parameters
@@ -237,7 +237,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None):
         :context: close-figs
 
         d, selection, secondary_source = sfs.fd.sdm.point_25d(
-            omega, array.x, array.n, xs, [0, -1, 0])
+            omega, array.x, array.n, xs, xref=[0, -1, 0])
         plot(d, selection, secondary_source)
 
     """

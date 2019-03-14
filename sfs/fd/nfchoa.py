@@ -35,7 +35,7 @@ from .. import util
 from . import secondary_source_point
 
 
-def plane_2d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
+def plane_2d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
     r"""Driving function for 2-dimensional NFC-HOA for a virtual plane wave.
 
     Parameters
@@ -101,7 +101,7 @@ def plane_2d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
     return -2j / (np.pi*r0) * d, selection, secondary_source_point(omega, c)
 
 
-def point_25d(omega, x0, r0, xs, max_order=None, c=None):
+def point_25d(omega, x0, r0, xs, *, max_order=None, c=None):
     r"""Driving function for 2.5-dimensional NFC-HOA for a virtual point source.
 
     Parameters
@@ -169,7 +169,7 @@ def point_25d(omega, x0, r0, xs, max_order=None, c=None):
     return d / (2 * np.pi * r0), selection, secondary_source_point(omega, c)
 
 
-def plane_25d(omega, x0, r0, n=[0, 1, 0], max_order=None, c=None):
+def plane_25d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
     r"""Driving function for 2.5-dimensional NFC-HOA for a virtual plane wave.
 
     Parameters

@@ -84,7 +84,7 @@ def as_secondary_source_distribution(arg, **kwargs):
     return SecondarySourceDistribution(x, n, a)
 
 
-def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
+def linear(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return linear, equidistantly sampled secondary source distribution.
 
     Parameters
@@ -119,7 +119,7 @@ def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     return _linear_helper(np.arange(N) * spacing, center, orientation)
 
 
-def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
+def linear_diff(distances, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return linear secondary source distribution from a list of distances.
 
     Parameters
@@ -152,7 +152,7 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
     return _linear_helper(ycoordinates, center, orientation)
 
 
-def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
+def linear_random(N, min_spacing, max_spacing, *, center=[0, 0, 0],
                   orientation=[1, 0, 0], seed=None):
     """Return randomly sampled linear array.
 
@@ -190,10 +190,10 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
     """
     r = np.random.RandomState(seed)
     distances = r.uniform(min_spacing, max_spacing, size=N-1)
-    return linear_diff(distances, center, orientation)
+    return linear_diff(distances, center=center, orientation=orientation)
 
 
-def circular(N, R, center=[0, 0, 0]):
+def circular(N, R, *, center=[0, 0, 0]):
     """Return circular secondary source distribution parallel to the xy-plane.
 
     Parameters
@@ -235,7 +235,7 @@ def circular(N, R, center=[0, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
+def rectangular(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return rectangular secondary source distribution.
 
     Parameters
@@ -272,10 +272,14 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     offset1 = spacing * (N2 - 1) / 2 + spacing / np.sqrt(2)
     offset2 = spacing * (N1 - 1) / 2 + spacing / np.sqrt(2)
     positions, normals, weights = concatenate(
-        linear(N1, spacing, [-offset1, 0, 0], [1, 0, 0]),  # left
-        linear(N2, spacing, [0, offset2, 0], [0, -1, 0]),  # upper
-        linear(N1, spacing, [offset1, 0, 0], [-1, 0, 0]),  # right
-        linear(N2, spacing, [0, -offset2, 0], [0, 1, 0]),  # lower
+        # left
+        linear(N1, spacing, center=[-offset1, 0, 0], orientation=[1, 0, 0]),
+        # upper
+        linear(N2, spacing, center=[0, offset2, 0], orientation=[0, -1, 0]),
+        # right
+        linear(N1, spacing, center=[offset1, 0, 0], orientation=[-1, 0, 0]),
+        # lower
+        linear(N2, spacing, center=[0, -offset2, 0], orientation=[0, 1, 0]),
     )
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
@@ -283,7 +287,7 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
+def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return SSD along the xy-axis with rounded edge at the origin.
 
     Parameters
@@ -357,7 +361,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, directions, weights)
 
 
-def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
+def edge(Nxy, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return SSD along the xy-axis with sharp edge at the origin.
 
     Parameters
@@ -409,7 +413,7 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, directions, weights)
 
 
-def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
+def planar(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return planar secondary source distribtion.
 
     Parameters
@@ -460,7 +464,7 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
+def cube(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return cube-shaped secondary source distribtion.
 
     Parameters
@@ -496,16 +500,23 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     """
     N1, N2, N3 = (N, N, N) if np.isscalar(N) else N
-    offset1 = spacing * (N2 - 1) / 2 + spacing / np.sqrt(2)
-    offset2 = spacing * (N1 - 1) / 2 + spacing / np.sqrt(2)
-    offset3 = spacing * (N3 - 1) / 2 + spacing / np.sqrt(2)
+    d = spacing
+    offset1 = d * (N2 - 1) / 2 + d / np.sqrt(2)
+    offset2 = d * (N1 - 1) / 2 + d / np.sqrt(2)
+    offset3 = d * (N3 - 1) / 2 + d / np.sqrt(2)
     positions, directions, weights = concatenate(
-        planar((N1, N3), spacing, [-offset1, 0, 0], [1, 0, 0]),  # west
-        planar((N2, N3), spacing, [0, offset2, 0], [0, -1, 0]),  # north
-        planar((N1, N3), spacing, [offset1, 0, 0], [-1, 0, 0]),  # east
-        planar((N2, N3), spacing, [0, -offset2, 0], [0, 1, 0]),  # south
-        planar((N2, N1), spacing, [0, 0, -offset3], [0, 0, 1]),  # bottom
-        planar((N2, N1), spacing, [0, 0, offset3], [0, 0, -1]),  # top
+        # west
+        planar((N1, N3), d, center=[-offset1, 0, 0], orientation=[1, 0, 0]),
+        # north
+        planar((N2, N3), d, center=[0, offset2, 0], orientation=[0, -1, 0]),
+        # east
+        planar((N1, N3), d, center=[offset1, 0, 0], orientation=[-1, 0, 0]),
+        # south
+        planar((N2, N3), d, center=[0, -offset2, 0], orientation=[0, 1, 0]),
+        # bottom
+        planar((N2, N1), d, center=[0, 0, -offset3], orientation=[0, 0, 1]),
+        # top
+        planar((N2, N1), d, center=[0, 0, offset3], orientation=[0, 0, -1]),
     )
     positions, directions = _rotate_array(positions, directions,
                                           [1, 0, 0], orientation)
@@ -513,7 +524,7 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, directions, weights)
 
 
-def sphere_load(file, radius, center=[0, 0, 0]):
+def sphere_load(file, radius, *, center=[0, 0, 0]):
     """Load spherical secondary source distribution from file.
 
     ASCII Format (see MATLAB SFS Toolbox) with 4 numbers (3 for the cartesian
@@ -562,7 +573,7 @@ def sphere_load(file, radius, center=[0, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def load(file, center=[0, 0, 0], orientation=[1, 0, 0]):
+def load(file, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Load secondary source distribution from file.
 
     Comma Separated Values (CSV) format with 7 values
@@ -615,7 +626,7 @@ def load(file, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def weights_midpoint(positions, closed):
+def weights_midpoint(positions, *, closed):
     """Calculate loudspeaker weights for a simply connected array.
 
     The weights are calculated according to the midpoint rule.

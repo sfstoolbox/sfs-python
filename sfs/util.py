@@ -230,7 +230,8 @@ def as_delayed_signal(arg, **kwargs):
     raise TypeError('expected audio data, samplerate, optional start time')
 
 
-def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
+def strict_arange(start, stop, step=1, *, endpoint=False, dtype=None,
+                  **kwargs):
     """Like :func:`numpy.arange`, but compensating numeric errors.
 
     Unlike :func:`numpy.arange`, but similar to :func:`numpy.linspace`,
@@ -266,7 +267,7 @@ def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
     return np.arange(start, stop, step, dtype)
 
 
-def xyz_grid(x, y, z, spacing, endpoint=True, **kwargs):
+def xyz_grid(x, y, z, *, spacing, endpoint=True, **kwargs):
     """Create a grid with given range and spacing.
 
     Parameters
@@ -349,7 +350,7 @@ def displacement(v, omega):
     return as_xyz_components(v) / (1j * omega)
 
 
-def db(x, power=False):
+def db(x, *, power=False):
     """Convert *x* to decibel.
 
     Parameters
@@ -477,7 +478,7 @@ If you want to ensure that a given variable contains a valid signal, use
 """
 
 
-def image_sources_for_box(x, L, N, prune=True):
+def image_sources_for_box(x, L, N, *, prune=True):
     """Image source method for a cuboid room.
 
     The classical method by Allen and Berkley :cite:`Allen1979`.

@@ -29,12 +29,12 @@ def compute_and_plot_soundfield(title):
     """Compute and plot synthesized sound field."""
     print('Computing', title)
 
-    twin = tapering(selection, talpha)
+    twin = tapering(selection, alpha=talpha)
     p = sfs.fd.synthesize(d, twin, array, secondary_source, grid=grid)
 
     plt.figure(figsize=(15, 15))
     plt.cla()
-    sfs.plot2d.amplitude(p, grid, xnorm)
+    sfs.plot2d.amplitude(p, grid, xnorm=xnorm)
     sfs.plot2d.loudspeakers(array.x, array.n, twin)
     sfs.plot2d.virtualsource(xs)
     sfs.plot2d.virtualsource([0, 0], npw, type='plane')

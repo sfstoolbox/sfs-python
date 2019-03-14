@@ -63,7 +63,7 @@ def secondary_source_point(omega, c):
     """Create a point source for use in `sfs.fd.synthesize()`."""
 
     def secondary_source(position, _, grid):
-        return source.point(omega, position, grid, c)
+        return source.point(omega, position, grid, c=c)
 
     return secondary_source
 
@@ -72,7 +72,7 @@ def secondary_source_line(omega, c):
     """Create a line source for use in `sfs.fd.synthesize()`."""
 
     def secondary_source(position, _, grid):
-        return source.line(omega, position, grid, c)
+        return source.line(omega, position, grid, c=c)
 
     return secondary_source
 

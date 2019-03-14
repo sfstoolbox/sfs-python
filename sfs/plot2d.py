@@ -41,7 +41,7 @@ def _register_cmap_transparent(name, color):
 _register_cmap_transparent('blacktransparent', 'black')
 
 
-def virtualsource(xs, ns=None, type='point', ax=None):
+def virtualsource(xs, ns=None, type='point', *, ax=None):
     """Draw position/orientation of virtual source."""
     xs = np.asarray(xs)
     ns = np.asarray(ns)
@@ -61,7 +61,7 @@ def virtualsource(xs, ns=None, type='point', ax=None):
                  head_length=0.1, fc='k', ec='k')
 
 
-def reference(xref, size=0.1, ax=None):
+def reference(xref, *, size=0.1, ax=None):
     """Draw reference/normalization point."""
     xref = np.asarray(xref)
     if ax is None:
@@ -71,7 +71,7 @@ def reference(xref, size=0.1, ax=None):
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]+size, xref[1]-size), 'k-')
 
 
-def secondary_sources(x0, n0, grid=None):
+def secondary_sources(x0, n0, *, grid=None):
     """Simple plot of secondary source locations."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
@@ -87,7 +87,7 @@ def secondary_sources(x0, n0, grid=None):
         ax.add_artist(ss)
 
 
-def loudspeakers(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
+def loudspeakers(x0, n0, a0=0.5, *, size=0.08, show_numbers=False, grid=None,
                  ax=None):
     """Draw loudspeaker symbols at given locations and angles.
 
@@ -164,9 +164,9 @@ def _visible_secondarysources(x0, n0, grid):
     return x0[idx, :], n0[idx, :]
 
 
-def amplitude(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
-              xlabel=None, ylabel=None, colorbar=True, colorbar_kwargs={},
-              ax=None, **kwargs):
+def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
+              vmin=-2.0, vmax=2.0, xlabel=None, ylabel=None,
+              colorbar=True, colorbar_kwargs={}, ax=None, **kwargs):
     """Two-dimensional plot of sound field (real part).
 
     Parameters
@@ -294,7 +294,7 @@ def amplitude(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
     return im
 
 
-def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
+def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
           **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
@@ -314,7 +314,7 @@ def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
                      vmax=vmax, vmin=vmin, **kwargs)
 
 
-def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
+def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
               edgecolor='', marker='.', s=15, **kwargs):
     """Plot particle positions as scatter plot"""
     XX, YY = [np.real(c) for c in x[:2]]
@@ -337,8 +337,8 @@ def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
                       **kwargs)
 
 
-def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
-            ax=None, clim=None, **kwargs):
+def vectors(v, grid, *, cmap='blacktransparent', headlength=3,
+            headaxislength=2.5, ax=None, clim=None, **kwargs):
     """Plot a vector field in the xy plane.
 
     Parameters
@@ -384,7 +384,7 @@ def vectors(v, grid, cmap='blacktransparent', headlength=3, headaxislength=2.5,
                      headaxislength=headaxislength, clim=clim, **kwargs)
 
 
-def add_colorbar(im, aspect=20, pad=0.5, **kwargs):
+def add_colorbar(im, *, aspect=20, pad=0.5, **kwargs):
     r"""Add a vertical color bar to a plot.
 
     Parameters

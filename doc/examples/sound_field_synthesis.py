@@ -49,7 +49,7 @@ array = sfs.array.circular(N, R)
 #d, selection, secondary_source = sfs.fd.wfs.line_2d(omega, array.x, array.n, xs)
 
 #d, selection, secondary_source = sfs.fd.wfs.plane_2d(omega, array.x, array.n, npw)
-d, selection, secondary_source = sfs.fd.wfs.plane_25d(omega, array.x, array.n, npw, xref)
+d, selection, secondary_source = sfs.fd.wfs.plane_25d(omega, array.x, array.n, npw, xref=xref)
 #d, selection, secondary_source = sfs.fd.wfs.plane_3d(omega, array.x, array.n, npw)
 
 #d, selection, secondary_source = sfs.fd.wfs.point_2d(omega, array.x, array.n, xs)
@@ -64,8 +64,8 @@ d, selection, secondary_source = sfs.fd.wfs.plane_25d(omega, array.x, array.n, n
 
 # === compute tapering window ===
 #twin = sfs.tapering.none(selection)
-#twin = sfs.tapering.kaiser(selection, 8.6)
-twin = sfs.tapering.tukey(selection, 0.3)
+#twin = sfs.tapering.kaiser(selection, beta=8.6)
+twin = sfs.tapering.tukey(selection, alpha=0.3)
 
 # === compute synthesized sound field ===
 p = sfs.fd.synthesize(d, twin, array, secondary_source, grid=grid)
@@ -73,7 +73,7 @@ p = sfs.fd.synthesize(d, twin, array, secondary_source, grid=grid)
 
 # === plot synthesized sound field ===
 plt.figure(figsize=(10, 10))
-sfs.plot2d.amplitude(p, grid, [0, 0, 0])
+sfs.plot2d.amplitude(p, grid, xnorm=[0, 0, 0])
 sfs.plot2d.loudspeakers(array.x, array.n, twin)
 plt.grid()
 plt.savefig('soundfield.png')

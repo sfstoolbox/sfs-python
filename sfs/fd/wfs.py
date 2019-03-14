@@ -39,7 +39,7 @@ from .. import util
 from . import secondary_source_line, secondary_source_point
 
 
-def line_2d(omega, x0, n0, xs, c=None):
+def line_2d(omega, x0, n0, xs, *, c=None):
     r"""Driving function for 2-dimensional WFS for a virtual line source.
 
     Parameters
@@ -95,7 +95,7 @@ def line_2d(omega, x0, n0, xs, c=None):
     return d, selection, secondary_source_line(omega, c)
 
 
-def _point(omega, x0, n0, xs, c=None):
+def _point(omega, x0, n0, xs, *, c=None):
     r"""Driving function for 2/3-dimensional WFS for a virtual point source.
 
     Parameters
@@ -322,7 +322,7 @@ def point_25d_legacy(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     return d, selection, secondary_source_point(omega, c)
 
 
-def _plane(omega, x0, n0, n=[0, 1, 0], c=None):
+def _plane(omega, x0, n0, n=[0, 1, 0], *, c=None):
     r"""Driving function for 2/3-dimensional WFS for a virtual plane wave.
 
     Parameters
@@ -380,7 +380,7 @@ def _plane(omega, x0, n0, n=[0, 1, 0], c=None):
 plane_2d = _plane
 
 
-def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
+def plane_25d(omega, x0, n0, n=[0, 1, 0], *, xref=[0, 0, 0], c=None,
               omalias=None):
     r"""Driving function for 2.5-dimensional WFS for a virtual plane wave.
 
@@ -446,7 +446,7 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None,
 plane_3d = _plane
 
 
-def _focused(omega, x0, n0, xs, ns, c=None):
+def _focused(omega, x0, n0, xs, ns, *, c=None):
     r"""Driving function for 2/3-dimensional WFS for a focused source.
 
     Parameters
@@ -507,7 +507,7 @@ def _focused(omega, x0, n0, xs, ns, c=None):
 focused_2d = _focused
 
 
-def focused_25d(omega, x0, n0, xs, ns, xref=[0, 0, 0], c=None,
+def focused_25d(omega, x0, n0, xs, ns, *, xref=[0, 0, 0], c=None,
                 omalias=None):
     r"""Driving function for 2.5-dimensional WFS for a focused source.
 
@@ -615,7 +615,7 @@ def preeq_25d(omega, omalias, c):
             return np.sqrt(1j * util.wavenumber(omalias, c))
 
 
-def plane_3d_delay(omega, x0, n0, n=[0, 1, 0], c=None):
+def plane_3d_delay(omega, x0, n0, n=[0, 1, 0], *, c=None):
     r"""Delay-only driving function for a virtual plane wave.
 
     Parameters
@@ -666,7 +666,7 @@ def plane_3d_delay(omega, x0, n0, n=[0, 1, 0], c=None):
     return d, selection, secondary_source_point(omega, c)
 
 
-def soundfigure_3d(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
+def soundfigure_3d(omega, x0, n0, figure, npw=[0, 0, 1], *, c=None):
     """Compute driving function for a 2D sound figure.
 
     Based on
@@ -701,7 +701,7 @@ def soundfigure_3d(omega, x0, n0, figure, npw=[0, 0, 1], c=None):
                 npw = npw / np.linalg.norm(npw)
                 # driving function of plane wave with positive kz
                 d_component, selection, secondary_source = plane_3d(
-                    omega, x0, n0, npw, c)
+                    omega, x0, n0, npw, c=c)
                 d += selection * figure[n, m] * d_component
 
     return d, util.source_selection_all(len(d)), secondary_source

@@ -29,7 +29,7 @@ d_delay, d_weight, selection, secondary_source = \
 d = sfs.td.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
-twin = sfs.tapering.tukey(selection, .3)
+twin = sfs.tapering.tukey(selection, alpha=0.3)
 
 p = sfs.td.synthesize(d, twin, array,
                       secondary_source, observation_time=t, grid=grid)
@@ -54,7 +54,7 @@ d_delay, d_weight, selection, secondary_source = \
 d = sfs.td.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
-twin = sfs.tapering.tukey(selection, .3)
+twin = sfs.tapering.tukey(selection, alpha=0.3)
 p = sfs.td.synthesize(d, twin, array,
                       secondary_source, observation_time=t, grid=grid)
 
@@ -76,7 +76,7 @@ d_delay, d_weight, selection, secondary_source = \
 d = sfs.td.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
-twin = sfs.tapering.tukey(selection, .3)
+twin = sfs.tapering.tukey(selection, alpha=0.3)
 p = sfs.td.synthesize(d, twin, array,
                       secondary_source, observation_time=t, grid=grid)
 p = p * 100  # scale absolute amplitude

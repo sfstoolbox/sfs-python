@@ -32,7 +32,7 @@ from .. import util
 from .. import default
 
 
-def point(omega, x0, grid, c=None):
+def point(omega, x0, grid, *, c=None):
     r"""Sound pressure of a point source.
 
     Parameters
@@ -85,7 +85,7 @@ def point(omega, x0, grid, c=None):
     return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
 
 
-def point_velocity(omega, x0, grid, c=None, rho0=None):
+def point_velocity(omega, x0, grid, *, c=None, rho0=None):
     """Particle velocity of a point source.
 
     Parameters
@@ -134,7 +134,7 @@ def point_velocity(omega, x0, grid, c=None, rho0=None):
     return util.XyzComponents([v * o / r for o in offset])
 
 
-def point_averaged_intensity(omega, x0, grid, c=None, rho0=None):
+def point_averaged_intensity(omega, x0, grid, *, c=None, rho0=None):
     """Velocity of a point source.
 
     Parameters
@@ -169,7 +169,7 @@ def point_averaged_intensity(omega, x0, grid, c=None, rho0=None):
     return util.XyzComponents([i * o / r**2 for o in offset])
 
 
-def point_dipole(omega, x0, n0, grid, c=None):
+def point_dipole(omega, x0, n0, grid, *, c=None):
     r"""Point source with dipole characteristics.
 
     Parameters
@@ -221,7 +221,7 @@ def point_dipole(omega, x0, n0, grid, c=None):
         np.power(r, 2) * np.exp(-1j * k * r)
 
 
-def point_modal(omega, x0, grid, L, N=None, deltan=0, c=None):
+def point_modal(omega, x0, grid, L, *, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
 
     Parameters
@@ -286,7 +286,7 @@ def point_modal(omega, x0, grid, L, N=None, deltan=0, c=None):
     return p
 
 
-def point_modal_velocity(omega, x0, grid, L, N=None, deltan=0, c=None):
+def point_modal_velocity(omega, x0, grid, L, *, N=None, deltan=0, c=None):
     """Velocity of point source in a rectangular room using a modal room model.
 
     Parameters
@@ -358,7 +358,7 @@ def point_modal_velocity(omega, x0, grid, L, N=None, deltan=0, c=None):
     return util.XyzComponents([vx, vy, vz])
 
 
-def point_image_sources(omega, x0, grid, L, max_order, coeffs=None, c=None):
+def point_image_sources(omega, x0, grid, L, *, max_order, coeffs=None, c=None):
     """Point source in a rectangular room using the mirror image source model.
 
     Parameters
@@ -395,12 +395,12 @@ def point_image_sources(omega, x0, grid, L, max_order, coeffs=None, c=None):
     p = 0
     for position, strength in zip(xs, source_strengths):
         if strength != 0:
-            p += strength * point(omega, position, grid, c)
+            p += strength * point(omega, position, grid, c=c)
 
     return p
 
 
-def line(omega, x0, grid, c=None):
+def line(omega, x0, grid, *, c=None):
     r"""Line source parallel to the z-axis.
 
     Note: third component of x0 is ignored.
@@ -439,7 +439,7 @@ def line(omega, x0, grid, c=None):
     return _duplicate_zdirection(p, grid)
 
 
-def line_velocity(omega, x0, grid, c=None, rho0=None):
+def line_velocity(omega, x0, grid, *, c=None, rho0=None):
     """Velocity of line source parallel to the z-axis.
 
     Returns
@@ -481,7 +481,7 @@ def line_velocity(omega, x0, grid, c=None, rho0=None):
     return util.XyzComponents([_duplicate_zdirection(vi, grid) for vi in v])
 
 
-def line_dipole(omega, x0, n0, grid, c=None):
+def line_dipole(omega, x0, n0, grid, *, c=None):
     r"""Line source with dipole characteristics parallel to the z-axis.
 
     Note: third component of x0 is ignored.
@@ -504,7 +504,7 @@ def line_dipole(omega, x0, n0, grid, c=None):
     return _duplicate_zdirection(p, grid)
 
 
-def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
+def line_dirichlet_edge(omega, x0, grid, *, alpha=3/2*np.pi, Nc=None, c=None):
     """Line source scattered at an edge with Dirichlet boundary conditions.
 
     :cite:`Moser2012`, eq.(10.18/19)
@@ -570,7 +570,7 @@ def line_dirichlet_edge(omega, x0, grid, alpha=3/2*np.pi, Nc=None, c=None):
     return p
 
 
-def plane(omega, x0, n0, grid, c=None):
+def plane(omega, x0, n0, grid, *, c=None):
     r"""Plane wave.
 
     Parameters
@@ -617,7 +617,7 @@ def plane(omega, x0, n0, grid, c=None):
     return np.exp(-1j * k * np.inner(grid - x0, n0))
 
 
-def plane_velocity(omega, x0, n0, grid, c=None, rho0=None):
+def plane_velocity(omega, x0, n0, grid, *, c=None, rho0=None):
     r"""Velocity of a plane wave.
 
     Parameters
@@ -668,7 +668,7 @@ def plane_velocity(omega, x0, n0, grid, c=None, rho0=None):
     return util.XyzComponents([v * n for n in n0])
 
 
-def plane_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
+def plane_averaged_intensity(omega, x0, n0, grid, *, c=None, rho0=None):
     r"""Averaged intensity of a plane wave.
 
     Parameters
@@ -707,7 +707,7 @@ def plane_averaged_intensity(omega, x0, n0, grid, c=None, rho0=None):
     return util.XyzComponents([i * n for n in n0])
 
 
-def pulsating_sphere(omega, center, radius, amplitude, grid, inside=False,
+def pulsating_sphere(omega, center, radius, amplitude, grid, *, inside=False,
                      c=None):
     """Sound pressure of a pulsating sphere.
 
@@ -765,7 +765,8 @@ def pulsating_sphere(omega, center, radius, amplitude, grid, inside=False,
     return impedance * radial_velocity
 
 
-def pulsating_sphere_velocity(omega, center, radius, amplitude, grid, c=None):
+def pulsating_sphere_velocity(omega, center, radius, amplitude, grid, *,
+                              c=None):
     """Particle velocity of a pulsating sphere.
 
     Parameters

@@ -16,8 +16,7 @@ from .. import util
 from . import secondary_source_line, secondary_source_point
 
 
-def plane_2d_edge(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
-             c=None):
+def plane_2d_edge(omega, x0, n=[0, 1, 0], *, alpha=3/2*np.pi, Nc=None, c=None):
     r"""Driving function for 2-dimensional plane wave with edge ESA.
 
     Driving function for a virtual plane wave using the 2-dimensional ESA
@@ -87,8 +86,8 @@ def plane_2d_edge(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
     return 4*np.pi/alpha * d, selection, secondary_source_line(omega, c)
 
 
-def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
-                             c=None):
+def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=3/2*np.pi,
+                             Nc=None, c=None):
     r"""Driving function for 2-dimensional plane wave with edge dipole ESA.
 
     Driving function for a virtual plane wave using the 2-dimensional ESA
@@ -155,7 +154,7 @@ def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], alpha=3/2*np.pi, Nc=None,
     return 4*np.pi/alpha * d
 
 
-def line_2d_edge(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
+def line_2d_edge(omega, x0, xs, *, alpha=3/2*np.pi, Nc=None, c=None):
     r"""Driving function for 2-dimensional line source with edge ESA.
 
     Driving function for a virtual line source using the 2-dimensional ESA
@@ -229,7 +228,8 @@ def line_2d_edge(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     return -1j*np.pi/alpha * d, selection, secondary_source_line(omega, c)
 
 
-def line_2d_edge_dipole_ssd(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
+def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=3/2*np.pi, Nc=None,
+                            c=None):
     r"""Driving function for 2-dimensional line source with edge dipole ESA.
 
     Driving function for a virtual line source using the 2-dimensional ESA
@@ -300,8 +300,8 @@ def line_2d_edge_dipole_ssd(omega, x0, xs, alpha=3/2*np.pi, Nc=None, c=None):
     return -1j*np.pi/alpha * d
 
 
-def point_25d_edge(omega, x0, xs, xref=[2, -2, 0], alpha=3/2*np.pi,
-              Nc=None, c=None):
+def point_25d_edge(omega, x0, xs, *, xref=[2, -2, 0], alpha=3/2*np.pi,
+                   Nc=None, c=None):
     r"""Driving function for 2.5-dimensional point source with edge ESA.
 
     Driving function for a virtual point source using the 2.5-dimensional

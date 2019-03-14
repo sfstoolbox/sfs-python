@@ -51,7 +51,7 @@ def none(active):
     return active
 
 
-def tukey(active, alpha):
+def tukey(active, *, alpha):
     """Tukey tapering window.
 
     This uses a function similar to :func:`scipy.signal.tukey`, except
@@ -75,18 +75,18 @@ def tukey(active, alpha):
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.tukey(active1, 0), label='alpha = 0')
-        plt.plot(sfs.tapering.tukey(active1, 0.25), label='alpha = 0.25')
-        plt.plot(sfs.tapering.tukey(active1, 0.5), label='alpha = 0.5')
-        plt.plot(sfs.tapering.tukey(active1, 0.75), label='alpha = 0.75')
-        plt.plot(sfs.tapering.tukey(active1, 1), label='alpha = 1')
+        plt.plot(sfs.tapering.tukey(active1, alpha=0), label='alpha = 0')
+        plt.plot(sfs.tapering.tukey(active1, alpha=0.25), label='alpha = 0.25')
+        plt.plot(sfs.tapering.tukey(active1, alpha=0.5), label='alpha = 0.5')
+        plt.plot(sfs.tapering.tukey(active1, alpha=0.75), label='alpha = 0.75')
+        plt.plot(sfs.tapering.tukey(active1, alpha=1), label='alpha = 1')
         plt.axis([-3, 103, -0.1, 1.1])
         plt.legend(loc='lower center')
 
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.tukey(active2, 0.3))
+        plt.plot(sfs.tapering.tukey(active2, alpha=0.3))
         plt.axis([-3, 103, -0.1, 1.1])
 
     """
@@ -109,7 +109,7 @@ def tukey(active, alpha):
     return result
 
 
-def kaiser(active, beta):
+def kaiser(active, *, beta):
     """Kaiser tapering window.
 
     This uses :func:`numpy.kaiser`.
@@ -131,18 +131,18 @@ def kaiser(active, beta):
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.kaiser(active1, 0), label='beta = 0')
-        plt.plot(sfs.tapering.kaiser(active1, 2), label='beta = 2')
-        plt.plot(sfs.tapering.kaiser(active1, 6), label='beta = 6')
-        plt.plot(sfs.tapering.kaiser(active1, 8.6), label='beta = 8.6')
-        plt.plot(sfs.tapering.kaiser(active1, 14), label='beta = 14')
+        plt.plot(sfs.tapering.kaiser(active1, beta=0), label='beta = 0')
+        plt.plot(sfs.tapering.kaiser(active1, beta=2), label='beta = 2')
+        plt.plot(sfs.tapering.kaiser(active1, beta=6), label='beta = 6')
+        plt.plot(sfs.tapering.kaiser(active1, beta=8.6), label='beta = 8.6')
+        plt.plot(sfs.tapering.kaiser(active1, beta=14), label='beta = 14')
         plt.axis([-3, 103, -0.1, 1.1])
         plt.legend(loc='lower center')
 
     .. plot::
         :context: close-figs
 
-        plt.plot(sfs.tapering.kaiser(active2, 7))
+        plt.plot(sfs.tapering.kaiser(active2, beta=7))
         plt.axis([-3, 103, -0.1, 1.1])
 
     """
