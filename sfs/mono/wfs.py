@@ -155,7 +155,101 @@ point_2d = _point
 
 
 def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
+    r"""Driving function for 2.5-dimensional WFS of a virtual point source.
+
+    .. versionchanged:: 0.5
+        see notes, old handling of `point_25d()` is now `point_25d_legacy()`
+
+    Parameters
+    ----------
+    omega : float
+        Angular frequency of point source.
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of normal vectors of secondary sources.
+    xs : (3,) array_like
+        Position of virtual point source.
+    xref : (3,) array_like, optional
+        Reference point xref or contour xref(x0) for amplitude correct
+        synthesis.
+    c : float, optional
+        Speed of sound in m/s.
+    omalias: float, optional
+        Angular frequency where spatial aliasing becomes prominent.
+
+    Returns
+    -------
+    d : (N,) numpy.ndarray
+        Complex weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.mono.synthesize()`.
+
+    Notes
+    -----
+    `point_25d()` derives 2.5D WFS from the 3D
+    Neumann-Rayleigh integral (i.e. the TU Delft approach).
+    The eq. (3.10), (3.11) in :cite:`Start1997`, equivalent to
+    Eq. (2.137) in :cite:`Schultz2016`
+
+    .. math::
+
+        D(\x_0,\w) = \sqrt{8 \pi \, \i\wc}
+            \sqrt{\frac{|\x_\text{ref}-\x_0| \cdot
+            |\x_0-\x_\text{s}|}{|\x_\text{ref}-\x_0| + |\x_0-\x_\text{s}|}}
+            \scalarprod{\frac{\x_0-\x_\text{s}}{|\x_0-\x_\text{s}|}}{\n_0}
+            \frac{\e{-\i\wc |\x_0-\x_\text{s}|}}{4\pi\,|\x_0-\x_\text{s}|}
+
+    is implemented.
+    The theoretical link of `point_25d()` and `point_25d_legacy()` was
+    introduced as *unified WFS framework* in :cite:`Firtha2017`.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.mono.wfs.point_25d(
+            omega, array.x, array.n, xs)
+        normalize_gain = 4 * np.pi * np.linalg.norm(xs)
+        plot(normalize_gain * d, selection, secondary_source)
+
+    """
+    x0 = util.asarray_of_rows(x0)
+    n0 = util.asarray_of_rows(n0)
+    xs = util.asarray_1d(xs)
+    xref = util.asarray_1d(xref)
+    k = util.wavenumber(omega, c)
+
+    ds = x0 - xs
+    dr = xref - x0
+    s = np.linalg.norm(ds, axis=1)
+    r = np.linalg.norm(dr, axis=1)
+
+    d = (
+        preeq_25d(omega, omalias, c) *
+        np.sqrt(8 * np.pi) *
+        np.sqrt((r * s) / (r + s)) *
+        inner1d(n0, ds) / s *
+        np.exp(-1j * k * s) / (4 * np.pi * s))
+    selection = util.source_selection_point(n0, x0, xs)
+    return d, selection, secondary_source_point(omega, c)
+
+
+point_3d = _point
+
+
+def point_25d_legacy(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     r"""Driving function for 2.5-dimensional WFS for a virtual point source.
+
+    .. versionadded:: 0.5
+        `point_25d()` was renamed to `point_25d_legacy()` (and a new
+        function with the name `point_25d()` was introduced). See notes for
+        further details.
 
     Parameters
     ----------
@@ -171,6 +265,8 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         Reference point for synthesized sound field.
     c : float, optional
         Speed of sound.
+    omalias: float, optional
+        Angular frequency where spatial aliasing becomes prominent.
 
     Returns
     -------
@@ -185,6 +281,10 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
 
     Notes
     -----
+    `point_25d_legacy()` derives 2.5D WFS from the 2D
+    Neumann-Rayleigh integral (i.e. the approach by Rabenstein & Spors), cf.
+    :cite:`Spors2008`.
+
     .. math::
 
         D(\x_0,\w) = \sqrt{\i\wc |\x_\text{ref}-\x_0|}
@@ -192,14 +292,19 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
             {|\x_0-\x_\text{s}|^\frac{3}{2}}
             \e{-\i\wc |\x_0-\x_\text{s}|}
 
+    The theoretical link of `point_25d()` and `point_25d_legacy()` was
+    introduced as *unified WFS framework* in :cite:`Firtha2017`.
+    Also cf. Eq. (2.145)-(2.147) :cite:`Schultz2016`.
+
     Examples
     --------
     .. plot::
         :context: close-figs
 
-        d, selection, secondary_source = sfs.mono.wfs.point_25d(
+        d, selection, secondary_source = sfs.mono.wfs.point_25d_legacy(
             omega, array.x, array.n, xs)
-        plot(d, selection, secondary_source)
+        normalize_gain = np.linalg.norm(xs)
+        plot(normalize_gain * d, selection, secondary_source)
 
     """
     x0 = util.asarray_of_rows(x0)
@@ -215,9 +320,6 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         r ** (3 / 2) * np.exp(-1j * k * r))
     selection = util.source_selection_point(n0, x0, xs)
     return d, selection, secondary_source_point(omega, c)
-
-
-point_3d = _point
 
 
 def _plane(omega, x0, n0, n=[0, 1, 0], c=None):
@@ -499,7 +601,8 @@ def preeq_25d(omega, omalias, c):
 
         H(\w) = \begin{cases}
             \sqrt{\i \wc} & \text{for } \w \leq \w_\text{alias} \\
-            \sqrt{\i \frac{\w_\text{alias}}{c}} & \text{for } \w > \w_\text{alias}
+            \sqrt{\i \frac{\w_\text{alias}}{c}} &
+            \text{for } \w > \w_\text{alias}
             \end{cases}
 
     """
