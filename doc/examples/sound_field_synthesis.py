@@ -44,22 +44,22 @@ array = sfs.array.circular(N, R)
 
 
 # === compute driving function and determine active secondary sources ===
-#d, selection, secondary_source = sfs.mono.wfs.plane_3d_delay(omega, array.x, array.n, npw)
+#d, selection, secondary_source = sfs.fd.wfs.plane_3d_delay(omega, array.x, array.n, npw)
 
-#d, selection, secondary_source = sfs.mono.wfs.line_2d(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.fd.wfs.line_2d(omega, array.x, array.n, xs)
 
-#d, selection, secondary_source = sfs.mono.wfs.plane_2d(omega, array.x, array.n, npw)
-d, selection, secondary_source = sfs.mono.wfs.plane_25d(omega, array.x, array.n, npw, xref)
-#d, selection, secondary_source = sfs.mono.wfs.plane_3d(omega, array.x, array.n, npw)
+#d, selection, secondary_source = sfs.fd.wfs.plane_2d(omega, array.x, array.n, npw)
+d, selection, secondary_source = sfs.fd.wfs.plane_25d(omega, array.x, array.n, npw, xref)
+#d, selection, secondary_source = sfs.fd.wfs.plane_3d(omega, array.x, array.n, npw)
 
-#d, selection, secondary_source = sfs.mono.wfs.point_2d(omega, array.x, array.n, xs)
-#d, selection, secondary_source = sfs.mono.wfs.point_25d(omega, array.x, array.n, xs)
-#d, selection, secondary_source = sfs.mono.wfs.point_3d(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.fd.wfs.point_2d(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.fd.wfs.point_25d(omega, array.x, array.n, xs)
+#d, selection, secondary_source = sfs.fd.wfs.point_3d(omega, array.x, array.n, xs)
 
-#d, selection, secondary_source = sfs.mono.nfchoa.plane_2d(omega, array.x, R, npw)
+#d, selection, secondary_source = sfs.fd.nfchoa.plane_2d(omega, array.x, R, npw)
 
-#d, selection, secondary_source = sfs.mono.nfchoa.point_25d(omega, array.x, R, xs)
-#d, selection, secondary_source = sfs.mono.nfchoa.plane_25d(omega, array.x, R, npw)
+#d, selection, secondary_source = sfs.fd.nfchoa.point_25d(omega, array.x, R, xs)
+#d, selection, secondary_source = sfs.fd.nfchoa.plane_25d(omega, array.x, R, npw)
 
 
 # === compute tapering window ===
@@ -68,7 +68,7 @@ d, selection, secondary_source = sfs.mono.wfs.plane_25d(omega, array.x, array.n,
 twin = sfs.tapering.tukey(selection, 0.3)
 
 # === compute synthesized sound field ===
-p = sfs.mono.synthesize(d, twin, array, secondary_source, grid=grid)
+p = sfs.fd.synthesize(d, twin, array, secondary_source, grid=grid)
 
 
 # === plot synthesized sound field ===

@@ -8,7 +8,7 @@ from matplotlib import animation
 def particle_displacement(omega, center, radius, amplitude, grid, frames,
                           figsize=(8, 8), interval=80, blit=True, **kwargs):
     """Generate sound particle animation."""
-    velocity = sfs.mono.source.pulsating_sphere_velocity(
+    velocity = sfs.fd.source.pulsating_sphere_velocity(
                omega, center, radius, amplitude, grid)
     displacement = sfs.util.displacement(velocity, omega)
     phasor = np.exp(1j * 2 * np.pi / frames)
@@ -32,7 +32,7 @@ def particle_displacement(omega, center, radius, amplitude, grid, frames,
 def particle_velocity(omega, center, radius, amplitude, grid, frames,
                       figsize=(8, 8), interval=80, blit=True, **kwargs):
     """Generate particle velocity animation."""
-    velocity = sfs.mono.source.pulsating_sphere_velocity(
+    velocity = sfs.fd.source.pulsating_sphere_velocity(
                omega, center, radius, amplitude, grid)
     phasor = np.exp(1j * 2 * np.pi / frames)
 
@@ -54,7 +54,7 @@ def sound_pressure(omega, center, radius, amplitude, grid, frames,
                    pulsate=False, figsize=(8, 8), interval=80, blit=True,
                    **kwargs):
     """Generate sound pressure animation."""
-    pressure = sfs.mono.source.pulsating_sphere(
+    pressure = sfs.fd.source.pulsating_sphere(
             omega, center, radius, amplitude, grid, inside=pulsate)
     phasor = np.exp(1j * 2 * np.pi / frames)
 

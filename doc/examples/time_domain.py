@@ -25,14 +25,14 @@ xs = 2, 2, 0  # position of virtual source
 t = 0.008
 # compute driving signals
 d_delay, d_weight, selection, secondary_source = \
-    sfs.time.wfs.point_25d(array.x, array.n, xs)
-d = sfs.time.wfs.driving_signals(d_delay, d_weight, signal)
+    sfs.td.wfs.point_25d(array.x, array.n, xs)
+d = sfs.td.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
 twin = sfs.tapering.tukey(selection, .3)
 
-p = sfs.time.synthesize(d, twin, array,
-                        secondary_source, observation_time=t, grid=grid)
+p = sfs.td.synthesize(d, twin, array,
+                      secondary_source, observation_time=t, grid=grid)
 p = p * 100  # scale absolute amplitude
 
 plt.figure(figsize=(10, 10))
@@ -50,13 +50,13 @@ t = -0.001
 
 # compute driving signals
 d_delay, d_weight, selection, secondary_source = \
-    sfs.time.wfs.plane_25d(array.x, array.n, npw)
-d = sfs.time.wfs.driving_signals(d_delay, d_weight, signal)
+    sfs.td.wfs.plane_25d(array.x, array.n, npw)
+d = sfs.td.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
 twin = sfs.tapering.tukey(selection, .3)
-p = sfs.time.synthesize(d, twin, array,
-                        secondary_source, observation_time=t, grid=grid)
+p = sfs.td.synthesize(d, twin, array,
+                      secondary_source, observation_time=t, grid=grid)
 
 plt.figure(figsize=(10, 10))
 sfs.plot.level(p, grid, cmap=my_cmap)
@@ -72,13 +72,13 @@ xref = np.r_[0, 0, 0]
 nfs = sfs.util.normalize_vector(xref - xs)  # main n of fsource
 t = 0.003  # compute driving signals
 d_delay, d_weight, selection, secondary_source = \
-    sfs.time.wfs.focused_25d(array.x, array.n, xs, nfs)
-d = sfs.time.wfs.driving_signals(d_delay, d_weight, signal)
+    sfs.td.wfs.focused_25d(array.x, array.n, xs, nfs)
+d = sfs.td.wfs.driving_signals(d_delay, d_weight, signal)
 
 # test soundfield
 twin = sfs.tapering.tukey(selection, .3)
-p = sfs.time.synthesize(d, twin, array,
-                        secondary_source, observation_time=t, grid=grid)
+p = sfs.td.synthesize(d, twin, array,
+                      secondary_source, observation_time=t, grid=grid)
 p = p * 100  # scale absolute amplitude
 
 plt.figure(figsize=(10, 10))
