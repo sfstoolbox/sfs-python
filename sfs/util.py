@@ -217,8 +217,7 @@ def as_delayed_signal(arg, **kwargs):
 
     """
     try:
-        # In Python 3, this could be: data, samplerate, *time = arg
-        data, samplerate, time = arg[0], arg[1], arg[2:]
+        data, samplerate, *time = arg
         time, = time or [0]
     except (IndexError, TypeError, ValueError):
         pass
