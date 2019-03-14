@@ -82,7 +82,9 @@ def point(omega, x0, grid, *, c=None):
     grid = util.as_xyz_components(grid)
 
     r = np.linalg.norm(grid - x0)
-    return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
+    # `r` can get `0`, which is fine in this case
+    with np.errstate(invalid='ignore', divide='ignore'):
+        return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
 
 
 def point_velocity(omega, x0, grid, *, c=None, rho0=None):
@@ -395,7 +397,9 @@ def point_image_sources(omega, x0, grid, L, *, max_order, coeffs=None, c=None):
     p = 0
     for position, strength in zip(xs, source_strengths):
         if strength != 0:
-            p += strength * point(omega, position, grid, c=c)
+            # `point` can return NaN, which is fine
+            with np.errstate(invalid='ignore'):
+                p += strength * point(omega, position, grid, c=c)
 
     return p
 

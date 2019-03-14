@@ -79,13 +79,16 @@ def point(xs, signal, observation_time, grid, c=None):
     if c is None:
         c = default.c
     r = np.linalg.norm(grid - xs)
-    # evaluate g over grid
-    weights = 1 / (4 * np.pi * r)
+    # evaluate g over grid (`r` can get `0`, which is fine)
+    with np.errstate(divide='ignore'):
+        weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    return weights * np.interp(base_time - delays,
-                               np.arange(len(data)) / samplerate,
-                               data, left=0, right=0)
+    # Result can be NaN, which is fine
+    with np.errstate(invalid='ignore'):
+        return weights * np.interp(base_time - delays,
+                                   np.arange(len(data)) / samplerate,
+                                   data, left=0, right=0)
 
 
 def point_image_sources(x0, signal, observation_time, grid, L, max_order,
