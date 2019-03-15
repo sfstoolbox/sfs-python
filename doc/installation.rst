@@ -5,17 +5,21 @@ Requirements
 ------------
 
 Obviously, you'll need Python_.
-We normally use Python 3.x, but it *should* also work with Python 2.x.
+More specifically, you'll need Python 3.
 NumPy_ and SciPy_ are needed for the calculations.
-If you also want to plot the resulting sound fields, you'll need matplotlib_.
+If you want to use the provided functions for plotting sound fields, you'll need
+Matplotlib_.
+However, since all results are provided as plain NumPy_ arrays, you should also
+be able to use any plotting library of your choice to visualize the sound
+fields.
 
-Instead of installing all of them separately, you should probably get a Python
-distribution that already includes everything, e.g. Anaconda_.
+Instead of installing all of the requirements separately, you should probably
+get a Python distribution that already includes everything, e.g. Anaconda_.
 
 .. _Python: https://www.python.org/
 .. _NumPy: http://www.numpy.org/
 .. _SciPy: https://www.scipy.org/scipylib/
-.. _matplotlib: https://matplotlib.org/
+.. _Matplotlib: https://matplotlib.org/
 .. _Anaconda: https://docs.anaconda.com/anaconda/
 
 Installation
@@ -33,5 +37,8 @@ necessary rights), you can just drop the ``--user`` option.
 To un-install, use::
 
     python3 -m pip uninstall sfs
+
+If you want to install the latest development version of the SFS Toolbox, have a
+look at :doc:`contributing`.
 
 .. _pip: https://pip.pypa.io/en/latest/installing/
