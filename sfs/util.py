@@ -21,7 +21,7 @@ def rotation_matrix(n1, n2):
 
     Returns
     -------
-    (3, 3) numpy.ndarray
+    (3, 3) `numpy.ndarray`
         Rotation matrix.
 
     """
@@ -78,18 +78,17 @@ def sph2cart(alpha, beta, r):
 
     Returns
     -------
-    x : float or array_like
+    x : float or `numpy.ndarray`
         x-component of Cartesian coordinates
-    y : float or array_like
+    y : float or `numpy.ndarray`
         y-component of Cartesian coordinates
-    z : float or array_like
+    z : float or `numpy.ndarray`
         z-component of Cartesian coordinates
 
     """
     x = r * np.cos(alpha) * np.sin(beta)
     y = r * np.sin(alpha) * np.sin(beta)
     z = r * np.cos(beta)
-
     return x, y, z
 
 
@@ -115,11 +114,11 @@ def cart2sph(x, y, z):
 
     Returns
     -------
-    alpha : float or array_like
+    alpha : float or `numpy.ndarray`
             Azimuth angle in radiants
-    beta : float or array_like
+    beta : float or `numpy.ndarray`
             Colatitude angle in radiants (with 0 denoting North pole)
-    r : float or array_like
+    r : float or `numpy.ndarray`
             Radius
 
     """
@@ -252,7 +251,7 @@ def strict_arange(start, stop, step=1, endpoint=False, dtype=None, **kwargs):
 
     Returns
     -------
-    numpy.ndarray
+    `numpy.ndarray`
         Array of evenly spaced values.  See :func:`numpy.arange`.
 
     """
@@ -508,9 +507,9 @@ def image_sources_for_box(x, L, N, prune=True):
 
     Returns
     -------
-    xs : (M, D) array_like
+    xs : (M, D) `numpy.ndarray`
         original & image source locations.
-    wall_count : (M, 2D) array_like
+    wall_count : (M, 2D) `numpy.ndarray`
         number of reflections at individual walls for each source.
 
     """

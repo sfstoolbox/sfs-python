@@ -67,7 +67,7 @@ def tukey(active, alpha):
 
     Returns
     -------
-    (len(active),) numpy.ndarray
+    (len(active),) `numpy.ndarray`
         Tapering weights.
 
     Examples
@@ -123,7 +123,7 @@ def kaiser(active, beta):
 
     Returns
     -------
-    (len(active),) numpy.ndarray
+    (len(active),) `numpy.ndarray`
         Tapering weights.
 
     Examples
