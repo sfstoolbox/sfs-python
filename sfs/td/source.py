@@ -69,7 +69,7 @@ def point(xs, signal, observation_time, grid, c=None):
         :context: close-figs
 
         p = sfs.td.source.point(xs, signal, ts, grid)
-        sfs.plot.level(p, grid)
+        sfs.plot2d.level(p, grid)
 
     """
     xs = util.asarray_1d(xs)
@@ -131,7 +131,7 @@ def point_image_sources(x0, signal, observation_time, grid, L, max_order,
         grid = sfs.util.xyz_grid([0, room[0]], [0, room[1]], 0, spacing=0.01)
         p = sfs.td.source.point_image_sources(
                 xs, signal, 1.5 * ts, grid, room, order, coeffs)
-        sfs.plot.level(p, grid)
+        sfs.plot2d.level(p, grid)
 
     """
     if coeffs is None:

@@ -32,8 +32,8 @@
     def plot(d, selection, secondary_source, t=0):
         p = sfs.td.synthesize(d, selection, array, secondary_source, grid=grid,
                               observation_time=t)
-        sfs.plot.level(p, grid)
-        sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
+        sfs.plot2d.level(p, grid)
+        sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
 
 """
 import numpy as np

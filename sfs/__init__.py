@@ -11,7 +11,8 @@ https://sfs-python.readthedocs.io/
     td
     array
     tapering
-    plot
+    plot2d
+    plot3d
     util
 
 """
@@ -59,7 +60,11 @@ from . import tapering
 from . import array
 from . import util
 try:
-    from . import plot
+    from . import plot2d
+except ImportError:
+    pass
+try:
+    from . import plot3d
 except ImportError:
     pass
 

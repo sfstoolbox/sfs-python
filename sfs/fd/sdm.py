@@ -23,8 +23,8 @@
 
     def plot(d, selection, secondary_source):
         p = sfs.fd.synthesize(d, selection, array, secondary_source, grid=grid)
-        sfs.plot.soundfield(p, grid)
-        sfs.plot.loudspeaker_2d(array.x, array.n, selection * array.a, size=0.15)
+        sfs.plot2d.amplitude(p, grid)
+        sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
 
 """
 

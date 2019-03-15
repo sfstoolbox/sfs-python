@@ -110,7 +110,7 @@ def linear(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         :context: close-figs
 
         x0, n0, a0 = sfs.array.linear(16, 0.2, orientation=[0, -1, 0])
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -141,7 +141,7 @@ def linear_diff(distances, center=[0, 0, 0], orientation=[1, 0, 0]):
 
         x0, n0, a0 = sfs.array.linear_diff(4 * [0.3] + 6 * [0.15] + 4 * [0.3],
                                            orientation=[0, -1, 0])
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -182,7 +182,7 @@ def linear_random(N, min_spacing, max_spacing, center=[0, 0, 0],
             N=12,
             min_spacing=0.15, max_spacing=0.4,
             orientation=[0, -1, 0])
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -216,7 +216,7 @@ def circular(N, R, center=[0, 0, 0]):
         :context: close-figs
 
         x0, n0, a0 = sfs.array.circular(16, 1)
-        sfs.plot.loudspeaker_2d(x0, n0, a0, size=0.2, show_numbers=True)
+        sfs.plot2d.loudspeakers(x0, n0, a0, size=0.2, show_numbers=True)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -262,7 +262,7 @@ def rectangular(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         :context: close-figs
 
         x0, n0, a0 = sfs.array.rectangular((4, 8), 0.2)
-        sfs.plot.loudspeaker_2d(x0, n0, a0, show_numbers=True)
+        sfs.plot2d.loudspeakers(x0, n0, a0, show_numbers=True)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -309,7 +309,7 @@ def rounded_edge(Nxy, Nr, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
         :context: close-figs
 
         x0, n0, a0 = sfs.array.rounded_edge(8, 5, 0.2)
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -380,7 +380,7 @@ def edge(Nxy, dx, center=[0, 0, 0], orientation=[1, 0, 0]):
         :context: close-figs
 
         x0, n0, a0 = sfs.array.edge(8, 0.2)
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -441,7 +441,7 @@ def planar(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
 
         x0, n0, a0 = sfs.array.planar(
             (4,3), 0.5, orientation=[0, 1, 0])  # 4 sources along x, 3 sources along z
-        sfs.plot.loudspeaker_2d(x0, n0, a0)  # plot the last ssd in 2D
+        sfs.plot2d.loudspeakers(x0, n0, a0)  # plot the last ssd in 2D
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -488,7 +488,7 @@ def cube(N, spacing, center=[0, 0, 0], orientation=[1, 0, 0]):
         x0, n0, a0 = sfs.array.cube(
             N=2, spacing=0.5,
             center=[0, 0, 0], orientation=[1, 0, 0])
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -547,7 +547,7 @@ def sphere_load(file, radius, center=[0, 0, 0]):
             '../data/arrays/example_array_6LS_3D.txt',
             radius=2,
             center=[0, 0, 0])
-        sfs.plot.loudspeaker_2d(x0, n0, a0, size=0.25)
+        sfs.plot2d.loudspeakers(x0, n0, a0, size=0.25)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -590,7 +590,7 @@ def load(file, center=[0, 0, 0], orientation=[1, 0, 0]):
         :context: close-figs
 
         x0, n0, a0 = sfs.array.load('../data/arrays/example_array_4LS_2D.csv')
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -600,7 +600,7 @@ def load(file, center=[0, 0, 0], orientation=[1, 0, 0]):
 
         x0, n0, a0 = sfs.array.load(
             '../data/arrays/wfs_university_rostock_2018.csv')
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')
@@ -695,7 +695,7 @@ def concatenate(*arrays):
         ssd1 = sfs.array.edge(10, 0.2)
         ssd2 = sfs.array.edge(20, 0.1, center=[2, 2, 0], orientation=[-1, 0, 0])
         x0, n0, a0 = sfs.array.concatenate(ssd1, ssd2)
-        sfs.plot.loudspeaker_2d(x0, n0, a0)
+        sfs.plot2d.loudspeakers(x0, n0, a0)
         plt.axis('equal')
         plt.xlabel('x / m')
         plt.ylabel('y / m')

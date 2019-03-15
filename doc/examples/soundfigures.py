@@ -37,14 +37,14 @@ p = sfs.fd.synthesize(d, selection, array, secondary_source, grid=grid)
 
 # plot and save synthesized sound field
 plt.figure(figsize=(10, 10))
-sfs.plot.soundfield(p, grid, xnorm=[0, -2.2, 0], cmap='BrBG', colorbar=False,
-                    vmin=-1, vmax=1)
+sfs.plot2d.amplitude(p, grid, xnorm=[0, -2.2, 0], cmap='BrBG', colorbar=False,
+                     vmin=-1, vmax=1)
 plt.title('Synthesized Sound Field')
 plt.savefig('soundfigure.png')
 
 # plot and save level of synthesized sound field
 plt.figure(figsize=(12.5, 12.5))
-im = sfs.plot.level(p, grid, xnorm=[0, -2.2, 0], vmin=-50, vmax=0,
-                    colorbar_kwargs=dict(label='dB'))
+im = sfs.plot2d.level(p, grid, xnorm=[0, -2.2, 0], vmin=-50, vmax=0,
+                      colorbar_kwargs=dict(label='dB'))
 plt.title('Level of Synthesized Sound Field')
 plt.savefig('soundfigure_level.png')

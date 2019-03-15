@@ -36,10 +36,10 @@ p = sfs.td.synthesize(d, twin, array,
 p = p * 100  # scale absolute amplitude
 
 plt.figure(figsize=(10, 10))
-sfs.plot.level(p, grid, cmap=my_cmap)
-sfs.plot.loudspeaker_2d(array.x, array.n, twin)
+sfs.plot2d.level(p, grid, cmap=my_cmap)
+sfs.plot2d.loudspeakers(array.x, array.n, twin)
 plt.grid()
-sfs.plot.virtualsource_2d(xs)
+sfs.plot2d.virtualsource(xs)
 plt.title('impulse_ps_wfs_25d')
 plt.savefig('impulse_ps_wfs_25d.png')
 
@@ -59,10 +59,10 @@ p = sfs.td.synthesize(d, twin, array,
                       secondary_source, observation_time=t, grid=grid)
 
 plt.figure(figsize=(10, 10))
-sfs.plot.level(p, grid, cmap=my_cmap)
-sfs.plot.loudspeaker_2d(array.x, array.n, twin)
+sfs.plot2d.level(p, grid, cmap=my_cmap)
+sfs.plot2d.loudspeakers(array.x, array.n, twin)
 plt.grid()
-sfs.plot.virtualsource_2d([0, 0], npw, type='plane')
+sfs.plot2d.virtualsource([0, 0], npw, type='plane')
 plt.title('impulse_pw_wfs_25d')
 plt.savefig('impulse_pw_wfs_25d.png')
 
@@ -82,9 +82,9 @@ p = sfs.td.synthesize(d, twin, array,
 p = p * 100  # scale absolute amplitude
 
 plt.figure(figsize=(10, 10))
-sfs.plot.level(p, grid, cmap=my_cmap)
-sfs.plot.loudspeaker_2d(array.x, array.n, twin)
+sfs.plot2d.level(p, grid, cmap=my_cmap)
+sfs.plot2d.loudspeakers(array.x, array.n, twin)
 plt.grid()
-sfs.plot.virtualsource_2d(xs)
+sfs.plot2d.virtualsource(xs)
 plt.title('impulse_fs_wfs_25d')
 plt.savefig('impulse_fs_wfs_25d.png')

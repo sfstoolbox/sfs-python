@@ -1,11 +1,10 @@
-"""Plot sound fields etc."""
+"""2D plots of sound fields etc."""
 import matplotlib.pyplot as plt
 from matplotlib import __version__ as matplotlib_version
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 from matplotlib.collections import PatchCollection
 from mpl_toolkits import axes_grid1
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from . import util
 from . import default
@@ -42,7 +41,7 @@ def _register_cmap_transparent(name, color):
 _register_cmap_transparent('blacktransparent', 'black')
 
 
-def virtualsource_2d(xs, ns=None, type='point', ax=None):
+def virtualsource(xs, ns=None, type='point', ax=None):
     """Draw position/orientation of virtual source."""
     xs = np.asarray(xs)
     ns = np.asarray(ns)
@@ -62,7 +61,7 @@ def virtualsource_2d(xs, ns=None, type='point', ax=None):
                  head_length=0.1, fc='k', ec='k')
 
 
-def reference_2d(xref, size=0.1, ax=None):
+def reference(xref, size=0.1, ax=None):
     """Draw reference/normalization point."""
     xref = np.asarray(xref)
     if ax is None:
@@ -72,7 +71,7 @@ def reference_2d(xref, size=0.1, ax=None):
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]+size, xref[1]-size), 'k-')
 
 
-def secondarysource_2d(x0, n0, grid=None):
+def secondary_sources(x0, n0, grid=None):
     """Simple plot of secondary source locations."""
     x0 = np.asarray(x0)
     n0 = np.asarray(n0)
@@ -80,7 +79,7 @@ def secondarysource_2d(x0, n0, grid=None):
 
     # plot only secondary sources inside simulated area
     if grid is not None:
-        x0, n0 = _visible_secondarysources_2d(x0, n0, grid)
+        x0, n0 = _visible_secondarysources(x0, n0, grid)
 
     # plot symbols
     for x00 in x0:
@@ -88,8 +87,8 @@ def secondarysource_2d(x0, n0, grid=None):
         ax.add_artist(ss)
 
 
-def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
-                   ax=None):
+def loudspeakers(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
+                 ax=None):
     """Draw loudspeaker symbols at given locations and angles.
 
     Parameters
@@ -117,7 +116,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
 
     # plot only secondary sources inside simulated area
     if grid is not None:
-        x0, n0 = _visible_secondarysources_2d(x0, n0, grid)
+        x0, n0 = _visible_secondarysources(x0, n0, grid)
 
     # normalized coordinates of loudspeaker symbol (see IEC 60617-9)
     codes, coordinates = zip(*(
@@ -155,7 +154,7 @@ def loudspeaker_2d(x0, n0, a0=0.5, size=0.08, show_numbers=False, grid=None,
                     verticalalignment='center', clip_on=True)
 
 
-def _visible_secondarysources_2d(x0, n0, grid):
+def _visible_secondarysources(x0, n0, grid):
     """Determine secondary sources which lie within *grid*."""
     x, y = util.as_xyz_components(grid[:2])
     idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
@@ -165,22 +164,10 @@ def _visible_secondarysources_2d(x0, n0, grid):
     return x0[idx, :], n0[idx, :]
 
 
-def loudspeaker_3d(x0, n0, a0=None, w=0.08, h=0.08):
-    """Plot positions and normals of a 3D secondary source distribution."""
-    fig = plt.figure(figsize=(15, 15))
-    ax = fig.add_subplot(111, projection='3d')
-    ax.quiver(x0[:, 0], x0[:, 1], x0[:, 2], n0[:, 0],
-              n0[:, 1], n0[:, 2], length=0.1)
-    plt.xlabel('x (m)')
-    plt.ylabel('y (m)')
-    plt.title('Secondary Sources')
-    fig.show()
-
-
-def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
-               xlabel=None, ylabel=None, colorbar=True, colorbar_kwargs={},
-               ax=None, **kwargs):
-    """Two-dimensional plot of sound field.
+def amplitude(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
+              xlabel=None, ylabel=None, colorbar=True, colorbar_kwargs={},
+              ax=None, **kwargs):
+    """Two-dimensional plot of sound field (real part).
 
     Parameters
     ----------
@@ -240,7 +227,7 @@ def soundfield(p, grid, xnorm=None, cmap='coolwarm_clip', vmin=-2.0, vmax=2.0,
 
     See Also
     --------
-    sfs.plot.level
+    sfs.plot2d.level
 
     """
     p = np.asarray(p)
@@ -311,7 +298,7 @@ def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
           **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
-    Takes the same parameters as `sfs.plot.soundfield()`.
+    Takes the same parameters as `sfs.plot2d.amplitude()`.
 
     Other Parameters
     ----------------
@@ -323,8 +310,8 @@ def level(p, grid, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
     if xnorm is not None:
         p = util.normalize(p, grid, xnorm)
     L = util.db(p, power=power)
-    return soundfield(L, grid=grid, xnorm=None, cmap=cmap,
-                      vmax=vmax, vmin=vmin, **kwargs)
+    return amplitude(L, grid=grid, xnorm=None, cmap=cmap,
+                     vmax=vmax, vmin=vmin, **kwargs)
 
 
 def particles(x, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
@@ -403,7 +390,7 @@ def add_colorbar(im, aspect=20, pad=0.5, **kwargs):
     Parameters
     ----------
     im : ScalarMappable
-        The output of `sfs.plot.soundfield()`, `sfs.plot.level()` or any
+        The output of `sfs.plot2d.amplitude()`, `sfs.plot2d.level()` or any
         other `matplotlib.cm.ScalarMappable`.
     aspect : float, optional
         Aspect ratio of the colorbar.  Strictly speaking, since the

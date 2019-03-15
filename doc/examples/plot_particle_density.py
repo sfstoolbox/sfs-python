@@ -23,7 +23,7 @@ def plot_particle_displacement(title):
     # plot displacement
     plt.figure(figsize=(15, 15))
     plt.cla()
-    sfs.plot.particles(X, facecolor='black', s=3, trim=[-3, 3, -3, 3])
+    sfs.plot2d.particles(X, facecolor='black', s=3, trim=[-3, 3, -3, 3])
     plt.axis('off')
     plt.title(title)
     plt.grid()

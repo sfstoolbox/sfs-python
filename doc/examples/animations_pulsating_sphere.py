@@ -15,7 +15,7 @@ def particle_displacement(omega, center, radius, amplitude, grid, frames,
 
     fig, ax = plt.subplots(figsize=figsize)
     ax.axis([grid[0].min(), grid[0].max(), grid[1].min(), grid[1].max()])
-    scat = sfs.plot.particles(grid + displacement, **kwargs)
+    scat = sfs.plot2d.particles(grid + displacement, **kwargs)
 
     def update_frame_displacement(i):
         position = (grid + displacement * phasor**i).apply(np.real)
@@ -38,7 +38,7 @@ def particle_velocity(omega, center, radius, amplitude, grid, frames,
 
     fig, ax = plt.subplots(figsize=figsize)
     ax.axis([grid[0].min(), grid[0].max(), grid[1].min(), grid[1].max()])
-    quiv = sfs.plot.vectors(
+    quiv = sfs.plot2d.vectors(
             velocity, grid, clim=[-omega * amplitude, omega * amplitude],
             **kwargs)
 
@@ -59,7 +59,7 @@ def sound_pressure(omega, center, radius, amplitude, grid, frames,
     phasor = np.exp(1j * 2 * np.pi / frames)
 
     fig, ax = plt.subplots(figsize=figsize)
-    im = sfs.plot.soundfield(np.real(pressure), grid, **kwargs)
+    im = sfs.plot2d.amplitude(np.real(pressure), grid, **kwargs)
     ax.axis([grid[0].min(), grid[0].max(), grid[1].min(), grid[1].max()])
 
     def update_frame_pressure(i):

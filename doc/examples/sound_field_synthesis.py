@@ -73,11 +73,11 @@ p = sfs.fd.synthesize(d, twin, array, secondary_source, grid=grid)
 
 # === plot synthesized sound field ===
 plt.figure(figsize=(10, 10))
-sfs.plot.soundfield(p, grid, [0, 0, 0])
-sfs.plot.loudspeaker_2d(array.x, array.n, twin)
+sfs.plot2d.amplitude(p, grid, [0, 0, 0])
+sfs.plot2d.loudspeakers(array.x, array.n, twin)
 plt.grid()
 plt.savefig('soundfield.png')
 
 
-#sfs.plot.loudspeaker_3d(array.x, array.n, twin)
+#sfs.plot3d.secondary_sources(array.x, array.n, twin)
 #plt.savefig('loudspeakers.png')

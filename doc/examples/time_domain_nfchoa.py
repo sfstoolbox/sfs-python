@@ -27,9 +27,9 @@ p = sfs.td.synthesize(d, selection, array, secondary_source,
                       observation_time=t, grid=grid)
 
 plt.figure()
-sfs.plot.level(p, grid)
-sfs.plot.loudspeaker_2d(array.x, array.n)
-sfs.plot.virtualsource_2d([0, 0], ns=npw, type='plane')
+sfs.plot2d.level(p, grid)
+sfs.plot2d.loudspeakers(array.x, array.n)
+sfs.plot2d.virtualsource([0, 0], ns=npw, type='plane')
 plt.savefig('impulse_pw_nfchoa_25d.png')
 
 # Point source
@@ -44,7 +44,7 @@ p = sfs.td.synthesize(d, selection, array, secondary_source,
                       observation_time=t, grid=grid)
 
 plt.figure()
-sfs.plot.level(p, grid)
-sfs.plot.loudspeaker_2d(array.x, array.n)
-sfs.plot.virtualsource_2d(xs, type='point')
+sfs.plot2d.level(p, grid)
+sfs.plot2d.loudspeakers(array.x, array.n)
+sfs.plot2d.virtualsource(xs, type='point')
 plt.savefig('impulse_ps_nfchoa_25d.png')
