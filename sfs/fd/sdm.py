@@ -27,11 +27,12 @@
         sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
 
 """
+import numpy as _np
+from scipy.special import hankel2 as _hankel2
 
-import numpy as np
-from scipy.special import hankel2
-from .. import util
-from . import secondary_source_line, secondary_source_point
+from . import secondary_source_line as _secondary_source_line
+from . import secondary_source_point as _secondary_source_point
+from .. import util as _util
 
 
 def line_2d(omega, x0, n0, xs, *, c=None):
@@ -76,15 +77,15 @@ def line_2d(omega, x0, n0, xs, *, c=None):
         plot(d, selection, secondary_source)
 
     """
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    xs = util.asarray_1d(xs)
-    k = util.wavenumber(omega, c)
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    xs = _util.asarray_1d(xs)
+    k = _util.wavenumber(omega, c)
     ds = x0 - xs
-    r = np.linalg.norm(ds, axis=1)
-    d = - 1j/2 * k * xs[1] / r * hankel2(1, k * r)
-    selection = util.source_selection_all(len(x0))
-    return d, selection, secondary_source_line(omega, c)
+    r = _np.linalg.norm(ds, axis=1)
+    d = - 1j/2 * k * xs[1] / r * _hankel2(1, k * r)
+    selection = _util.source_selection_all(len(x0))
+    return d, selection, _secondary_source_line(omega, c)
 
 
 def plane_2d(omega, x0, n0, n=[0, 1, 0], *, c=None):
@@ -133,13 +134,13 @@ def plane_2d(omega, x0, n0, n=[0, 1, 0], *, c=None):
         plot(d, selection, secondary_source)
 
     """
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    n = util.normalize_vector(n)
-    k = util.wavenumber(omega, c)
-    d = k * n[1] * np.exp(-1j * k * n[0] * x0[:, 0])
-    selection = util.source_selection_all(len(x0))
-    return d, selection, secondary_source_line(omega, c)
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    n = _util.normalize_vector(n)
+    k = _util.wavenumber(omega, c)
+    d = k * n[1] * _np.exp(-1j * k * n[0] * x0[:, 0])
+    selection = _util.source_selection_all(len(x0))
+    return d, selection, _secondary_source_line(omega, c)
 
 
 def plane_25d(omega, x0, n0, n=[0, 1, 0], *, xref=[0, 0, 0], c=None):
@@ -186,15 +187,15 @@ def plane_25d(omega, x0, n0, n=[0, 1, 0], *, xref=[0, 0, 0], c=None):
         plot(d, selection, secondary_source)
 
     """
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    n = util.normalize_vector(n)
-    xref = util.asarray_1d(xref)
-    k = util.wavenumber(omega, c)
-    d = 4j * np.exp(-1j*k*n[1]*xref[1]) / hankel2(0, k*n[1]*xref[1]) * \
-        np.exp(-1j*k*n[0]*x0[:, 0])
-    selection = util.source_selection_all(len(x0))
-    return d, selection, secondary_source_point(omega, c)
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    n = _util.normalize_vector(n)
+    xref = _util.asarray_1d(xref)
+    k = _util.wavenumber(omega, c)
+    d = 4j * _np.exp(-1j*k*n[1]*xref[1]) / _hankel2(0, k*n[1]*xref[1]) * \
+        _np.exp(-1j*k*n[0]*x0[:, 0])
+    selection = _util.source_selection_all(len(x0))
+    return d, selection, _secondary_source_point(omega, c)
 
 
 def point_25d(omega, x0, n0, xs, *, xref=[0, 0, 0], c=None):
@@ -241,14 +242,14 @@ def point_25d(omega, x0, n0, xs, *, xref=[0, 0, 0], c=None):
         plot(d, selection, secondary_source)
 
     """
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    xs = util.asarray_1d(xs)
-    xref = util.asarray_1d(xref)
-    k = util.wavenumber(omega, c)
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    xs = _util.asarray_1d(xs)
+    xref = _util.asarray_1d(xref)
+    k = _util.wavenumber(omega, c)
     ds = x0 - xs
-    r = np.linalg.norm(ds, axis=1)
-    d = 1/2 * 1j * k * np.sqrt(xref[1] / (xref[1] - xs[1])) * \
-        xs[1] / r * hankel2(1, k * r)
-    selection = util.source_selection_all(len(x0))
-    return d, selection, secondary_source_point(omega, c)
+    r = _np.linalg.norm(ds, axis=1)
+    d = 1/2 * 1j * k * _np.sqrt(xref[1] / (xref[1] - xs[1])) * \
+        xs[1] / r * _hankel2(1, k * r)
+    selection = _util.source_selection_all(len(x0))
+    return d, selection, _secondary_source_point(omega, c)

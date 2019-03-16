@@ -11,10 +11,11 @@
     esa
 
 """
+import numpy as _np
+
 from . import source
 from .. import array as _array
 from .. import util as _util
-import numpy as _np
 
 
 def shiftphase(p, phase):

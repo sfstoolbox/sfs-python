@@ -42,11 +42,13 @@
         sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
 
 """
-import numpy as np
-from numpy.core.umath_tests import inner1d  # element-wise inner product
-from .. import default
-from .. import util
-from . import secondary_source_point, apply_delays
+import numpy as _np
+from numpy.core.umath_tests import inner1d as _inner1d
+
+from . import apply_delays as _apply_delays
+from . import secondary_source_point as _secondary_source_point
+from .. import default as _default
+from .. import util as _util
 
 
 def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
@@ -110,16 +112,16 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
     """
     if c is None:
-        c = default.c
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    n = util.normalize_vector(n)
-    xref = util.asarray_1d(xref)
-    g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
-    delays = inner1d(n, x0) / c
-    weights = 2 * g0 * inner1d(n, n0)
-    selection = util.source_selection_plane(n0, n)
-    return delays, weights, selection, secondary_source_point(c)
+        c = _default.c
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    n = _util.normalize_vector(n)
+    xref = _util.asarray_1d(xref)
+    g0 = _np.sqrt(2 * _np.pi * _np.linalg.norm(xref - x0, axis=1))
+    delays = _inner1d(n, x0) / c
+    weights = 2 * g0 * _inner1d(n, n0)
+    selection = _util.source_selection_plane(n0, n)
+    return delays, weights, selection, _secondary_source_point(c)
 
 
 def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
@@ -185,18 +187,18 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     """
     if c is None:
-        c = default.c
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    xs = util.asarray_1d(xs)
-    xref = util.asarray_1d(xref)
-    g0 = np.sqrt(2 * np.pi * np.linalg.norm(xref - x0, axis=1))
+        c = _default.c
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    xs = _util.asarray_1d(xs)
+    xref = _util.asarray_1d(xref)
+    g0 = _np.sqrt(2 * _np.pi * _np.linalg.norm(xref - x0, axis=1))
     ds = x0 - xs
-    r = np.linalg.norm(ds, axis=1)
+    r = _np.linalg.norm(ds, axis=1)
     delays = r/c
-    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
-    selection = util.source_selection_point(n0, x0, xs)
-    return delays, weights, selection, secondary_source_point(c)
+    weights = g0 * _inner1d(ds, n0) / (2 * _np.pi * r**(3/2))
+    selection = _util.source_selection_point(n0, x0, xs)
+    return delays, weights, selection, _secondary_source_point(c)
 
 
 def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
@@ -267,19 +269,19 @@ def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
 
     """
     if c is None:
-        c = default.c
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    xs = util.asarray_1d(xs)
-    xref = util.asarray_1d(xref)
+        c = _default.c
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    xs = _util.asarray_1d(xs)
+    xref = _util.asarray_1d(xref)
     ds = x0 - xs
-    r = np.linalg.norm(ds, axis=1)
-    g0 = np.sqrt(np.linalg.norm(xref - x0, axis=1)
-                 / (np.linalg.norm(xref - x0, axis=1) + r))
+    r = _np.linalg.norm(ds, axis=1)
+    g0 = _np.sqrt(_np.linalg.norm(xref - x0, axis=1)
+                  / (_np.linalg.norm(xref - x0, axis=1) + r))
     delays = -r/c
-    weights = g0 * inner1d(ds, n0) / (2 * np.pi * r**(3/2))
-    selection = util.source_selection_focused(ns, x0, xs)
-    return delays, weights, selection, secondary_source_point(c)
+    weights = g0 * _inner1d(ds, n0) / (2 * _np.pi * r**(3/2))
+    selection = _util.source_selection_focused(ns, x0, xs)
+    return delays, weights, selection, _secondary_source_point(c)
 
 
 def driving_signals(delays, weights, signal):
@@ -306,7 +308,7 @@ def driving_signals(delays, weights, signal):
         and a (possibly negative) time offset (in seconds).
 
     """
-    delays = util.asarray_1d(delays)
-    weights = util.asarray_1d(weights)
-    data, samplerate, signal_offset = apply_delays(signal, delays)
-    return util.DelayedSignal(data * weights, samplerate, signal_offset)
+    delays = _util.asarray_1d(delays)
+    weights = _util.asarray_1d(weights)
+    data, samplerate, signal_offset = _apply_delays(signal, delays)
+    return _util.DelayedSignal(data * weights, samplerate, signal_offset)

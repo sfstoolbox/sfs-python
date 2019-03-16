@@ -17,7 +17,7 @@
     active2[30:-10] = False
 
 """
-import numpy as np
+import numpy as _np
 
 
 def none(active):
@@ -91,20 +91,20 @@ def tukey(active, *, alpha):
 
     """
     idx = _windowidx(active)
-    alpha = np.clip(alpha, 0, 1)
+    alpha = _np.clip(alpha, 0, 1)
     if alpha == 0:
         return none(active)
     # design Tukey window
-    x = np.linspace(0, 1, len(idx) + 2)
-    tukey = np.ones_like(x)
+    x = _np.linspace(0, 1, len(idx) + 2)
+    tukey = _np.ones_like(x)
     first_part = x < alpha / 2
     tukey[first_part] = 0.5 * (
-        1 + np.cos(2 * np.pi / alpha * (x[first_part] - alpha / 2)))
+        1 + _np.cos(2 * _np.pi / alpha * (x[first_part] - alpha / 2)))
     third_part = x >= (1 - alpha / 2)
     tukey[third_part] = 0.5 * (
-        1 + np.cos(2 * np.pi / alpha * (x[third_part] - 1 + alpha / 2)))
+        1 + _np.cos(2 * _np.pi / alpha * (x[third_part] - 1 + alpha / 2)))
     # fit window into tapering function
-    result = np.zeros(len(active))
+    result = _np.zeros(len(active))
     result[idx] = tukey[1:-1]
     return result
 
@@ -147,8 +147,8 @@ def kaiser(active, *, beta):
 
     """
     idx = _windowidx(active)
-    window = np.zeros(len(active))
-    window[idx] = np.kaiser(len(idx), beta)
+    window = _np.zeros(len(active))
+    window[idx] = _np.kaiser(len(idx), beta)
     return window
 
 
@@ -159,11 +159,11 @@ def _windowidx(active):
 
     """
     # find index where active loudspeakers begin (works for connected contours)
-    if (active[0] and not active[-1]) or np.all(active):
+    if (active[0] and not active[-1]) or _np.all(active):
         first_idx = 0
     else:
-        first_idx = np.argmax(np.diff(active.astype(int))) + 1
+        first_idx = _np.argmax(_np.diff(active.astype(int))) + 1
     # shift generic index vector to get a connected list of indices
-    idx = np.roll(np.arange(len(active)), -first_idx)
+    idx = _np.roll(_np.arange(len(active)), -first_idx)
     # remove indices of inactive secondary sources
-    return idx[:np.count_nonzero(active)]
+    return idx[:_np.count_nonzero(active)]

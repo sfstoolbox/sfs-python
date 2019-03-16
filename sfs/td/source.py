@@ -23,10 +23,10 @@ The Green's function describes the spatial sound propagation over time.
     grid = sfs.util.xyz_grid([-2, 3], [-1, 2], 0, spacing=0.02)
 
 """
+import numpy as _np
 
-import numpy as np
-from .. import util
-from .. import default
+from .. import default as _default
+from .. import util as _util
 
 
 def point(xs, signal, observation_time, grid, c=None):
@@ -72,23 +72,23 @@ def point(xs, signal, observation_time, grid, c=None):
         sfs.plot2d.level(p, grid)
 
     """
-    xs = util.asarray_1d(xs)
-    data, samplerate, signal_offset = util.as_delayed_signal(signal)
-    data = util.asarray_1d(data)
-    grid = util.as_xyz_components(grid)
+    xs = _util.asarray_1d(xs)
+    data, samplerate, signal_offset = _util.as_delayed_signal(signal)
+    data = _util.asarray_1d(data)
+    grid = _util.as_xyz_components(grid)
     if c is None:
-        c = default.c
-    r = np.linalg.norm(grid - xs)
+        c = _default.c
+    r = _np.linalg.norm(grid - xs)
     # If r is +-0, the sound pressure is +-infinity
-    with np.errstate(divide='ignore'):
-        weights = 1 / (4 * np.pi * r)
+    with _np.errstate(divide='ignore'):
+        weights = 1 / (4 * _np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    points_at_time = np.interp(base_time - delays,
-                               np.arange(len(data)) / samplerate,
+    points_at_time = _np.interp(base_time - delays,
+                               _np.arange(len(data)) / samplerate,
                                data, left=0, right=0)
     # weights can be +-infinity
-    with np.errstate(invalid='ignore'):
+    with _np.errstate(invalid='ignore'):
         return weights * points_at_time
 
 
@@ -139,10 +139,10 @@ def point_image_sources(x0, signal, observation_time, grid, L, max_order,
 
     """
     if coeffs is None:
-        coeffs = np.ones(6)
+        coeffs = _np.ones(6)
 
-    positions, order = util.image_sources_for_box(x0, L, max_order)
-    source_strengths = np.prod(coeffs**order, axis=1)
+    positions, order = _util.image_sources_for_box(x0, L, max_order)
+    source_strengths = _np.prod(coeffs**order, axis=1)
 
     p = 0
     for position, strength in zip(positions, source_strengths):

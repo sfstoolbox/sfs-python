@@ -9,14 +9,16 @@ Note that mode-matching (such as NFC-HOA, SDM) are equivalent
 to ESA in their specific geometries (spherical/circular, planar/linear).
 
 """
+import numpy as _np
+from scipy.special import jn as _jn, hankel2 as _hankel2
 
-import numpy as np
-from scipy.special import jn, hankel2
-from .. import util
-from . import secondary_source_line, secondary_source_point
+from . import secondary_source_line as _secondary_source_line
+from . import secondary_source_point as _secondary_source_point
+from .. import util as _util
 
 
-def plane_2d_edge(omega, x0, n=[0, 1, 0], *, alpha=3/2*np.pi, Nc=None, c=None):
+def plane_2d_edge(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2, Nc=None,
+                  c=None):
     r"""Driving function for 2-dimensional plane wave with edge ESA.
 
     Driving function for a virtual plane wave using the 2-dimensional ESA
@@ -58,35 +60,35 @@ def plane_2d_edge(omega, x0, n=[0, 1, 0], *, alpha=3/2*np.pi, Nc=None, c=None):
     Derived from :cite:`Spors2016`
 
     """
-    x0 = np.asarray(x0)
-    n = util.normalize_vector(n)
-    k = util.wavenumber(omega, c)
-    phi_s = np.arctan2(n[1], n[0]) + np.pi
+    x0 = _np.asarray(x0)
+    n = _util.normalize_vector(n)
+    k = _util.wavenumber(omega, c)
+    phi_s = _np.arctan2(n[1], n[0]) + _np.pi
     L = x0.shape[0]
 
-    r = np.linalg.norm(x0, axis=1)
-    phi = np.arctan2(x0[:, 1], x0[:, 0])
-    phi = np.where(phi < 0, phi+2*np.pi, phi)
+    r = _np.linalg.norm(x0, axis=1)
+    phi = _np.arctan2(x0[:, 1], x0[:, 0])
+    phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
+        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
 
-    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    d = np.zeros(L, dtype=complex)
-    for m in np.arange(Nc):
-        nu = m*np.pi/alpha
-        d = d + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.sin(nu*phi_s) \
-            * np.cos(nu*phi) * nu/r * jn(nu, k*r)
+    d = _np.zeros(L, dtype=complex)
+    for m in _np.arange(Nc):
+        nu = m * _np.pi / alpha
+        d = d + 1/epsilon[m] * _np.exp(1j*nu*_np.pi/2) * _np.sin(nu*phi_s) \
+            * _np.cos(nu*phi) * nu/r * _jn(nu, k*r)
 
     d[phi > 0] = -d[phi > 0]
 
-    selection = util.source_selection_all(len(x0))
-    return 4*np.pi/alpha * d, selection, secondary_source_line(omega, c)
+    selection = _util.source_selection_all(len(x0))
+    return 4*_np.pi/alpha * d, selection, _secondary_source_line(omega, c)
 
 
-def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=3/2*np.pi,
+def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2,
                              Nc=None, c=None):
     r"""Driving function for 2-dimensional plane wave with edge dipole ESA.
 
@@ -129,32 +131,32 @@ def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=3/2*np.pi,
     Derived from :cite:`Spors2016`
 
     """
-    x0 = np.asarray(x0)
-    n = util.normalize_vector(n)
-    k = util.wavenumber(omega, c)
-    phi_s = np.arctan2(n[1], n[0]) + np.pi
+    x0 = _np.asarray(x0)
+    n = _util.normalize_vector(n)
+    k = _util.wavenumber(omega, c)
+    phi_s = _np.arctan2(n[1], n[0]) + _np.pi
     L = x0.shape[0]
 
-    r = np.linalg.norm(x0, axis=1)
-    phi = np.arctan2(x0[:, 1], x0[:, 0])
-    phi = np.where(phi < 0, phi+2*np.pi, phi)
+    r = _np.linalg.norm(x0, axis=1)
+    phi = _np.arctan2(x0[:, 1], x0[:, 0])
+    phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
+        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
 
-    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    d = np.zeros(L, dtype=complex)
-    for m in np.arange(Nc):
-        nu = m*np.pi/alpha
-        d = d + 1/epsilon[m] * np.exp(1j*nu*np.pi/2) * np.cos(nu*phi_s) \
-            * np.cos(nu*phi) * jn(nu, k*r)
+    d = _np.zeros(L, dtype=complex)
+    for m in _np.arange(Nc):
+        nu = m * _np.pi / alpha
+        d = d + 1/epsilon[m] * _np.exp(1j*nu*_np.pi/2) * _np.cos(nu*phi_s) \
+            * _np.cos(nu*phi) * _jn(nu, k*r)
 
-    return 4*np.pi/alpha * d
+    return 4*_np.pi/alpha * d
 
 
-def line_2d_edge(omega, x0, xs, *, alpha=3/2*np.pi, Nc=None, c=None):
+def line_2d_edge(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None, c=None):
     r"""Driving function for 2-dimensional line source with edge ESA.
 
     Driving function for a virtual line source using the 2-dimensional ESA
@@ -196,39 +198,39 @@ def line_2d_edge(omega, x0, xs, *, alpha=3/2*np.pi, Nc=None, c=None):
     Derived from :cite:`Spors2016`
 
     """
-    x0 = np.asarray(x0)
-    k = util.wavenumber(omega, c)
-    phi_s = np.arctan2(xs[1], xs[0])
+    x0 = _np.asarray(x0)
+    k = _util.wavenumber(omega, c)
+    phi_s = _np.arctan2(xs[1], xs[0])
     if phi_s < 0:
-        phi_s = phi_s + 2*np.pi
-    r_s = np.linalg.norm(xs)
+        phi_s = phi_s + 2 * _np.pi
+    r_s = _np.linalg.norm(xs)
     L = x0.shape[0]
 
-    r = np.linalg.norm(x0, axis=1)
-    phi = np.arctan2(x0[:, 1], x0[:, 0])
-    phi = np.where(phi < 0, phi+2*np.pi, phi)
+    r = _np.linalg.norm(x0, axis=1)
+    phi = _np.arctan2(x0[:, 1], x0[:, 0])
+    phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
+        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
 
-    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    d = np.zeros(L, dtype=complex)
+    d = _np.zeros(L, dtype=complex)
     idx = (r <= r_s)
-    for m in np.arange(Nc):
-        nu = m*np.pi/alpha
-        f = 1/epsilon[m] * np.sin(nu*phi_s) * np.cos(nu*phi) * nu/r
-        d[idx] = d[idx] + f[idx] * jn(nu, k*r[idx]) * hankel2(nu, k*r_s)
-        d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
+    for m in _np.arange(Nc):
+        nu = m * _np.pi / alpha
+        f = 1/epsilon[m] * _np.sin(nu*phi_s) * _np.cos(nu*phi) * nu/r
+        d[idx] = d[idx] + f[idx] * _jn(nu, k*r[idx]) * _hankel2(nu, k*r_s)
+        d[~idx] = d[~idx] + f[~idx] * _jn(nu, k*r_s) * _hankel2(nu, k*r[~idx])
 
     d[phi > 0] = -d[phi > 0]
 
-    selection = util.source_selection_all(len(x0))
-    return -1j*np.pi/alpha * d, selection, secondary_source_line(omega, c)
+    selection = _util.source_selection_all(len(x0))
+    return -1j*_np.pi/alpha * d, selection, _secondary_source_line(omega, c)
 
 
-def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=3/2*np.pi, Nc=None,
+def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None,
                             c=None):
     r"""Driving function for 2-dimensional line source with edge dipole ESA.
 
@@ -271,36 +273,36 @@ def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=3/2*np.pi, Nc=None,
     Derived from :cite:`Spors2016`
 
     """
-    x0 = np.asarray(x0)
-    k = util.wavenumber(omega, c)
-    phi_s = np.arctan2(xs[1], xs[0])
+    x0 = _np.asarray(x0)
+    k = _util.wavenumber(omega, c)
+    phi_s = _np.arctan2(xs[1], xs[0])
     if phi_s < 0:
-        phi_s = phi_s + 2*np.pi
-    r_s = np.linalg.norm(xs)
+        phi_s = phi_s + 2 * _np.pi
+    r_s = _np.linalg.norm(xs)
     L = x0.shape[0]
 
-    r = np.linalg.norm(x0, axis=1)
-    phi = np.arctan2(x0[:, 1], x0[:, 0])
-    phi = np.where(phi < 0, phi+2*np.pi, phi)
+    r = _np.linalg.norm(x0, axis=1)
+    phi = _np.arctan2(x0[:, 1], x0[:, 0])
+    phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = np.ceil(2 * k * np.max(r) * alpha/np.pi)
+        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
 
-    epsilon = np.ones(Nc)  # weights for series expansion
+    epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    d = np.zeros(L, dtype=complex)
+    d = _np.zeros(L, dtype=complex)
     idx = (r <= r_s)
-    for m in np.arange(Nc):
-        nu = m*np.pi/alpha
-        f = 1/epsilon[m] * np.cos(nu*phi_s) * np.cos(nu*phi)
-        d[idx] = d[idx] + f[idx] * jn(nu, k*r[idx]) * hankel2(nu, k*r_s)
-        d[~idx] = d[~idx] + f[~idx] * jn(nu, k*r_s) * hankel2(nu, k*r[~idx])
+    for m in _np.arange(Nc):
+        nu = m * _np.pi / alpha
+        f = 1/epsilon[m] * _np.cos(nu*phi_s) * _np.cos(nu*phi)
+        d[idx] = d[idx] + f[idx] * _jn(nu, k*r[idx]) * _hankel2(nu, k*r_s)
+        d[~idx] = d[~idx] + f[~idx] * _jn(nu, k*r_s) * _hankel2(nu, k*r[~idx])
 
-    return -1j*np.pi/alpha * d
+    return -1j*_np.pi/alpha * d
 
 
-def point_25d_edge(omega, x0, xs, *, xref=[2, -2, 0], alpha=3/2*np.pi,
+def point_25d_edge(omega, x0, xs, *, xref=[2, -2, 0], alpha=_np.pi*3/2,
                    Nc=None, c=None):
     r"""Driving function for 2.5-dimensional point source with edge ESA.
 
@@ -345,14 +347,14 @@ def point_25d_edge(omega, x0, xs, *, xref=[2, -2, 0], alpha=3/2*np.pi,
     Derived from :cite:`Spors2016`
 
     """
-    x0 = np.asarray(x0)
-    xs = np.asarray(xs)
-    xref = np.asarray(xref)
+    x0 = _np.asarray(x0)
+    xs = _np.asarray(xs)
+    xref = _np.asarray(xref)
 
-    if np.isscalar(xref):
-        a = np.linalg.norm(xref)/np.linalg.norm(xref-xs)
+    if _np.isscalar(xref):
+        a = _np.linalg.norm(xref) / _np.linalg.norm(xref - xs)
     else:
-        a = np.linalg.norm(xref-x0, axis=1)/np.linalg.norm(xref-xs)
+        a = _np.linalg.norm(xref - x0, axis=1) / _np.linalg.norm(xref - xs)
 
     d, selection, _ = line_2d_edge(omega, x0, xs, alpha=alpha, Nc=Nc, c=c)
-    return 1j*np.sqrt(a) * d, selection, secondary_source_point(omega, c)
+    return 1j*_np.sqrt(a) * d, selection, _secondary_source_point(omega, c)

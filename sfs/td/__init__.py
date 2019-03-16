@@ -9,9 +9,10 @@
     nfchoa
 
 """
-from .. import array as _array
-import numpy as np
+import numpy as _np
+
 from . import source
+from .. import array as _array
 from .. import util as _util
 
 
@@ -90,10 +91,10 @@ def apply_delays(signal, delays):
     delays = _util.asarray_1d(delays)
     delays += initial_offset
 
-    delays_samples = np.rint(samplerate * delays).astype(int)
+    delays_samples = _np.rint(samplerate * delays).astype(int)
     offset_samples = delays_samples.min()
     delays_samples -= offset_samples
-    out = np.zeros((delays_samples.max() + len(data), len(delays_samples)))
+    out = _np.zeros((delays_samples.max() + len(data), len(delays_samples)))
     for column, row in enumerate(delays_samples):
         out[row:row + len(data), column] = data
     return _util.DelayedSignal(out, samplerate, offset_samples / samplerate)

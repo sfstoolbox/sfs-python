@@ -1,26 +1,24 @@
 """2D plots of sound fields etc."""
-import matplotlib.pyplot as plt
-from matplotlib import __version__ as matplotlib_version
-from matplotlib.patches import PathPatch
-from matplotlib.path import Path
-from matplotlib.collections import PatchCollection
-from mpl_toolkits import axes_grid1
-import numpy as np
-from . import util
-from . import default
+import matplotlib as _mpl
+import matplotlib.pyplot as _plt
+from mpl_toolkits import axes_grid1 as _axes_grid1
+import numpy as _np
+
+from . import default as _default
+from . import util as _util
 
 
 def _register_cmap_clip(name, original_cmap, alpha):
     """Create a color map with "over" and "under" values."""
     from matplotlib.colors import LinearSegmentedColormap
-    cdata = plt.cm.datad[original_cmap]
+    cdata = _plt.cm.datad[original_cmap]
     if isinstance(cdata, dict):
         cmap = LinearSegmentedColormap(name, cdata)
     else:
         cmap = LinearSegmentedColormap.from_list(name, cdata)
     cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
     cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
-    plt.cm.register_cmap(cmap=cmap)
+    _plt.cm.register_cmap(cmap=cmap)
 
 
 # The 'coolwarm' colormap is based on the paper
@@ -38,7 +36,7 @@ def _register_cmap_transparent(name, color):
              'blue': ((0, blue, blue), (1, blue, blue)),
              'alpha': ((0, 0, 0), (1, 1, 1))}
     cmap = LinearSegmentedColormap(name, cdict)
-    plt.cm.register_cmap(cmap=cmap)
+    _plt.cm.register_cmap(cmap=cmap)
 
 
 _register_cmap_transparent('blacktransparent', 'black')
@@ -46,16 +44,16 @@ _register_cmap_transparent('blacktransparent', 'black')
 
 def virtualsource(xs, ns=None, type='point', *, ax=None):
     """Draw position/orientation of virtual source."""
-    xs = np.asarray(xs)
-    ns = np.asarray(ns)
+    xs = _np.asarray(xs)
+    ns = _np.asarray(ns)
     if ax is None:
-        ax = plt.gca()
+        ax = _plt.gca()
 
     if type == 'point':
-        vps = plt.Circle(xs, .05, edgecolor='k', facecolor='k')
+        vps = _plt.Circle(xs, .05, edgecolor='k', facecolor='k')
         ax.add_artist(vps)
         for n in range(1, 3):
-            vps = plt.Circle(xs, .05+n*0.05, edgecolor='k', fill=False)
+            vps = _plt.Circle(xs, .05+n*0.05, edgecolor='k', fill=False)
             ax.add_artist(vps)
     elif type == 'plane':
         ns = 0.2 * ns
@@ -66,9 +64,9 @@ def virtualsource(xs, ns=None, type='point', *, ax=None):
 
 def reference(xref, *, size=0.1, ax=None):
     """Draw reference/normalization point."""
-    xref = np.asarray(xref)
+    xref = _np.asarray(xref)
     if ax is None:
-        ax = plt.gca()
+        ax = _plt.gca()
 
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]-size, xref[1]+size), 'k-')
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]+size, xref[1]-size), 'k-')
@@ -76,9 +74,9 @@ def reference(xref, *, size=0.1, ax=None):
 
 def secondary_sources(x0, n0, *, grid=None):
     """Simple plot of secondary source locations."""
-    x0 = np.asarray(x0)
-    n0 = np.asarray(n0)
-    ax = plt.gca()
+    x0 = _np.asarray(x0)
+    n0 = _np.asarray(n0)
+    ax = _plt.gca()
 
     # plot only secondary sources inside simulated area
     if grid is not None:
@@ -86,7 +84,7 @@ def secondary_sources(x0, n0, *, grid=None):
 
     # plot symbols
     for x00 in x0:
-        ss = plt.Circle(x00[0:2], .05, edgecolor='k', facecolor='k')
+        ss = _plt.Circle(x00[0:2], .05, edgecolor='k', facecolor='k')
         ax.add_artist(ss)
 
 
@@ -113,9 +111,9 @@ def loudspeakers(x0, n0, a0=0.5, *, size=0.08, show_numbers=False, grid=None,
         object or -- if not specified -- into the current axes.
 
     """
-    x0 = util.asarray_of_rows(x0)
-    n0 = util.asarray_of_rows(n0)
-    a0 = util.asarray_1d(a0).reshape(-1, 1)
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    a0 = _util.asarray_1d(a0).reshape(-1, 1)
 
     # plot only secondary sources inside simulated area
     if grid is not None:
@@ -123,35 +121,37 @@ def loudspeakers(x0, n0, a0=0.5, *, size=0.08, show_numbers=False, grid=None,
 
     # normalized coordinates of loudspeaker symbol (see IEC 60617-9)
     codes, coordinates = zip(*(
-        (Path.MOVETO, [-0.62, 0.21]),
-        (Path.LINETO, [-0.31, 0.21]),
-        (Path.LINETO, [0, 0.5]),
-        (Path.LINETO, [0, -0.5]),
-        (Path.LINETO, [-0.31, -0.21]),
-        (Path.LINETO, [-0.62, -0.21]),
-        (Path.CLOSEPOLY, [0, 0]),
-        (Path.MOVETO, [-0.31, 0.21]),
-        (Path.LINETO, [-0.31, -0.21]),
+        (_mpl.path.Path.MOVETO, [-0.62, 0.21]),
+        (_mpl.path.Path.LINETO, [-0.31, 0.21]),
+        (_mpl.path.Path.LINETO, [0, 0.5]),
+        (_mpl.path.Path.LINETO, [0, -0.5]),
+        (_mpl.path.Path.LINETO, [-0.31, -0.21]),
+        (_mpl.path.Path.LINETO, [-0.62, -0.21]),
+        (_mpl.path.Path.CLOSEPOLY, [0, 0]),
+        (_mpl.path.Path.MOVETO, [-0.31, 0.21]),
+        (_mpl.path.Path.LINETO, [-0.31, -0.21]),
     ))
-    coordinates = np.column_stack([coordinates, np.zeros(len(coordinates))])
+    coordinates = _np.column_stack([coordinates, _np.zeros(len(coordinates))])
     coordinates *= size
 
     patches = []
-    for x00, n00 in util.broadcast_zip(x0, n0):
+    for x00, n00 in _util.broadcast_zip(x0, n0):
         # rotate and translate coordinates
-        R = util.rotation_matrix([1, 0, 0], n00)
-        transformed_coordinates = np.inner(coordinates, R) + x00
+        R = _util.rotation_matrix([1, 0, 0], n00)
+        transformed_coordinates = _np.inner(coordinates, R) + x00
 
-        patches.append(PathPatch(Path(transformed_coordinates[:, :2], codes)))
+        patches.append(_mpl.patches.PathPatch(_mpl.path.Path(
+            transformed_coordinates[:, :2], codes)))
 
     # add collection of patches to current axis
-    p = PatchCollection(patches, edgecolor='0', facecolor=np.tile(1 - a0, 3))
+    p = _mpl.collections.PatchCollection(
+        patches, edgecolor='0', facecolor=_np.tile(1 - a0, 3))
     if ax is None:
-        ax = plt.gca()
+        ax = _plt.gca()
     ax.add_collection(p)
 
     if show_numbers:
-        for idx, (x00, n00) in enumerate(util.broadcast_zip(x0, n0)):
+        for idx, (x00, n00) in enumerate(_util.broadcast_zip(x0, n0)):
             x, y = x00[:2] - 1.2 * size * n00[:2]
             ax.text(x, y, idx + 1, horizontalalignment='center',
                     verticalalignment='center', clip_on=True)
@@ -159,10 +159,10 @@ def loudspeakers(x0, n0, a0=0.5, *, size=0.08, show_numbers=False, grid=None,
 
 def _visible_secondarysources(x0, n0, grid):
     """Determine secondary sources which lie within *grid*."""
-    x, y = util.as_xyz_components(grid[:2])
-    idx = np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
+    x, y = _util.as_xyz_components(grid[:2])
+    idx = _np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
-    idx = np.squeeze(idx)
+    idx = _np.squeeze(idx)
 
     return x0[idx, :], n0[idx, :]
 
@@ -233,12 +233,12 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     sfs.plot2d.level
 
     """
-    p = np.asarray(p)
-    grid = util.as_xyz_components(grid)
+    p = _np.asarray(p)
+    grid = _util.as_xyz_components(grid)
 
     # normalize sound field wrt xnorm
     if xnorm is not None:
-        p = util.normalize(p, grid, xnorm)
+        p = _util.normalize(p, grid, xnorm)
 
     if p.ndim == 3:
         if p.shape[2] == 1:
@@ -277,13 +277,13 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     dy = 0.5 * y.ptp() / p.shape[1]
 
     if ax is None:
-        ax = plt.gca()
+        ax = _plt.gca()
 
     # see https://github.com/matplotlib/matplotlib/issues/10567
-    if matplotlib_version.startswith('2.1.'):
-        p = np.clip(p, -1e15, 1e15)  # clip to float64 range
+    if _mpl.__version__.startswith('2.1.'):
+        p = _np.clip(p, -1e15, 1e15)  # clip to float64 range
 
-    im = ax.imshow(np.real(p), cmap=cmap, origin='lower',
+    im = ax.imshow(_np.real(p), cmap=cmap, origin='lower',
                    extent=[x.min()-dx, x.max()+dx, y.min()-dy, y.max()+dy],
                    vmax=vmax, vmin=vmin, **kwargs)
     if xlabel is None:
@@ -311,8 +311,8 @@ def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
     """
     # normalize before converting to dB!
     if xnorm is not None:
-        p = util.normalize(p, grid, xnorm)
-    L = util.db(p, power=power)
+        p = _util.normalize(p, grid, xnorm)
+    L = _util.db(p, power=power)
     return amplitude(L, grid=grid, xnorm=None, cmap=cmap,
                      vmax=vmax, vmin=vmin, **kwargs)
 
@@ -320,17 +320,17 @@ def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
 def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
               edgecolor='', marker='.', s=15, **kwargs):
     """Plot particle positions as scatter plot"""
-    XX, YY = [np.real(c) for c in x[:2]]
+    XX, YY = [_np.real(c) for c in x[:2]]
 
     if trim is not None:
         xmin, xmax, ymin, ymax = trim
 
-        idx = np.where((XX > xmin) & (XX < xmax) & (YY > ymin) & (YY < ymax))
+        idx = _np.where((XX > xmin) & (XX < xmax) & (YY > ymin) & (YY < ymax))
         XX = XX[idx]
         YY = YY[idx]
 
     if ax is None:
-        ax = plt.gca()
+        ax = _plt.gca()
 
     if xlabel:
         ax.set_xlabel(xlabel)
@@ -372,15 +372,15 @@ def vectors(v, grid, *, cmap='blacktransparent', headlength=3,
         :func:`matplotlib.pyplot.quiver`.
 
     """
-    v = util.as_xyz_components(v[:2]).apply(np.real)
-    X, Y = util.as_xyz_components(grid[:2])
-    speed = np.linalg.norm(v)
-    with np.errstate(invalid='ignore'):
-        U, V = v.apply(np.true_divide, speed)
+    v = _util.as_xyz_components(v[:2]).apply(_np.real)
+    X, Y = _util.as_xyz_components(grid[:2])
+    speed = _np.linalg.norm(v)
+    with _np.errstate(invalid='ignore'):
+        U, V = v.apply(_np.true_divide, speed)
     if ax is None:
-        ax = plt.gca()
+        ax = _plt.gca()
     if clim is None:
-        v_ref = 1 / (default.rho0 * default.c)  # reference particle velocity
+        v_ref = 1 / (_default.rho0 * _default.c)  # reference particle velocity
         clim = 0, 2 * v_ref
     return ax.quiver(X, Y, U, V, speed, cmap=cmap, pivot='mid', units='xy',
                      angles='xy', headlength=headlength,
@@ -417,10 +417,10 @@ def add_colorbar(im, *, aspect=20, pad=0.5, **kwargs):
 
     """
     ax = im.axes
-    divider = axes_grid1.make_axes_locatable(ax)
-    width = axes_grid1.axes_size.AxesY(ax, aspect=1/aspect)
-    pad = axes_grid1.axes_size.Fraction(pad, width)
-    current_ax = plt.gca()
+    divider = _axes_grid1.make_axes_locatable(ax)
+    width = _axes_grid1.axes_size.AxesY(ax, aspect=1/aspect)
+    pad = _axes_grid1.axes_size.Fraction(pad, width)
+    current_ax = _plt.gca()
     cax = divider.append_axes("right", size=width, pad=pad)
-    plt.sca(current_ax)
+    _plt.sca(current_ax)
     return ax.figure.colorbar(im, cax=cax, orientation='vertical', **kwargs)

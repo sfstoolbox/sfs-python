@@ -28,11 +28,11 @@
         sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
 
 """
+import numpy as _np
+from scipy.special import hankel2 as _hankel2
 
-import numpy as np
-from scipy.special import hankel2
-from .. import util
-from . import secondary_source_point
+from . import secondary_source_point as _secondary_source_point
+from .. import util as _util
 
 
 def plane_2d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
@@ -87,18 +87,18 @@ def plane_2d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
 
     """
     if max_order is None:
-        max_order = util.max_order_circular_harmonics(len(x0))
+        max_order = _util.max_order_circular_harmonics(len(x0))
 
-    x0 = util.asarray_of_rows(x0)
-    k = util.wavenumber(omega, c)
-    n = util.normalize_vector(n)
-    phi, _, r = util.cart2sph(*n)
-    phi0 = util.cart2sph(*x0.T)[0]
+    x0 = _util.asarray_of_rows(x0)
+    k = _util.wavenumber(omega, c)
+    n = _util.normalize_vector(n)
+    phi, _, r = _util.cart2sph(*n)
+    phi0 = _util.cart2sph(*x0.T)[0]
     d = 0
     for m in range(-max_order, max_order + 1):
-        d += 1j**-m / hankel2(m, k * r0) * np.exp(1j * m * (phi0 - phi))
-    selection = util.source_selection_all(len(x0))
-    return -2j / (np.pi*r0) * d, selection, secondary_source_point(omega, c)
+        d += 1j**-m / _hankel2(m, k * r0) * _np.exp(1j * m * (phi0 - phi))
+    selection = _util.source_selection_all(len(x0))
+    return -2j / (_np.pi*r0) * d, selection, _secondary_source_point(omega, c)
 
 
 def point_25d(omega, x0, r0, xs, *, max_order=None, c=None):
@@ -153,20 +153,20 @@ def point_25d(omega, x0, r0, xs, *, max_order=None, c=None):
 
     """
     if max_order is None:
-        max_order = util.max_order_circular_harmonics(len(x0))
+        max_order = _util.max_order_circular_harmonics(len(x0))
 
-    x0 = util.asarray_of_rows(x0)
-    k = util.wavenumber(omega, c)
-    xs = util.asarray_1d(xs)
-    phi, _, r = util.cart2sph(*xs)
-    phi0 = util.cart2sph(*x0.T)[0]
-    hr = util.spherical_hn2(range(0, max_order + 1), k * r)
-    hr0 = util.spherical_hn2(range(0, max_order + 1), k * r0)
+    x0 = _util.asarray_of_rows(x0)
+    k = _util.wavenumber(omega, c)
+    xs = _util.asarray_1d(xs)
+    phi, _, r = _util.cart2sph(*xs)
+    phi0 = _util.cart2sph(*x0.T)[0]
+    hr = _util.spherical_hn2(range(0, max_order + 1), k * r)
+    hr0 = _util.spherical_hn2(range(0, max_order + 1), k * r0)
     d = 0
     for m in range(-max_order, max_order + 1):
-        d += hr[abs(m)] / hr0[abs(m)] * np.exp(1j * m * (phi0 - phi))
-    selection = util.source_selection_all(len(x0))
-    return d / (2 * np.pi * r0), selection, secondary_source_point(omega, c)
+        d += hr[abs(m)] / hr0[abs(m)] * _np.exp(1j * m * (phi0 - phi))
+    selection = _util.source_selection_all(len(x0))
+    return d / (2 * _np.pi * r0), selection, _secondary_source_point(omega, c)
 
 
 def plane_25d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
@@ -221,16 +221,16 @@ def plane_25d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
 
     """
     if max_order is None:
-        max_order = util.max_order_circular_harmonics(len(x0))
+        max_order = _util.max_order_circular_harmonics(len(x0))
 
-    x0 = util.asarray_of_rows(x0)
-    k = util.wavenumber(omega, c)
-    n = util.normalize_vector(n)
-    phi, _, r = util.cart2sph(*n)
-    phi0 = util.cart2sph(*x0.T)[0]
+    x0 = _util.asarray_of_rows(x0)
+    k = _util.wavenumber(omega, c)
+    n = _util.normalize_vector(n)
+    phi, _, r = _util.cart2sph(*n)
+    phi0 = _util.cart2sph(*x0.T)[0]
     d = 0
-    hn2 = util.spherical_hn2(range(0, max_order + 1), k * r0)
+    hn2 = _util.spherical_hn2(range(0, max_order + 1), k * r0)
     for m in range(-max_order, max_order + 1):
-        d += (-1j)**abs(m) / (k * hn2[abs(m)]) * np.exp(1j * m * (phi0 - phi))
-    selection = util.source_selection_all(len(x0))
-    return 2*1j / r0 * d, selection, secondary_source_point(omega, c)
+        d += (-1j)**abs(m) / (k * hn2[abs(m)]) * _np.exp(1j * m * (phi0 - phi))
+    selection = _util.source_selection_all(len(x0))
+    return 2*1j / r0 * d, selection, _secondary_source_point(omega, c)

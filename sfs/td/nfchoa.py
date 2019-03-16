@@ -36,12 +36,13 @@
         sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
 
 """
-import numpy as np
-from scipy.signal import besselap, sosfilt, zpk2sos
-from scipy.special import eval_legendre as legendre
-from .. import default
-from .. import util
-from . import secondary_source_point
+import numpy as _np
+import scipy.signal as _sig
+from scipy.special import eval_legendre as _legendre
+
+from . import secondary_source_point as _secondary_source_point
+from .. import default as _default
+from .. import util as _util
 
 
 def matchedz_zpk(s_zeros, s_poles, s_gain, fs):
@@ -72,12 +73,12 @@ def matchedz_zpk(s_zeros, s_poles, s_gain, fs):
     :func:`scipy.signal.bilinear_zpk`
 
     """
-    z_zeros = np.exp(s_zeros / fs)
-    z_poles = np.exp(s_poles / fs)
-    omega = 1j * np.pi * fs
-    s_gain *= np.prod((omega - s_zeros) / (omega - s_poles)
-                      * (-1 - z_poles) / (-1 - z_zeros))
-    return z_zeros, z_poles, np.real(s_gain)
+    z_zeros = _np.exp(s_zeros / fs)
+    z_poles = _np.exp(s_poles / fs)
+    omega = 1j * _np.pi * fs
+    s_gain *= _np.prod((omega - s_zeros) / (omega - s_poles)
+                       * (-1 - z_poles) / (-1 - z_zeros))
+    return z_zeros, z_poles, _np.real(s_gain)
 
 
 def plane_25d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
@@ -151,28 +152,29 @@ def plane_25d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
 
     """
     if max_order is None:
-        max_order = util.max_order_circular_harmonics(len(x0))
+        max_order = _util.max_order_circular_harmonics(len(x0))
     if c is None:
-        c = default.c
+        c = _default.c
 
-    x0 = util.asarray_of_rows(x0)
-    npw = util.asarray_1d(npw)
-    phi0, _, _ = util.cart2sph(*x0.T)
-    phipw, _, _ = util.cart2sph(*npw)
-    phaseshift = phi0 - phipw + np.pi
+    x0 = _util.asarray_of_rows(x0)
+    npw = _util.asarray_1d(npw)
+    phi0, _, _ = _util.cart2sph(*x0.T)
+    phipw, _, _ = _util.cart2sph(*npw)
+    phaseshift = phi0 - phipw + _np.pi
 
     delay = -r0 / c
     weight = 2
     sos = []
     for m in range(max_order + 1):
-        _, p, _ = besselap(m, norm='delay')
-        s_zeros = np.zeros(m)
+        _, p, _ = _sig.besselap(m, norm='delay')
+        s_zeros = _np.zeros(m)
         s_poles = c / r0 * p
         s_gain = 1
         z_zeros, z_poles, z_gain = s2z(s_zeros, s_poles, s_gain, fs)
-        sos.append(zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
-    selection = util.source_selection_all(len(x0))
-    return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
+        sos.append(_sig.zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
+    selection = _util.source_selection_all(len(x0))
+    return (delay, weight, sos, phaseshift, selection,
+            _secondary_source_point(c))
 
 
 def point_25d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
@@ -247,28 +249,29 @@ def point_25d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
 
     """
     if max_order is None:
-        max_order = util.max_order_circular_harmonics(len(x0))
+        max_order = _util.max_order_circular_harmonics(len(x0))
     if c is None:
-        c = default.c
+        c = _default.c
 
-    x0 = util.asarray_of_rows(x0)
-    xs = util.asarray_1d(xs)
-    phi0, _, _ = util.cart2sph(*x0.T)
-    phis, _, rs = util.cart2sph(*xs)
+    x0 = _util.asarray_of_rows(x0)
+    xs = _util.asarray_1d(xs)
+    phi0, _, _ = _util.cart2sph(*x0.T)
+    phis, _, rs = _util.cart2sph(*xs)
     phaseshift = phi0 - phis
 
     delay = (rs - r0) / c
-    weight = 1 / 2 / np.pi / rs
+    weight = 1 / 2 / _np.pi / rs
     sos = []
     for m in range(max_order + 1):
-        _, p, _ = besselap(m, norm='delay')
+        _, p, _ = _sig.besselap(m, norm='delay')
         s_zeros = c / rs * p
         s_poles = c / r0 * p
         s_gain = 1
         z_zeros, z_poles, z_gain = s2z(s_zeros, s_poles, s_gain, fs)
-        sos.append(zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
-    selection = util.source_selection_all(len(x0))
-    return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
+        sos.append(_sig.zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
+    selection = _util.source_selection_all(len(x0))
+    return (delay, weight, sos, phaseshift, selection,
+            _secondary_source_point(c))
 
 
 def plane_3d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
@@ -333,28 +336,29 @@ def plane_3d(x0, r0, npw, fs, max_order=None, c=None, s2z=matchedz_zpk):
 
     """
     if max_order is None:
-        max_order = util.max_order_spherical_harmonics(len(x0))
+        max_order = _util.max_order_spherical_harmonics(len(x0))
     if c is None:
-        c = default.c
+        c = _default.c
 
-    x0 = util.asarray_of_rows(x0)
-    npw = util.asarray_1d(npw)
-    phi0, theta0, _ = util.cart2sph(*x0.T)
-    phipw, thetapw, _ = util.cart2sph(*npw)
-    phaseshift = np.arccos(np.dot(x0 / r0, -npw))
+    x0 = _util.asarray_of_rows(x0)
+    npw = _util.asarray_1d(npw)
+    phi0, theta0, _ = _util.cart2sph(*x0.T)
+    phipw, thetapw, _ = _util.cart2sph(*npw)
+    phaseshift = _np.arccos(_np.dot(x0 / r0, -npw))
 
     delay = -r0 / c
-    weight = 4 * np.pi / r0
+    weight = 4 * _np.pi / r0
     sos = []
     for m in range(max_order + 1):
-        _, p, _ = besselap(m, norm='delay')
-        s_zeros = np.zeros(m)
+        _, p, _ = _sig.besselap(m, norm='delay')
+        s_zeros = _np.zeros(m)
         s_poles = c / r0 * p
         s_gain = 1
         z_zeros, z_poles, z_gain = s2z(s_zeros, s_poles, s_gain, fs)
-        sos.append(zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
-    selection = util.source_selection_all(len(x0))
-    return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
+        sos.append(_sig.zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
+    selection = _util.source_selection_all(len(x0))
+    return (delay, weight, sos, phaseshift, selection,
+            _secondary_source_point(c))
 
 
 def point_3d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
@@ -420,28 +424,29 @@ def point_3d(x0, r0, xs, fs, max_order=None, c=None, s2z=matchedz_zpk):
 
     """
     if max_order is None:
-        max_order = util.max_order_spherical_harmonics(len(x0))
+        max_order = _util.max_order_spherical_harmonics(len(x0))
     if c is None:
-        c = default.c
+        c = _default.c
 
-    x0 = util.asarray_of_rows(x0)
-    xs = util.asarray_1d(xs)
-    phi0, theta0, _ = util.cart2sph(*x0.T)
-    phis, thetas, rs = util.cart2sph(*xs)
-    phaseshift = np.arccos(np.dot(x0 / r0, xs / rs))
+    x0 = _util.asarray_of_rows(x0)
+    xs = _util.asarray_1d(xs)
+    phi0, theta0, _ = _util.cart2sph(*x0.T)
+    phis, thetas, rs = _util.cart2sph(*xs)
+    phaseshift = _np.arccos(_np.dot(x0 / r0, xs / rs))
 
     delay = (rs - r0) / c
     weight = 1 / r0 / rs
     sos = []
     for m in range(max_order + 1):
-        _, p, _ = besselap(m, norm='delay')
+        _, p, _ = _sig.besselap(m, norm='delay')
         s_zeros = c / rs * p
         s_poles = c / r0 * p
         s_gain = 1
         z_zeros, z_poles, z_gain = s2z(s_zeros, s_poles, s_gain, fs)
-        sos.append(zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
-    selection = util.source_selection_all(len(x0))
-    return delay, weight, sos, phaseshift, selection, secondary_source_point(c)
+        sos.append(_sig.zpk2sos(z_zeros, z_poles, z_gain, pairing='nearest'))
+    selection = _util.source_selection_all(len(x0))
+    return (delay, weight, sos, phaseshift, selection,
+            _secondary_source_point(c))
 
 
 def driving_signals_25d(delay, weight, sos, phaseshift, signal):
@@ -469,13 +474,13 @@ def driving_signals_25d(delay, weight, sos, phaseshift, signal):
         and a (possibly negative) time offset (in seconds).
 
     """
-    data, fs, t_offset = util.as_delayed_signal(signal)
+    data, fs, t_offset = _util.as_delayed_signal(signal)
     N = len(phaseshift)
-    out = np.tile(np.expand_dims(sosfilt(sos[0], data), 1), (1, N))
+    out = _np.tile(_np.expand_dims(_sig.sosfilt(sos[0], data), 1), (1, N))
     for m in range(1, len(sos)):
-        modal_response = sosfilt(sos[m], data)[:, np.newaxis]
-        out += modal_response * np.cos(m * phaseshift)
-    return util.DelayedSignal(2 * weight * out, fs, t_offset + delay)
+        modal_response = _sig.sosfilt(sos[m], data)[:, _np.newaxis]
+        out += modal_response * _np.cos(m * phaseshift)
+    return _util.DelayedSignal(2 * weight * out, fs, t_offset + delay)
 
 
 def driving_signals_3d(delay, weight, sos, phaseshift, signal):
@@ -503,10 +508,10 @@ def driving_signals_3d(delay, weight, sos, phaseshift, signal):
         and a (possibly negative) time offset (in seconds).
 
     """
-    data, fs, t_offset = util.as_delayed_signal(signal)
+    data, fs, t_offset = _util.as_delayed_signal(signal)
     N = len(phaseshift)
-    out = np.tile(np.expand_dims(sosfilt(sos[0], data), 1), (1, N))
+    out = _np.tile(_np.expand_dims(_sig.sosfilt(sos[0], data), 1), (1, N))
     for m in range(1, len(sos)):
-        modal_response = sosfilt(sos[m], data)[:, np.newaxis]
-        out += (2 * m + 1) * modal_response * legendre(m, np.cos(phaseshift))
-    return util.DelayedSignal(weight / 4 / np.pi * out, fs, t_offset + delay)
+        modal_response = _sig.sosfilt(sos[m], data)[:, _np.newaxis]
+        out += (2 * m + 1) * modal_response * _legendre(m, _np.cos(phaseshift))
+    return _util.DelayedSignal(weight / 4 / _np.pi * out, fs, t_offset + delay)

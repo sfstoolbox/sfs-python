@@ -9,13 +9,15 @@
     plt.rcParams['axes.grid'] = True
 
 """
-from collections import namedtuple
-import numpy as np
-from . import util
+from collections import namedtuple as _namedtuple
+
+import numpy as _np
+
+from . import util as _util
 
 
-class SecondarySourceDistribution(namedtuple('SecondarySourceDistribution',
-                                             'x n a')):
+class SecondarySourceDistribution(_namedtuple('SecondarySourceDistribution',
+                                              'x n a')):
     """Named tuple returned by array functions.
 
     See `collections.namedtuple`.
@@ -70,17 +72,17 @@ def as_secondary_source_distribution(arg, **kwargs):
         a = 1.0
     elif len(arg) == 1:
         x, = arg
-        n = np.nan, np.nan, np.nan
+        n = _np.nan, _np.nan, _np.nan
         a = 1.0
     else:
         raise TypeError('Between 1 and 3 elements are required')
-    x = util.asarray_of_rows(x, **kwargs)
-    n = util.asarray_of_rows(n, **kwargs)
+    x = _util.asarray_of_rows(x, **kwargs)
+    n = _util.asarray_of_rows(n, **kwargs)
     if len(n) == 1:
-        n = np.tile(n, (len(x), 1))
-    a = util.asarray_1d(a, **kwargs)
+        n = _np.tile(n, (len(x), 1))
+    a = _util.asarray_1d(a, **kwargs)
     if len(a) == 1:
-        a = np.tile(a, len(x))
+        a = _np.tile(a, len(x))
     return SecondarySourceDistribution(x, n, a)
 
 
@@ -116,7 +118,7 @@ def linear(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
         plt.ylabel('y / m')
 
     """
-    return _linear_helper(np.arange(N) * spacing, center, orientation)
+    return _linear_helper(_np.arange(N) * spacing, center, orientation)
 
 
 def linear_diff(distances, *, center=[0, 0, 0], orientation=[1, 0, 0]):
@@ -147,8 +149,8 @@ def linear_diff(distances, *, center=[0, 0, 0], orientation=[1, 0, 0]):
         plt.ylabel('y / m')
 
     """
-    distances = util.asarray_1d(distances)
-    ycoordinates = np.concatenate(([0], np.cumsum(distances)))
+    distances = _util.asarray_1d(distances)
+    ycoordinates = _np.concatenate(([0], _np.cumsum(distances)))
     return _linear_helper(ycoordinates, center, orientation)
 
 
@@ -188,7 +190,7 @@ def linear_random(N, min_spacing, max_spacing, *, center=[0, 0, 0],
         plt.ylabel('y / m')
 
     """
-    r = np.random.RandomState(seed)
+    r = _np.random.RandomState(seed)
     distances = r.uniform(min_spacing, max_spacing, size=N-1)
     return linear_diff(distances, center=center, orientation=orientation)
 
@@ -222,16 +224,16 @@ def circular(N, R, *, center=[0, 0, 0]):
         plt.ylabel('y / m')
 
     """
-    center = util.asarray_1d(center)
-    alpha = np.linspace(0, 2 * np.pi, N, endpoint=False)
-    positions = np.zeros((N, len(center)))
-    positions[:, 0] = R * np.cos(alpha)
-    positions[:, 1] = R * np.sin(alpha)
+    center = _util.asarray_1d(center)
+    alpha = _np.linspace(0, 2 * _np.pi, N, endpoint=False)
+    positions = _np.zeros((N, len(center)))
+    positions[:, 0] = R * _np.cos(alpha)
+    positions[:, 1] = R * _np.sin(alpha)
     positions += center
-    normals = np.zeros_like(positions)
-    normals[:, 0] = np.cos(alpha + np.pi)
-    normals[:, 1] = np.sin(alpha + np.pi)
-    weights = np.ones(N) * 2 * np.pi * R / N
+    normals = _np.zeros_like(positions)
+    normals[:, 0] = _np.cos(alpha + _np.pi)
+    normals[:, 1] = _np.sin(alpha + _np.pi)
+    weights = _np.ones(N) * 2 * _np.pi * R / N
     return SecondarySourceDistribution(positions, normals, weights)
 
 
@@ -268,9 +270,9 @@ def rectangular(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
         plt.ylabel('y / m')
 
     """
-    N1, N2 = (N, N) if np.isscalar(N) else N
-    offset1 = spacing * (N2 - 1) / 2 + spacing / np.sqrt(2)
-    offset2 = spacing * (N1 - 1) / 2 + spacing / np.sqrt(2)
+    N1, N2 = (N, N) if _np.isscalar(N) else N
+    offset1 = spacing * (N2 - 1) / 2 + spacing / _np.sqrt(2)
+    offset2 = spacing * (N1 - 1) / 2 + spacing / _np.sqrt(2)
     positions, normals, weights = concatenate(
         # left
         linear(N1, spacing, center=[-offset1, 0, 0], orientation=[1, 0, 0]),
@@ -321,37 +323,37 @@ def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """
     # radius of rounded edge
     Nr += 1
-    R = 2/np.pi * Nr * dx
+    R = 2/_np.pi * Nr * dx
 
     # array along y-axis
     x00, n00, a00 = linear(Nxy, dx, center=[0, Nxy//2*dx+dx/2+R, 0])
-    x00 = np.flipud(x00)
+    x00 = _np.flipud(x00)
     positions = x00
     directions = n00
     weights = a00
 
     # round part
-    x00 = np.zeros((Nr, 3))
-    n00 = np.zeros((Nr, 3))
-    a00 = np.zeros(Nr)
+    x00 = _np.zeros((Nr, 3))
+    n00 = _np.zeros((Nr, 3))
+    a00 = _np.zeros(Nr)
     for n in range(0, Nr):
-        alpha = np.pi/2 * n/Nr
-        x00[n, 0] = R * (1-np.cos(alpha))
-        x00[n, 1] = R * (1-np.sin(alpha))
-        n00[n, 0] = np.cos(alpha)
-        n00[n, 1] = np.sin(alpha)
+        alpha = _np.pi/2 * n/Nr
+        x00[n, 0] = R * (1 - _np.cos(alpha))
+        x00[n, 1] = R * (1 - _np.sin(alpha))
+        n00[n, 0] = _np.cos(alpha)
+        n00[n, 1] = _np.sin(alpha)
         a00[n] = dx
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
+    positions = _np.concatenate((positions, x00))
+    directions = _np.concatenate((directions, n00))
+    weights = _np.concatenate((weights, a00))
 
     # array along x-axis
     x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2+R, 0, 0],
                            orientation=[0, 1, 0])
-    x00 = np.flipud(x00)
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
+    x00 = _np.flipud(x00)
+    positions = _np.concatenate((positions, x00))
+    directions = _np.concatenate((directions, n00))
+    weights = _np.concatenate((weights, a00))
 
     # rotate array
     positions, directions = _rotate_array(positions, directions,
@@ -392,7 +394,7 @@ def edge(Nxy, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """
     # array along y-axis
     x00, n00, a00 = linear(Nxy, dx, center=[0, Nxy//2*dx+dx/2, 0])
-    x00 = np.flipud(x00)
+    x00 = _np.flipud(x00)
     positions = x00
     directions = n00
     weights = a00
@@ -400,10 +402,10 @@ def edge(Nxy, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     # array along x-axis
     x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2, 0, 0],
                            orientation=[0, 1, 0])
-    x00 = np.flipud(x00)
-    positions = np.concatenate((positions, x00))
-    directions = np.concatenate((directions, n00))
-    weights = np.concatenate((weights, a00))
+    x00 = _np.flipud(x00)
+    positions = _np.concatenate((positions, x00))
+    directions = _np.concatenate((directions, n00))
+    weights = _np.concatenate((weights, a00))
 
     # rotate array
     positions, directions = _rotate_array(positions, directions,
@@ -452,9 +454,9 @@ def planar(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
 
 
     """
-    N1, N2 = (N, N) if np.isscalar(N) else N
-    zcoordinates = np.arange(N2) * spacing
-    zcoordinates -= np.mean(zcoordinates[[0, -1]])  # move center to origin
+    N1, N2 = (N, N) if _np.isscalar(N) else N
+    zcoordinates = _np.arange(N2) * spacing
+    zcoordinates -= _np.mean(zcoordinates[[0, -1]])  # move center to origin
     subarrays = [linear(N1, spacing, center=[0, 0, z]) for z in zcoordinates]
     positions, normals, weights = concatenate(*subarrays)
     weights *= spacing
@@ -499,11 +501,11 @@ def cube(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
         plt.title('view onto xy-plane')
 
     """
-    N1, N2, N3 = (N, N, N) if np.isscalar(N) else N
+    N1, N2, N3 = (N, N, N) if _np.isscalar(N) else N
     d = spacing
-    offset1 = d * (N2 - 1) / 2 + d / np.sqrt(2)
-    offset2 = d * (N1 - 1) / 2 + d / np.sqrt(2)
-    offset3 = d * (N3 - 1) / 2 + d / np.sqrt(2)
+    offset1 = d * (N2 - 1) / 2 + d / _np.sqrt(2)
+    offset2 = d * (N1 - 1) / 2 + d / _np.sqrt(2)
+    offset3 = d * (N3 - 1) / 2 + d / _np.sqrt(2)
     positions, directions, weights = concatenate(
         # west
         planar((N1, N3), d, center=[-offset1, 0, 0], orientation=[1, 0, 0]),
@@ -565,7 +567,7 @@ def sphere_load(file, radius, *, center=[0, 0, 0]):
         plt.title('view onto xy-plane')
 
     """
-    data = np.loadtxt(file)
+    data = _np.loadtxt(file)
     positions, weights = data[:, :3], data[:, 3]
     normals = -positions
     positions *= radius
@@ -618,7 +620,7 @@ def load(file, *, center=[0, 0, 0], orientation=[1, 0, 0]):
         plt.title('top view of 64 channel WFS system at university of Rostock')
 
     """
-    data = np.loadtxt(file, delimiter=',')
+    data = _np.loadtxt(file, delimiter=',')
     positions, normals, weights = data[:, :3], data[:, 3:6], data[:, 6]
     positions, normals = _rotate_array(positions, normals,
                                        [1, 0, 0], orientation)
@@ -657,34 +659,34 @@ def weights_midpoint(positions, *, closed):
     0.0003152601902411123
 
     """
-    positions = util.asarray_of_rows(positions)
+    positions = _util.asarray_of_rows(positions)
     if closed:
         before, after = -1, 0  # cyclic
     else:
         before, after = 1, -2  # mirrored
-    positions = np.row_stack((positions[before], positions, positions[after]))
-    distances = np.linalg.norm(np.diff(positions, axis=0), axis=1)
+    positions = _np.row_stack((positions[before], positions, positions[after]))
+    distances = _np.linalg.norm(_np.diff(positions, axis=0), axis=1)
     return (distances[:-1] + distances[1:]) / 2
 
 
 def _rotate_array(positions, normals, n1, n2):
     """Rotate secondary sources from n1 to n2."""
-    R = util.rotation_matrix(n1, n2)
-    positions = np.inner(positions, R)
-    normals = np.inner(normals, R)
+    R = _util.rotation_matrix(n1, n2)
+    positions = _np.inner(positions, R)
+    normals = _np.inner(normals, R)
     return positions, normals
 
 
 def _linear_helper(ycoordinates, center, orientation):
     """Create a full linear array from an array of y-coordinates."""
-    center = util.asarray_1d(center)
+    center = _util.asarray_1d(center)
     N = len(ycoordinates)
-    positions = np.zeros((N, 3))
-    positions[:, 1] = ycoordinates - np.mean(ycoordinates[[0, -1]])
+    positions = _np.zeros((N, 3))
+    positions[:, 1] = ycoordinates - _np.mean(ycoordinates[[0, -1]])
     positions, normals = _rotate_array(positions, [1, 0, 0],
                                        [1, 0, 0], orientation)
     positions += center
-    normals = np.tile(normals, (N, 1))
+    normals = _np.tile(normals, (N, 1))
     weights = weights_midpoint(positions, closed=False)
     return SecondarySourceDistribution(positions, normals, weights)
 
@@ -712,5 +714,5 @@ def concatenate(*arrays):
         plt.ylabel('y / m')
 
     """
-    return SecondarySourceDistribution._make(np.concatenate(i)
+    return SecondarySourceDistribution._make(_np.concatenate(i)
                                              for i in zip(*arrays))
