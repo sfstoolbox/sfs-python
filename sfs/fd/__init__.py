@@ -13,6 +13,7 @@
 """
 from . import source
 from .. import array as _array
+from .. import util as _util
 import numpy as _np
 
 
@@ -20,6 +21,17 @@ def shiftphase(p, phase):
     """Shift phase of a sound field."""
     p = _np.asarray(p)
     return p * _np.exp(1j * phase)
+
+
+def displacement(v, omega):
+    r"""Particle displacement.
+
+    .. math::
+
+        d(x, t) = \int_{-\infty}^t v(x, \tau) d\tau
+
+    """
+    return _util.as_xyz_components(v) / (1j * omega)
 
 
 def synthesize(d, weights, ssd, secondary_source_function, **kwargs):

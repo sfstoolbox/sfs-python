@@ -339,17 +339,6 @@ def normalize_vector(x):
     return x / np.linalg.norm(x)
 
 
-def displacement(v, omega):
-    r"""Particle displacement.
-
-    .. math::
-
-        d(x, t) = \int_{-\infty}^t v(x, \tau) d\tau
-
-    """
-    return as_xyz_components(v) / (1j * omega)
-
-
 def db(x, *, power=False):
     """Convert *x* to decibel.
 
