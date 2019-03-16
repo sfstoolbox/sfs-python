@@ -96,9 +96,7 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
     with wfs(2.5D) prefilter h(t), which is not implemented yet.
 
-    References
-    ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.pw.2.5D
+    See :sfs:`d_wfs/#equation-td-wfs-plane-25d`
 
     Examples
     --------
@@ -173,9 +171,7 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     with wfs(2.5D) prefilter h(t), which is not implemented yet.
 
-    References
-    ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.ps.2.5D
+    See :sfs:`d_wfs/#equation-td-wfs-point-25d`
 
     Examples
     --------
@@ -257,9 +253,7 @@ def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
 
     with wfs(2.5D) prefilter h(t), which is not implemented yet.
 
-    References
-    ----------
-    See http://sfstoolbox.org/en/latest/#equation-d.wfs.fs.2.5D
+    See :sfs:`d_wfs/#equation-td-wfs-focused-25d`
 
     Examples
     --------
