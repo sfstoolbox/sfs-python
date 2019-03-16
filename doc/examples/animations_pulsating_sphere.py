@@ -10,7 +10,7 @@ def particle_displacement(omega, center, radius, amplitude, grid, frames,
     """Generate sound particle animation."""
     velocity = sfs.fd.source.pulsating_sphere_velocity(
                omega, center, radius, amplitude, grid)
-    displacement = sfs.util.displacement(velocity, omega)
+    displacement = sfs.fd.displacement(velocity, omega)
     phasor = np.exp(1j * 2 * np.pi / frames)
 
     fig, ax = plt.subplots(figsize=figsize)

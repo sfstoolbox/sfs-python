@@ -19,7 +19,7 @@ grid = [np.random.uniform(-3, 3, 40000), np.random.uniform(-3, 3, 40000), 0]
 
 def plot_particle_displacement(title):
     # compute displacement
-    X = grid + amplitude * sfs.util.displacement(v, omega)
+    X = grid + amplitude * sfs.fd.displacement(v, omega)
     # plot displacement
     plt.figure(figsize=(15, 15))
     plt.cla()
