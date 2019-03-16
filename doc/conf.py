@@ -41,6 +41,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.doctest',
     'sphinxcontrib.bibtex',
+    'sphinx.ext.extlinks',
     'matplotlib.sphinxext.plot_directive',
     'nbsphinx',
 ]
@@ -76,6 +77,9 @@ intersphinx_mapping = {
     'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
     'matplotlib': ('https://matplotlib.org/', None),
 }
+
+extlinks = {'sfs': ('https://sfs.readthedocs.io/en/3.2/%s',
+                    'https://sfs.rtfd.io/')}
 
 plot_include_source = True
 plot_html_show_source_link = False

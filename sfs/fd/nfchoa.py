@@ -74,7 +74,7 @@ def plane_2d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
         \frac{\i^{-m}}{\Hankel{2}{m}{\wc r_0}}
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2D.
+    See :sfs:`d_nfchoa/#equation-fd-nfchoa-plane-2d`
 
     Examples
     --------
@@ -140,7 +140,7 @@ def point_25d(omega, x0, r0, xs, *, max_order=None, c=None):
         \frac{\hankel{2}{|m|}{\wc r}}{\hankel{2}{|m|}{\wc r_0}}
         \e{\i m (\phi_0 - \phi)}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.ps.2.5D.
+    See :sfs:`d_nfchoa/#equation-fd-nfchoa-point-25d`
 
     Examples
     --------
@@ -208,7 +208,7 @@ def plane_25d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
         \frac{\i^{-|m|}}{\wc \hankel{2}{|m|}{\wc r_0}}
         \e{\i m (\phi_0 - \phi_\text{pw})}
 
-    See http://sfstoolbox.org/#equation-D.nfchoa.pw.2.5D.
+    See :sfs:`d_nfchoa/#equation-fd-nfchoa-plane-25d`
 
     Examples
     --------
