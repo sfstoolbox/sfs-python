@@ -13,8 +13,11 @@ from . import default
 def _register_cmap_clip(name, original_cmap, alpha):
     """Create a color map with "over" and "under" values."""
     from matplotlib.colors import LinearSegmentedColormap
-    cdict = plt.cm.datad[original_cmap]
-    cmap = LinearSegmentedColormap(name, cdict)
+    cdata = plt.cm.datad[original_cmap]
+    if isinstance(cdata, dict):
+        cmap = LinearSegmentedColormap(name, cdata)
+    else:
+        cmap = LinearSegmentedColormap.from_list(name, cdata)
     cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
     cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
     plt.cm.register_cmap(cmap=cmap)
