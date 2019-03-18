@@ -82,9 +82,10 @@ def point(omega, x0, grid, *, c=None):
     grid = util.as_xyz_components(grid)
 
     r = np.linalg.norm(grid - x0)
-    # `r` can get `0`, which is fine in this case
-    with np.errstate(invalid='ignore', divide='ignore'):
-        return 1 / (4*np.pi) * np.exp(-1j * k * r) / r
+    # If r is 0, the sound pressure is complex infinity
+    numerator = np.exp(-1j * k * r) / (4*np.pi)
+    with np.errstate(divide='ignore'):
+        return numerator / r
 
 
 def point_velocity(omega, x0, grid, *, c=None, rho0=None):
@@ -397,7 +398,7 @@ def point_image_sources(omega, x0, grid, L, *, max_order, coeffs=None, c=None):
     p = 0
     for position, strength in zip(xs, source_strengths):
         if strength != 0:
-            # `point` can return NaN, which is fine
+            # point can be complex infinity
             with np.errstate(invalid='ignore'):
                 p += strength * point(omega, position, grid, c=c)
 

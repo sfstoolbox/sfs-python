@@ -79,16 +79,17 @@ def point(xs, signal, observation_time, grid, c=None):
     if c is None:
         c = default.c
     r = np.linalg.norm(grid - xs)
-    # evaluate g over grid (`r` can get `0`, which is fine)
+    # If r is +-0, the sound pressure is +-infinity
     with np.errstate(divide='ignore'):
         weights = 1 / (4 * np.pi * r)
     delays = r / c
     base_time = observation_time - signal_offset
-    # Result can be NaN, which is fine
+    points_at_time = np.interp(base_time - delays,
+                               np.arange(len(data)) / samplerate,
+                               data, left=0, right=0)
+    # weights can be +-infinity
     with np.errstate(invalid='ignore'):
-        return weights * np.interp(base_time - delays,
-                                   np.arange(len(data)) / samplerate,
-                                   data, left=0, right=0)
+        return weights * points_at_time
 
 
 def point_image_sources(x0, signal, observation_time, grid, L, max_order,
