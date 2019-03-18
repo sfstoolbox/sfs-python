@@ -84,7 +84,7 @@ def point(omega, x0, grid, *, c=None):
     r = np.linalg.norm(grid - x0)
     # If r is 0, the sound pressure is complex infinity
     numerator = np.exp(-1j * k * r) / (4*np.pi)
-    with np.errstate(divide='ignore'):
+    with np.errstate(invalid='ignore', divide='ignore'):
         return numerator / r
 
 
