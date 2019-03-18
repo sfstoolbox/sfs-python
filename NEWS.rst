@@ -1,6 +1,20 @@
 Version History
 ===============
 
+Version 0.5.0 (2019-03-18):
+ * Switching to separate `sfs.plot2d` and `sfs.plot3d` for plotting functions
+ * Move `sfs.util.displacement()` to `sfs.fd.displacement()`
+ * Switch to keyword only arguments
+ * New default driving function for `sfs.fd.wfs.point_25d()`
+ * New driving function syntax, e.g. `sfs.fd.wfs.point_25d()`
+ * Example for the sound field of a pulsating sphere
+ * Add time domain NFC-HOA driving functions `sfs.td.nfchoa`
+ * `sfs.fd.synthesize()`, `sfs.td.synthesize()` for soundfield superposition
+ * Change `sfs.mono` to `sfs.fd` and `sfs.time` to `sfs.td`
+ * Move source selection helpers to `sfs.util`
+ * Use `sfs.default` object instead of `sfs.defs` submodule
+ * Drop support for legacy Python 2.7
+
 Version 0.4.0 (2018-03-14):
  * Driving functions in time domain for a plane wave, point source, and
    focused source
