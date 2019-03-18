@@ -13,6 +13,7 @@ Examples
 .. toctree::
     :maxdepth: 1
 
+    examples/sound-field-synthesis
     examples/modal-room-acoustics
     examples/mirror-image-source-model
     examples/animations-pulsating-sphere
