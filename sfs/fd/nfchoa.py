@@ -32,6 +32,7 @@ import numpy as _np
 from scipy.special import hankel2 as _hankel2
 
 from . import secondary_source_point as _secondary_source_point
+from . import secondary_source_line as _secondary_source_line
 from .. import util as _util
 
 
