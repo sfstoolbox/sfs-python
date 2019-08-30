@@ -98,7 +98,7 @@ def plane_2d(omega, x0, r0, n=[0, 1, 0], *, max_order=None, c=None):
     for m in range(-max_order, max_order + 1):
         d += 1j**-m / _hankel2(m, k * r0) * _np.exp(1j * m * (phi0 - phi))
     selection = _util.source_selection_all(len(x0))
-    return -2j / (_np.pi*r0) * d, selection, _secondary_source_point(omega, c)
+    return -2j / (_np.pi*r0) * d, selection, _secondary_source_line(omega, c)
 
 
 def point_25d(omega, x0, r0, xs, *, max_order=None, c=None):
