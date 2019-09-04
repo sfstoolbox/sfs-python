@@ -409,7 +409,22 @@ def point_image_sources(omega, x0, grid, L, *, max_order, coeffs=None, c=None):
 def line(omega, x0, grid, *, c=None):
     r"""Line source parallel to the z-axis.
 
-    Note: third component of x0 is ignored.
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source. Note: third component of x0 is ignored.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
 
     Notes
     -----
@@ -447,6 +462,18 @@ def line(omega, x0, grid, *, c=None):
 
 def line_velocity(omega, x0, grid, *, c=None, rho0=None):
     """Velocity of line source parallel to the z-axis.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source. Note: third component of x0 is ignored.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
 
     Returns
     -------
@@ -490,7 +517,19 @@ def line_velocity(omega, x0, grid, *, c=None, rho0=None):
 def line_dipole(omega, x0, n0, grid, *, c=None):
     r"""Line source with dipole characteristics parallel to the z-axis.
 
-    Note: third component of x0 is ignored.
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source. Note: third component of x0 is ignored.
+    x0 : (3,) array_like
+        Normal vector of the source.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    c : float, optional
+        Speed of sound.
 
     Notes
     -----
@@ -507,6 +546,76 @@ def line_dipole(omega, x0, n0, grid, *, c=None):
 
     r = _np.linalg.norm(dx)
     p = 1j*k/4 * _special.hankel2(1, k * r) * _np.inner(dx, n0) / r
+    return _duplicate_zdirection(p, grid)
+
+
+def line_bandlimited(omega, x0, grid, *, max_order=None, c=None):
+    r"""Spatially bandlimited (modal) line source parallel to the z-axis.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source. Note: third component of x0 is ignored.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    max_order : int, optional
+        Number of elements for series expansion of the source.
+        No bandlimitation if not given.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
+
+    Notes
+    -----
+    .. math::
+
+        G(\x-\x_0,\w) = -\frac{\i}{4} \sum_{\nu = - N}^{N}
+        e^{j \nu (\alpha - \alpha_0)}
+        \begin{cases}
+        J_\nu(\frac{\omega}{c} r) H_\nu^\text{(2)}(\frac{\omega}{c} r_0)
+        & \text{for } r \leq r_0 \\
+        J_\nu(\frac{\omega}{c} r_0) H_\nu^\text{(2)}(\frac{\omega}{c} r)
+        & \text{for } r > r_0 \\
+        \end{cases}
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        p = sfs.fd.source.line_bandlimited(omega, x0, grid, max_order=10)
+        sfs.plot2d.amplitude(p * normalization_line, grid)
+        plt.title("Bandlimited Line Source at {} m".format(x0[:2]))
+
+
+    """
+    k = _util.wavenumber(omega, c)
+    x0 = _util.asarray_1d(x0)[:2]  # ignore z-components
+    r0 = _np.linalg.norm(x0)
+    phi0 = _np.arctan2(x0[1], x0[0])
+
+    grid = _util.as_xyz_components(grid)
+    r = _np.linalg.norm(grid[:2])
+    phi = _np.arctan2(grid[1], grid[0])
+
+    if max_order is None:
+        max_order = int(_np.ceil(k * _np.max(r)))
+
+    p = _np.zeros((grid[1].shape[0], grid[0].shape[1]), dtype=complex)
+    idxr = (r <= r0)
+    for m in range(-max_order, max_order + 1):
+        p[idxr] -= 1j/4 * _special.hankel2(m, k * r0) * \
+            _special.jn(m, k * r[idxr]) * _np.exp(1j * m * (phi[idxr] - phi0))
+        p[~idxr] -= 1j/4 * _special.hankel2(m, k * r[~idxr]) * \
+            _special.jn(m, k * r0) * _np.exp(1j * m * (phi[~idxr] - phi0))
+
     return _duplicate_zdirection(p, grid)
 
 
@@ -557,7 +666,7 @@ def line_dirichlet_edge(omega, x0, grid, *, alpha=_np.pi*3/2, Nc=None, c=None):
     epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    p = _np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
+    p = _np.zeros((grid[1].shape[0], grid[0].shape[1]), dtype=complex)
     idxr = (r <= r_s)
     idxa = (phi <= alpha)
     for m in _np.arange(Nc):
