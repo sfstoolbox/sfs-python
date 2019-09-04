@@ -582,7 +582,7 @@ def line_bandlimited(omega, x0, grid, *, max_order=None, c=None):
         J_\nu(\frac{\omega}{c} r) H_\nu^\text{(2)}(\frac{\omega}{c} r_0)
         & \text{for } r \leq r_0 \\
         J_\nu(\frac{\omega}{c} r_0) H_\nu^\text{(2)}(\frac{\omega}{c} r)
-        & \text{for } r \leq r_0 \\
+        & \text{for } r > r_0 \\
         \end{cases}
 
 
