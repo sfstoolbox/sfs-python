@@ -583,8 +583,8 @@ def line_bandlimited(omega, x0, grid, *, max_order=None, c=None):
     phi0 = _np.arctan2(x0[1], x0[0])
 
     grid = _util.XyzComponents(grid)
-    r = _np.linalg.norm(grid[:2])
-    phi = _np.arctan2(grid[1], grid[0])
+    r = _np.linalg.norm(grid[:2]).T
+    phi = _np.arctan2(grid[1], grid[0]).T
 
     if max_order is None:
         max_order = int(_np.ceil(k * _np.max(r)))
