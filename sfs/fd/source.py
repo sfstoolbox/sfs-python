@@ -666,7 +666,7 @@ def line_dirichlet_edge(omega, x0, grid, *, alpha=_np.pi*3/2, Nc=None, c=None):
     epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
 
-    p = _np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
+    p = _np.zeros((grid[1].shape[0], grid[0].shape[1]), dtype=complex)
     idxr = (r <= r_s)
     idxa = (phi <= alpha)
     for m in _np.arange(Nc):
@@ -679,7 +679,7 @@ def line_dirichlet_edge(omega, x0, grid, *, alpha=_np.pi*3/2, Nc=None, c=None):
 
     p = p * -1j * _np.pi / alpha
 
-    pl = line(omega, x0, None, grid, c=c)
+    pl = line(omega, x0, grid, c=c)
     p[~idxa] = pl[~idxa]
 
     return p
