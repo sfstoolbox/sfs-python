@@ -570,7 +570,7 @@ def line_dirichlet_edge(omega, x0, grid, *, alpha=_np.pi*3/2, Nc=None, c=None):
 
     p = p * -1j * _np.pi / alpha
 
-    pl = line(omega, x0, None, grid, c=c)
+    pl = line(omega, x0, grid, c=c)
     p[~idxa] = pl[~idxa]
 
     return p
