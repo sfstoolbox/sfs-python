@@ -576,25 +576,35 @@ def line_bandlimited(omega, x0, grid, *, max_order=None, c=None):
     -----
     .. math::
 
+        G(\x-\x_0,\w) = -\frac{\i}{4} \sum_{\nu = - N}^{N}
+        e^{j \nu (\alpha - \alpha_0)}
+        \begin{cases}
+        J_\nu(\frac{\omega}{c} r) H_\nu^\text{(2)}(\frac{\omega}{c} r_0)
+        & \text{for } r \leq r_0 \\
+        J_\nu(\frac{\omega}{c} r_0) H_\nu^\text{(2)}(\frac{\omega}{c} r)
+        & \text{for } r \leq r_0 \\
+        \end{cases}
+
+
     """
     k = _util.wavenumber(omega, c)
     x0 = _util.asarray_1d(x0)[:2]  # ignore z-components
     r0 = _np.linalg.norm(x0)
     phi0 = _np.arctan2(x0[1], x0[0])
 
-    grid = _util.XyzComponents(grid)
-    r = _np.linalg.norm(grid[:2]).T
-    phi = _np.arctan2(grid[1], grid[0]).T
+    grid = _util.as_xyz_components(grid)
+    r = _np.linalg.norm(grid[:2])
+    phi = _np.arctan2(grid[1], grid[0])
 
     if max_order is None:
         max_order = int(_np.ceil(k * _np.max(r)))
 
-    p = _np.zeros((grid[0].shape[1], grid[1].shape[0]), dtype=complex)
+    p = _np.zeros((grid[1].shape[0], grid[0].shape[1]), dtype=complex)
     idxr = (r <= r0)
     for m in range(-max_order, max_order + 1):
-        p[idxr] += 1j/4 * _special.hankel2(m, k * r0) * \
+        p[idxr] -= 1j/4 * _special.hankel2(m, k * r0) * \
             _special.jn(m, k * r[idxr]) * _np.exp(1j * m * (phi[idxr] - phi0))
-        p[~idxr] += 1j/4 * _special.hankel2(m, k * r[~idxr]) * \
+        p[~idxr] -= 1j/4 * _special.hankel2(m, k * r[~idxr]) * \
             _special.jn(m, k * r0) * _np.exp(1j * m * (phi[~idxr] - phi0))
 
     return _duplicate_zdirection(p, grid)
