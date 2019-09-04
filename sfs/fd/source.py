@@ -585,6 +585,15 @@ def line_bandlimited(omega, x0, grid, *, max_order=None, c=None):
         & \text{for } r > r_0 \\
         \end{cases}
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        p = sfs.fd.source.line_bandlimited(omega, x0, grid, max_order=10)
+        sfs.plot2d.amplitude(p * normalization_line, grid)
+        plt.title("Bandlimited Line Source at {} m".format(x0[:2]))
+
 
     """
     k = _util.wavenumber(omega, c)
