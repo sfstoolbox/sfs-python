@@ -224,6 +224,68 @@ def point_dipole(omega, x0, n0, grid, *, c=None):
     return 1 / (4 * _np.pi) * (1j * k + 1 / r) * _np.inner(offset, n0) / \
         _np.power(r, 2) * _np.exp(-1j * k * r)
 
+def point_circular_piston(omega, x0, n0, grid, R, *, c=None):
+    r"""Point source with circular piston far-field directivity.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    n0 : (3,) array_like
+        Normal vector (direction) of the circular piston.
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    R : float
+        Radius of circular piston.
+    c : float, optional
+        Speed of sound.
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
+
+    Notes
+    -----
+    .. math::
+
+        G(\x-\x_0,\w) = \frac{1}{2\pi} 
+            \frac{J_1(\wc R \sin(\Theta))}{\wc R \sin(\Theta)}
+            \frac{\e{-\i\wc|\x-\x_0|}}{|\x-\x_0|}
+    with 
+
+    .. math::
+
+        \cos(\Theta) =
+            \frac{\langle \mathbf{x} - \mathbf{x}_0 | \mathbf{n}_0 \rangle}
+                {|\mathbf{x} - \mathbf{x}_0|}
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        n0 = 0, -1, 0
+        R = 1.0
+        p = sfs.fd.source.point_circular_piston(omega, x0, n0, grid, R)
+        sfs.plot2d.amplitude(p * normalization_point, grid)
+        plt.title("Circular Piston Radiator at {} m".format(x0))
+
+    """
+    k = _util.wavenumber(omega, c)
+    x0 = _util.asarray_1d(x0)
+    n0 = _util.asarray_1d(n0)
+    grid = _util.as_xyz_components(grid)
+
+    offset = grid - x0
+    r = _np.linalg.norm(offset)
+    cosphi = _np.inner(offset, n0) / r
+    sinphi = _np.sqrt(1 - _np.power(cosphi, 2))
+
+    return 1 / (2 * _np.pi) * _np.exp(-1j * k * r) * _util.jinc(k * R * sinphi)
+
 
 def point_modal(omega, x0, grid, L, *, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
