@@ -284,7 +284,8 @@ def point_circular_piston(omega, x0, n0, grid, R, *, c=None):
     cosphi = _np.inner(offset, n0) / r
     sinphi = _np.sqrt(1 - _np.power(cosphi, 2))
 
-    return 1 / (2 * _np.pi) * _np.exp(-1j * k * r) * _util.jinc(k * R * sinphi)
+    return 1 / (2 * _np.pi) * _np.exp(-1j * k * r) / r \
+        _util.jinc(k * R * sinphi)
 
 
 def point_modal(omega, x0, grid, L, *, N=None, deltan=0, c=None):
