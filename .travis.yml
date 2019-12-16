@@ -5,8 +5,15 @@ matrix:
     - python: "3.5"
     - python: "3.6"
     - python: "3.7"
+    - os: osx
+      language: generic
+      python: ""
 addons:
   apt:
+    packages:
+      - pandoc
+      - ffmpeg
+  homebrew:
     packages:
       - pandoc
       - ffmpeg
