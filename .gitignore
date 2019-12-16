@@ -4,3 +4,4 @@ build/
 dist/
 .eggs/
 sfs.egg-info/
+doc/sfs.*.rst
