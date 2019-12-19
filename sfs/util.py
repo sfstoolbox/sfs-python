@@ -577,6 +577,7 @@ def jinc(x):
     y = where(x == 0, 1.0e-20, x)
     return j1(y)/y
 
+
 def source_selection_plane(n0, n):
     """Secondary source selection for a plane wave.
 

@@ -224,6 +224,7 @@ def point_dipole(omega, x0, n0, grid, *, c=None):
     return 1 / (4 * _np.pi) * (1j * k + 1 / r) * _np.inner(offset, n0) / \
         _np.power(r, 2) * _np.exp(-1j * k * r)
 
+
 def point_circular_piston(omega, x0, n0, grid, R, *, c=None):
     r"""Point source with circular piston far-field directivity.
 
@@ -251,10 +252,10 @@ def point_circular_piston(omega, x0, n0, grid, R, *, c=None):
     -----
     .. math::
 
-        G(\x-\x_0,\w) = \frac{1}{2\pi} 
+        G(\x-\x_0,\w) = \frac{1}{2\pi}
             \frac{J_1(\wc R \sin(\Theta))}{\wc R \sin(\Theta)}
             \frac{\e{-\i\wc|\x-\x_0|}}{|\x-\x_0|}
-    with 
+    with
 
     .. math::
 
