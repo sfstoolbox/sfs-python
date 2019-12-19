@@ -243,6 +243,7 @@ def point_circular_piston(omega, x0, n0, grid, R, *, c=None):
         Radius of circular piston.
     c : float, optional
         Speed of sound.
+
     Returns
     -------
     numpy.ndarray
