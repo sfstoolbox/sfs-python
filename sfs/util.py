@@ -557,14 +557,15 @@ def spherical_hn2(n, z):
 
 
 def jinc(x):
-    r"""Circular counterpart of Sinc function a.k.a. Jinc function
+    r"""Jinc function (circular counterpart of Sinc function).
 
     .. math::
 
         \mathrm{Jinc}(x) = \frac{J_1(x)}{x}
 
     where :math:`J_1(\cdot)` is the Bessel function of first order,
-    and :math:`x` its real-value argument.
+    and :math:`x` its real-value argument. For reference implementation, see
+    https://docs.scipy.org/doc/numpy/reference/generated/numpy.sinc.html.
 
     Parameters
     ----------
@@ -572,7 +573,6 @@ def jinc(x):
         Argument of the Jinc function.
 
     """
-
     x = np.asanyarray(x)
     y = where(x == 0, 1.0e-20, x)
     return j1(y)/y
