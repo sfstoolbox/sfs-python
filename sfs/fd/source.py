@@ -256,7 +256,7 @@ def point_circular_piston(omega, x0, n0, grid, R, *, c=None):
         G(\x-\x_0,\w) = \frac{1}{2\pi}
             \frac{J_1(\wc R \sin(\Theta))}{\wc R \sin(\Theta)}
             \frac{\e{-\i\wc|\x-\x_0|}}{|\x-\x_0|}
-    with
+    with :math:`\Theta` more conveniently defined by its cosine
 
     .. math::
 
