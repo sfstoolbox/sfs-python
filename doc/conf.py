@@ -56,7 +56,10 @@ sphinx.SFS_DOCS_ARE_BEING_BUILT = True
 
 autoclass_content = 'init'
 autodoc_member_order = 'bysource'
-autodoc_default_flags = ['members', 'undoc-members']
+autodoc_default_options = {
+    'members': True,
+    'undoc-members': True,
+}
 
 autosummary_generate = ['api']
 
