@@ -289,7 +289,7 @@ def rectangular(N, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, normals, weights)
 
 
-def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
+def rounded_edge(Nxy, Nr, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return SSD along the xy-axis with rounded edge at the origin.
 
     Parameters
@@ -299,6 +299,8 @@ def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     Nr : int
         Number of secondary sources in rounded edge.  Radius of edge is
         adjusted to equdistant sampling along entire array.
+    spacing : float
+        Distance (in metres) between secondary sources.
     center : (3,) array_like, optional
         Position of edge.
     orientation : (3,) array_like, optional
@@ -323,10 +325,11 @@ def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """
     # radius of rounded edge
     Nr += 1
-    R = 2/_np.pi * Nr * dx
+    R = 2/_np.pi * Nr * spacing
 
     # array along y-axis
-    x00, n00, a00 = linear(Nxy, dx, center=[0, Nxy//2*dx+dx/2+R, 0])
+    x00, n00, a00 = linear(Nxy, spacing,
+                           center=[0, Nxy//2*spacing+spacing/2+R, 0])
     x00 = _np.flipud(x00)
     positions = x00
     directions = n00
@@ -342,13 +345,14 @@ def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
         x00[n, 1] = R * (1 - _np.sin(alpha))
         n00[n, 0] = _np.cos(alpha)
         n00[n, 1] = _np.sin(alpha)
-        a00[n] = dx
+        a00[n] = spacing
     positions = _np.concatenate((positions, x00))
     directions = _np.concatenate((directions, n00))
     weights = _np.concatenate((weights, a00))
 
     # array along x-axis
-    x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2+R, 0, 0],
+    x00, n00, a00 = linear(Nxy, spacing,
+                           center=[Nxy//2*spacing-spacing/2+R, 0, 0],
                            orientation=[0, 1, 0])
     x00 = _np.flipud(x00)
     positions = _np.concatenate((positions, x00))
@@ -363,13 +367,15 @@ def rounded_edge(Nxy, Nr, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     return SecondarySourceDistribution(positions, directions, weights)
 
 
-def edge(Nxy, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
+def edge(Nxy, spacing, *, center=[0, 0, 0], orientation=[1, 0, 0]):
     """Return SSD along the xy-axis with sharp edge at the origin.
 
     Parameters
     ----------
     Nxy : int
         Number of secondary sources along x- and y-axis.
+    spacing : float
+        Distance (in metres) between secondary sources.
     center : (3,) array_like, optional
         Position of edge.
     orientation : (3,) array_like, optional
@@ -393,14 +399,16 @@ def edge(Nxy, dx, *, center=[0, 0, 0], orientation=[1, 0, 0]):
 
     """
     # array along y-axis
-    x00, n00, a00 = linear(Nxy, dx, center=[0, Nxy//2*dx+dx/2, 0])
+    x00, n00, a00 = linear(Nxy, spacing,
+                           center=[0, Nxy//2*spacing+spacing/2, 0])
     x00 = _np.flipud(x00)
     positions = x00
     directions = n00
     weights = a00
 
     # array along x-axis
-    x00, n00, a00 = linear(Nxy, dx, center=[Nxy//2*dx-dx/2, 0, 0],
+    x00, n00, a00 = linear(Nxy, spacing,
+                           center=[Nxy//2*spacing-spacing/2, 0, 0],
                            orientation=[0, 1, 0])
     x00 = _np.flipud(x00)
     positions = _np.concatenate((positions, x00))
