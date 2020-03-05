@@ -72,8 +72,20 @@ def reference(xref, *, size=0.1, ax=None):
     ax.plot((xref[0]-size, xref[0]+size), (xref[1]+size, xref[1]-size), 'k-')
 
 
-def secondary_sources(x0, n0, *, grid=None):
-    """Simple plot of secondary source locations."""
+def secondary_sources(x0, n0, *, size=0.05, grid=None):
+    """Simple visualization of secondary source locations.
+
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Loudspeaker positions.
+    n0 : (N, 3) or (3,) array_like
+        Normal vector(s) of loudspeakers.
+    size : float, optional
+        Size of loudspeakers in metres.
+    grid : triple of array_like, optional
+        If specified, only loudspeakers within the *grid* are shown.
+    """
     x0 = _np.asarray(x0)
     n0 = _np.asarray(n0)
     ax = _plt.gca()
@@ -84,7 +96,7 @@ def secondary_sources(x0, n0, *, grid=None):
 
     # plot symbols
     for x00 in x0:
-        ss = _plt.Circle(x00[0:2], .05, edgecolor='k', facecolor='k')
+        ss = _plt.Circle(x00[0:2], size, edgecolor='k', facecolor='k')
         ax.add_artist(ss)
 
 
