@@ -43,7 +43,6 @@
 
 """
 import numpy as _np
-from numpy.core.umath_tests import inner1d as _inner1d
 
 from . import apply_delays as _apply_delays
 from . import secondary_source_point as _secondary_source_point
@@ -118,8 +117,8 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
     n = _util.normalize_vector(n)
     xref = _util.asarray_1d(xref)
     g0 = _np.sqrt(2 * _np.pi * _np.linalg.norm(xref - x0, axis=1))
-    delays = _inner1d(n, x0) / c
-    weights = 2 * g0 * _inner1d(n, n0)
+    delays = _np.einsum('i,ji->j', n, x0) / c
+    weights = 2 * g0 * _np.einsum('i,ji->j', n, n0)
     selection = _util.source_selection_plane(n0, n)
     return delays, weights, selection, _secondary_source_point(c)
 
@@ -195,8 +194,8 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
     g0 = _np.sqrt(2 * _np.pi * _np.linalg.norm(xref - x0, axis=1))
     ds = x0 - xs
     r = _np.linalg.norm(ds, axis=1)
-    delays = r/c
-    weights = g0 * _inner1d(ds, n0) / (2 * _np.pi * r**(3/2))
+    delays = r / c
+    weights = g0 * _np.einsum('ij,ij->i', ds, n0) / (2 * _np.pi * r ** (3 / 2))
     selection = _util.source_selection_point(n0, x0, xs)
     return delays, weights, selection, _secondary_source_point(c)
 
@@ -278,8 +277,8 @@ def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
     r = _np.linalg.norm(ds, axis=1)
     g0 = _np.sqrt(_np.linalg.norm(xref - x0, axis=1)
                   / (_np.linalg.norm(xref - x0, axis=1) + r))
-    delays = -r/c
-    weights = g0 * _inner1d(ds, n0) / (2 * _np.pi * r**(3/2))
+    delays = -r / c
+    weights = g0 * _np.einsum('ij,ij->i', ds, n0) / (2 * _np.pi * r ** (3 / 2))
     selection = _util.source_selection_focused(ns, x0, xs)
     return delays, weights, selection, _secondary_source_point(c)
 
