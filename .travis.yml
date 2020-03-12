@@ -30,4 +30,4 @@ script:
   - python3 -m pytest
   - python3 doc/examples/run_all.py
   # This executes the example notebooks and runs the doctests:
-  - python3 -m sphinx doc/ _build/ -b doctest
+  - python3 -m sphinx doc/ _build/ -b doctest -W

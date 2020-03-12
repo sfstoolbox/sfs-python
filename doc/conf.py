@@ -173,7 +173,7 @@ pygments_style = 'sphinx'
 #keep_warnings = False
 
 jinja_define = """
-{% set docname = env.doc2path(env.docname, base='doc') %}
+{% set docname = 'doc/' + env.doc2path(env.docname, base=None) %}
 {% set latex_href = ''.join([
     '\href{https://github.com/sfstoolbox/sfs-python/blob/',
     env.config.release,
@@ -219,7 +219,7 @@ nbsphinx_epilog = jinja_define + r"""
 
 def setup(app):
     """Include custom theme files to sphinx HTML header"""
-    app.add_stylesheet('css/title.css')
+    app.add_css_file('css/title.css')
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
