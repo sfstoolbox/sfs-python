@@ -223,7 +223,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     x0 = _util.asarray_of_rows(x0)
     n0 = _util.asarray_of_rows(n0)
     xs = _util.asarray_1d(xs)
-    xref = _util.asarray_1d(xref)
+    xref = _util.asarray_of_rows(xref)
     k = _util.wavenumber(omega, c)
 
     ds = x0 - xs
