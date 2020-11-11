@@ -330,8 +330,38 @@ def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
 
 
 def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
-              edgecolor='', marker='.', s=15, **kwargs):
-    """Plot particle positions as scatter plot"""
+              edgecolors=None, marker='.', s=15, **kwargs):
+    """Plot particle positions as scatter plot.
+    
+    Parameters
+    ----------
+    x : triple or pair of array_like
+        x, y and optionally z components of particle positions. The z
+        components are ignored.
+        If the values are complex, the imaginary parts are ignored.
+
+    Returns
+    -------
+    Scatter
+        See :func:`matplotlib.pyplot.scatter`.
+
+    Other Parameters
+    ----------------
+    trim : array of float, optional
+        xmin, xmax, ymin, ymax limits for which the particles are plotted.
+    ax : Axes, optional
+        If given, the plot is created on *ax* instead of the current
+        axis (see :func:`matplotlib.pyplot.gca`).
+    xlabel, ylabel : str
+        Overwrite default x/y labels.  Use ``xlabel=''`` and
+        ``ylabel=''`` to remove x/y labels.  The labels can be changed
+        afterwards with :func:`matplotlib.pyplot.xlabel` and
+        :func:`matplotlib.pyplot.ylabel`.
+    edgecolors, markr, s, **kwargs
+        All further parameters are forwarded to
+        :func:`matplotlib.pyplot.scatter`.
+
+    """
     XX, YY = [_np.real(c) for c in x[:2]]
 
     if trim is not None:
@@ -348,7 +378,7 @@ def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
         ax.set_xlabel(xlabel)
     if ylabel:
         ax.set_ylabel(ylabel)
-    return ax.scatter(XX, YY, edgecolor=edgecolor, marker=marker, s=s,
+    return ax.scatter(XX, YY, edgecolors=edgecolors, marker=marker, s=s,
                       **kwargs)
 
 
