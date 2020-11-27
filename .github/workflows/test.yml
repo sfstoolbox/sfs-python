@@ -1,0 +1,47 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macOS-latest ]
+        python-version: [3.5, 3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Prepare Ubuntu
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pandoc ffmpeg
+      if: matrix.os == 'ubuntu-latest'
+    - name: Prepare OSX
+      run: |
+        brew install pandoc ffmpeg
+      if: matrix.os == 'macOS-latest'
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install .
+        python3 -m pip install -r tests/requirements.txt
+        python3 -m pip install -r doc/requirements.txt
+        # This is needed in example scripts:
+        python3 -m pip install pillow
+    - name: Test
+      run: python3 -m pytest
+    - name: Test documentation
+      run: |
+        python3 doc/examples/run_all.py
+        # This executes the example notebooks and runs the doctests:
+        python3 -m sphinx doc/ _build/ -b doctest
