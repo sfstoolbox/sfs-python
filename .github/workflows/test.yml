@@ -40,8 +40,7 @@ jobs:
         python3 -m pip install pillow
     - name: Test
       run: python3 -m pytest
+    - name: Test examples
+      run: python3 doc/examples/run_all.py
     - name: Test documentation
-      run: |
-        python3 doc/examples/run_all.py
-        # This executes the example notebooks and runs the doctests:
-        python3 -m sphinx doc/ _build/ -b doctest
+      run: python3 -m sphinx doc/ _build/ -b doctest
