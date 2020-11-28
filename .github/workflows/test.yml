@@ -19,7 +19,6 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Prepare Ubuntu
       run: |
-        sudo apt-get update
         sudo apt-get install -y pandoc ffmpeg
       if: matrix.os == 'ubuntu-latest'
     - name: Prepare OSX
