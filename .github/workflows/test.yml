@@ -27,15 +27,16 @@ jobs:
       if: matrix.os == 'macOS-latest'
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install .
-        python3 -m pip install -r tests/requirements.txt
-        python3 -m pip install -r doc/requirements.txt
+        python -V
+        python -m pip install --upgrade pip
+        python -m pip install .
+        python -m pip install -r tests/requirements.txt
+        python -m pip install -r doc/requirements.txt
         # This is needed in example scripts:
-        python3 -m pip install pillow
+        python -m pip install pillow
     - name: Test
-      run: python3 -m pytest
+      run: python -m pytest
     - name: Test examples
-      run: python3 doc/examples/run_all.py
+      run: python doc/examples/run_all.py
     - name: Test documentation
-      run: python3 -m sphinx doc/ _build/ -b doctest
+      run: python -m sphinx doc/ _build/ -b doctest
