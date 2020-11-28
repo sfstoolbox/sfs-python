@@ -8,10 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [ubuntu-latest, macOS-latest, windows-latest]
-        os: [windows-latest]
-        # python-version: [3.6, 3.7, 3.8]
-      python-version: [3.6]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -29,6 +27,7 @@ jobs:
       if: matrix.os == 'macOS-latest'
     - name: prepare Windows
       run: choco install pandoc ffmpeg
+      if: matrix.os == 'windows-latest'
     - name: Install dependencies
       run: |
         python -V
