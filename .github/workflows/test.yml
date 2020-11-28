@@ -18,12 +18,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Prepare Ubuntu
-      run: |
-        sudo apt-get install -y pandoc ffmpeg
+      run: sudo apt-get install --no-install-recommends -y pandoc ffmpeg
       if: matrix.os == 'ubuntu-latest'
     - name: Prepare OSX
-      run: |
-        brew install pandoc ffmpeg
+      run: brew install pandoc ffmpeg
       if: matrix.os == 'macOS-latest'
     - name: Install dependencies
       run: |
