@@ -3,10 +3,8 @@ Version History
 
 
 Version 0.6.0 (2020-12-01):
-* Added spatially bandlimited line source
-* Extended documentation of various functions
-* Various bug fixes
-* Drop support for Python 3.5
+ * New function `sfs.fd.source.line_bandlimited()` computing the sound field of a spatially bandlimited line source
+ * Drop support for Python 3.5
 
 Version 0.5.0 (2019-03-18):
  * Switching to separate `sfs.plot2d` and `sfs.plot3d` for plotting functions
