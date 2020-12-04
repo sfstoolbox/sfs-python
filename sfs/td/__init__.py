@@ -37,8 +37,7 @@ def synthesize(signals, weights, ssd, secondary_source_function, **kwargs):
         This signature is expected::
 
             secondary_source_function(
-                position, normal_vector, weight, driving_signal,
-                **kwargs) -> numpy.ndarray
+                position, normal_vector, **kwargs) -> numpy.ndarray
 
     **kwargs
         All keyword arguments are forwarded to *secondary_source_function*.
