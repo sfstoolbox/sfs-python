@@ -39,7 +39,8 @@
         p = sfs.td.synthesize(d, selection, array, secondary_source, grid=grid,
                               observation_time=t)
         sfs.plot2d.level(p, grid)
-        sfs.plot2d.loudspeakers(array.x, array.n, selection * array.a, size=0.15)
+        sfs.plot2d.loudspeakers(array.x, array.n,
+                                selection * array.a, size=0.15)
 
 """
 import numpy as _np
@@ -92,9 +93,9 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
     .. math::
 
-        d_{2.5D}(x_0,t) = h(t)
+        d_{2.5D}(x_0,t) =
         2 g_0 \scalarprod{n}{n_0}
-        \dirac{t - \frac{1}{c} \scalarprod{n}{x_0}}
+        \dirac{t - \frac{1}{c} \scalarprod{n}{x_0}} \ast_t h(t)
 
     with wfs(2.5D) prefilter h(t), which is not implemented yet.
 
@@ -125,7 +126,101 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 
 
 def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
-    r"""Point source by 2.5-dimensional WFS.
+    r"""Driving function for 2.5-dimensional WFS of a virtual point source.
+
+    .. versionchanged:: 0.61
+        see notes, old handling of `point_25d()` is now `point_25d_legacy()`
+
+    Parameters
+    ----------
+    x0 : (N, 3) array_like
+        Sequence of secondary source positions.
+    n0 : (N, 3) array_like
+        Sequence of secondary source orientations.
+    xs : (3,) array_like
+        Virtual source position.
+    xref : (N, 3) array_like or (3,) array_like
+        Reference curve of correct amplitude xref(x0)
+    c : float, optional
+        Speed of sound
+
+    Returns
+    -------
+    delays : (N,) numpy.ndarray
+        Delays of secondary sources in seconds.
+    weights: (N,) numpy.ndarray
+        Weights of secondary sources.
+    selection : (N,) numpy.ndarray
+        Boolean array containing ``True`` or ``False`` depending on
+        whether the corresponding secondary source is "active" or not.
+    secondary_source_function : callable
+        A function that can be used to create the sound field of a
+        single secondary source.  See `sfs.td.synthesize()`.
+
+    Notes
+    -----
+
+    Eq. (2.138) in :cite:`Schultz2016`:
+
+    .. math::
+
+         d_{2.5D}(x_0, x_{ref}, t) =
+         \sqrt{8\pi}
+         \frac{\scalarprod{(x_0 - x_s)}{n_0}}{|x_0 - x_s|}
+         \sqrt{\frac{|x_0 - x_s||x_0 - x_{ref}|}{|x_0 - x_s|+|x_0 - x_{ref}|}}
+         \cdot
+         \frac{\dirac{t - \frac{|x_0 - x_s|}{c}}}{4\pi |x_0 - x_s|} \ast_t h(t)
+
+    .. math::
+
+         h(t) = F^{-1}(\sqrt{\frac{j \omega}{c}})
+
+    with wfs(2.5D) prefilter h(t), which is not implemented yet.
+
+    `point_25d()` derives WFS from 3D to 2.5D via the stationary phase
+    approximation approach (i.e. the Delft approach).
+    The theoretical link of `point_25d()` and `point_25d_legacy()` was
+    introduced as *unified WFS framework* in :cite:`Firtha2017`.
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        delays, weights, selection, secondary_source = \
+            sfs.td.wfs.point_25d(array.x, array.n, xs)
+        d = sfs.td.wfs.driving_signals(delays, weights, signal)
+        plot(d, selection, secondary_source, t=ts)
+
+    """
+    if c is None:
+        c = _default.c
+    x0 = _util.asarray_of_rows(x0)
+    n0 = _util.asarray_of_rows(n0)
+    xs = _util.asarray_1d(xs)
+    xref = _util.asarray_of_rows(xref)
+
+    x0xs = x0 - xs
+    x0xref = x0 - xref
+    x0xs_n = _np.linalg.norm(x0xs, axis=1)
+    x0xref_n = _np.linalg.norm(x0xref, axis=1)
+
+    g0 = 1/(_np.sqrt(2*_np.pi)*x0xs_n**2)
+    g0 *= _np.sqrt((x0xs_n*x0xref_n)/(x0xs_n+x0xref_n))
+
+    delays = x0xs_n/c
+    weights = g0*_inner1d(x0xs, n0)
+    selection = _util.source_selection_point(n0, x0, xs)
+    return delays, weights, selection, _secondary_source_point(c)
+
+
+def point_25d_legacy(x0, n0, xs, xref=[0, 0, 0], c=None):
+    r"""Driving function for 2.5-dimensional WFS of a virtual point source.
+
+    .. versionadded:: 0.61
+        `point_25d()` was renamed to `point_25d_legacy()` (and a new
+        function with the name `point_25d()` was introduced). See notes below
+        for further details.
 
     Parameters
     ----------
@@ -166,14 +261,20 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     .. math::
 
-         d_{2.5D}(x_0,t) = h(t)
+         d_{2.5D}(x_0,t) =
          \frac{g_0  \scalarprod{(x_0 - x_s)}{n_0}}
          {2\pi |x_0 - x_s|^{3/2}}
-         \dirac{t - \frac{|x_0 - x_s|}{c}}
+         \dirac{t - \frac{|x_0 - x_s|}{c}}  \ast_t h(t)
 
     with wfs(2.5D) prefilter h(t), which is not implemented yet.
 
     See :sfs:`d_wfs/#equation-td-wfs-point-25d`
+
+    `point_25d_legacy()` derives 2.5D WFS from the 2D
+    Neumann-Rayleigh integral (i.e. the approach by Rabenstein & Spors), cf.
+    :cite:`Spors2008`.
+    The theoretical link of `point_25d()` and `point_25d_legacy()` was
+    introduced as *unified WFS framework* in :cite:`Firtha2017`.
 
     Examples
     --------
@@ -248,10 +349,10 @@ def focused_25d(x0, n0, xs, ns, xref=[0, 0, 0], c=None):
 
     .. math::
 
-         d_{2.5D}(x_0,t) = h(t)
+         d_{2.5D}(x_0,t) =
          \frac{g_0  \scalarprod{(x_0 - x_s)}{n_0}}
          {|x_0 - x_s|^{3/2}}
-         \dirac{t + \frac{|x_0 - x_s|}{c}}
+         \dirac{t + \frac{|x_0 - x_s|}{c}}  \ast_t h(t)
 
     with wfs(2.5D) prefilter h(t), which is not implemented yet.
 
