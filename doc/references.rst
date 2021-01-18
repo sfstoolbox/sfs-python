@@ -1,6 +1,6 @@
 References
 ==========
 
-.. bibliography:: references.bib
+.. bibliography::
     :style: alpha
     :all:

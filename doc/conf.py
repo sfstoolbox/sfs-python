@@ -46,6 +46,8 @@ extensions = [
     'nbsphinx',
 ]
 
+bibtex_bibfiles = ['references.bib']
+
 nbsphinx_execute_arguments = [
     "--InlineBackend.figure_formats={'svg', 'pdf'}",
     "--InlineBackend.rc={'figure.dpi': 96}",

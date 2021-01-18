@@ -2,7 +2,7 @@ Sphinx>=1.3.6
 Sphinx-RTD-Theme
 nbsphinx
 ipykernel
-sphinxcontrib-bibtex
+sphinxcontrib-bibtex>=2.1.4
 
 NumPy
 SciPy
