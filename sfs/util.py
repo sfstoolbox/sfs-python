@@ -610,7 +610,7 @@ def max_order_circular_harmonics(N):
     r"""Maximum order of 2D/2.5D HOA.
 
     It returns the maximum order for which no spatial aliasing appears.
-    It is given on page 132 of [Ahrens2012]_ as
+    It is given on page 132 of :cite:`Ahrens2012` as
 
     .. math::
         \mathtt{max\_order} =
