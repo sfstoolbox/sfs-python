@@ -171,9 +171,8 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         Sequence of normal vectors of secondary sources.
     xs : (3,) array_like
         Position of virtual point source.
-    xref : (3,) array_like, optional
-        Reference point xref or contour xref(x0) for amplitude correct
-        synthesis.
+    xref : (N, 3) array_like or (3,) array_like
+        Contour xref(x0) for amplitude correct synthesis, reference point xref.
     c : float, optional
         Speed of sound in m/s.
     omalias: float, optional
