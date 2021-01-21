@@ -128,7 +128,7 @@ def plane_25d(x0, n0, n=[0, 1, 0], xref=[0, 0, 0], c=None):
 def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
     r"""Driving function for 2.5-dimensional WFS of a virtual point source.
 
-    .. versionchanged:: 0.61
+    .. versionchanged:: 0.6.1
         see notes, old handling of `point_25d()` is now `point_25d_legacy()`
 
     Parameters
@@ -140,7 +140,7 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
     xs : (3,) array_like
         Virtual source position.
     xref : (N, 3) array_like or (3,) array_like
-        Reference curve of correct amplitude xref(x0)
+        Contour xref(x0) for amplitude correct synthesis, reference point xref.
     c : float, optional
         Speed of sound
 
@@ -159,7 +159,6 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
 
     Notes
     -----
-
     Eq. (2.138) in :cite:`Schultz2016`:
 
     .. math::
@@ -217,7 +216,7 @@ def point_25d(x0, n0, xs, xref=[0, 0, 0], c=None):
 def point_25d_legacy(x0, n0, xs, xref=[0, 0, 0], c=None):
     r"""Driving function for 2.5-dimensional WFS of a virtual point source.
 
-    .. versionadded:: 0.61
+    .. versionadded:: 0.6.1
         `point_25d()` was renamed to `point_25d_legacy()` (and a new
         function with the name `point_25d()` was introduced). See notes below
         for further details.
