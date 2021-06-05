@@ -2,6 +2,9 @@ Version History
 ===============
 
 
+Version 0.6.2 (2021-06-05):
+ * build doc fix, use sphinx4, mathjax2, html_css_files
+
 Version 0.6.1 (2021-06-05):
  * New default driving function for `sfs.td.wfs.point_25d()` for reference curve
 
