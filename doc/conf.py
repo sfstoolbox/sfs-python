@@ -35,7 +35,6 @@ needs_sphinx = '1.3'  # for sphinx.ext.napoleon
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',  # support for NumPy-style docstrings
     'sphinx.ext.intersphinx',
@@ -95,7 +94,22 @@ plot_rcparams = {
 }
 plot_formats = ['svg', 'pdf']
 
-mathjax_config = {
+# use mathjax2 with
+# https://github.com/spatialaudio/nbsphinx/issues/572#issuecomment-853389268
+# and 'TeX' dictionary
+# in future we might switch to mathjax3 once the
+# 'begingroup' extension is available
+# http://docs.mathjax.org/en/latest/input/tex/extensions/begingroup.html#begingroup
+# https://mathjax.github.io/MathJax-demos-web/convert-configuration/convert-configuration.html
+mathjax_path = ('https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js'
+                '?config=TeX-AMS-MML_HTMLorMML')
+mathjax2_config = {
+    'tex2jax': {
+        'inlineMath': [['$', '$'], ['\\(', '\\)']],
+        'processEscapes': True,
+        'ignoreClass': 'document',
+        'processClass': 'math|output_area',
+    },
     'TeX': {
         'extensions': ['newcommand.js', 'begingroup.js'],  # Support for \gdef
     },
@@ -219,9 +233,7 @@ nbsphinx_epilog = jinja_define + r"""
 
 # -- Options for HTML output ----------------------------------------------
 
-def setup(app):
-    """Include custom theme files to sphinx HTML header"""
-    app.add_stylesheet('css/title.css')
+html_css_files = ['css/title.css']
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
