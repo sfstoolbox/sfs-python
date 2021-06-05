@@ -2,6 +2,9 @@ Version History
 ===============
 
 
+Version 0.6.1 (2021-06-05):
+ * New default driving function for `sfs.td.wfs.point_25d()` for reference curve
+
 Version 0.6.0 (2020-12-01):
  * New function `sfs.fd.source.line_bandlimited()` computing the sound field of a spatially bandlimited line source
  * Drop support for Python 3.5
