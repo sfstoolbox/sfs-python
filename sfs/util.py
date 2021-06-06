@@ -6,7 +6,6 @@
 
 import collections
 import numpy as np
-from numpy.core.umath_tests import inner1d
 from scipy.special import spherical_jn, spherical_yn
 from . import default
 
@@ -51,7 +50,7 @@ def wavenumber(omega, c=None):
     return omega / c
 
 
-def direction_vector(alpha, beta=np.pi/2):
+def direction_vector(alpha, beta=np.pi / 2):
     """Compute normal vector from azimuth, colatitude."""
     return sph2cart(alpha, beta, 1)
 
@@ -503,6 +502,7 @@ def image_sources_for_box(x, L, N, *, prune=True):
         number of reflections at individual walls for each source.
 
     """
+
     def _images_1d_unit_box(x, N):
         result = np.arange(-N, N + 1, dtype=x.dtype)
         result[N % 2::2] += x
@@ -510,12 +510,12 @@ def image_sources_for_box(x, L, N, *, prune=True):
         return result
 
     def _count_walls_1d(a):
-        b = np.floor(a/2)
-        c = np.ceil((a-1)/2)
+        b = np.floor(a / 2)
+        c = np.ceil((a - 1) / 2)
         return np.abs(np.stack([b, c], axis=1)).astype(int)
 
     L = asarray_1d(L)
-    x = asarray_1d(x)/L
+    x = asarray_1d(x) / L
     D = len(x)
     xs = [_images_1d_unit_box(coord, N) for coord in x]
     xs = np.reshape(np.transpose(np.meshgrid(*xs, indexing='ij')), (-1, D))
@@ -576,7 +576,7 @@ def source_selection_point(n0, x0, xs):
     x0 = asarray_of_rows(x0)
     xs = asarray_1d(xs)
     ds = x0 - xs
-    return inner1d(ds, n0) >= default.selection_tolerance
+    return np.einsum('ij,ij->i', ds, n0) >= default.selection_tolerance
 
 
 def source_selection_line(n0, x0, xs):
@@ -598,7 +598,7 @@ def source_selection_focused(ns, x0, xs):
     xs = asarray_1d(xs)
     ns = normalize_vector(ns)
     ds = xs - x0
-    return inner1d(ns, ds) >= default.selection_tolerance
+    return np.einsum('i,ji->j', ns, ds) >= default.selection_tolerance
 
 
 def source_selection_all(N):
