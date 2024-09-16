@@ -13,7 +13,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     install_requires=[
-        'numpy!=1.11.0',  # https://github.com/sfstoolbox/sfs-python/issues/11
+        'numpy',
         'scipy',
     ],
     author="SFS Toolbox Developers",
