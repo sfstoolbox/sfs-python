@@ -289,8 +289,8 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     elif plotting_plane == 'yz':
         x, y = grid[[1, 2]]
 
-    dx = 0.5 * np.ptp(x) / p.shape[0]
-    dy = 0.5 * np.ptp(y) / p.shape[1]
+    dx = 0.5 * _np.ptp(x) / p.shape[0]
+    dy = 0.5 * _np.ptp(y) / p.shape[1]
 
     if ax is None:
         ax = _plt.gca()
