@@ -32,7 +32,6 @@
 
 """
 import numpy as _np
-from numpy.core.umath_tests import inner1d as _inner1d
 from scipy.special import hankel2 as _hankel2
 
 from . import secondary_source_line as _secondary_source_line
@@ -91,7 +90,7 @@ def line_2d(omega, x0, n0, xs, *, c=None):
     k = _util.wavenumber(omega, c)
     ds = x0 - xs
     r = _np.linalg.norm(ds, axis=1)
-    d = -1j/2 * k * _inner1d(ds, n0) / r * _hankel2(1, k * r)
+    d = -1j/2 * k * _util._inner1d(ds, n0) / r * _hankel2(1, k * r)
     selection = _util.source_selection_line(n0, x0, xs)
     return d, selection, _secondary_source_line(omega, c)
 
@@ -147,7 +146,7 @@ def _point(omega, x0, n0, xs, *, c=None):
     k = _util.wavenumber(omega, c)
     ds = x0 - xs
     r = _np.linalg.norm(ds, axis=1)
-    d = 1j * k * _inner1d(ds, n0) / r ** (3 / 2) * _np.exp(-1j * k * r)
+    d = 1j * k * _util._inner1d(ds, n0) / r ** (3 / 2) * _np.exp(-1j * k * r)
     selection = _util.source_selection_point(n0, x0, xs)
     return d, selection, _secondary_source_point(omega, c)
 
@@ -234,7 +233,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         preeq_25d(omega, omalias, c) *
         _np.sqrt(8 * _np.pi) *
         _np.sqrt((r * s) / (r + s)) *
-        _inner1d(n0, ds) / s *
+        _util._inner1d(n0, ds) / s *
         _np.exp(-1j * k * s) / (4 * _np.pi * s))
     selection = _util.source_selection_point(n0, x0, xs)
     return d, selection, _secondary_source_point(omega, c)
@@ -316,7 +315,7 @@ def point_25d_legacy(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     r = _np.linalg.norm(ds, axis=1)
     d = (
         preeq_25d(omega, omalias, c) *
-        _np.sqrt(_np.linalg.norm(xref - x0)) * _inner1d(ds, n0) /
+        _np.sqrt(_np.linalg.norm(xref - x0)) * _util._inner1d(ds, n0) /
         r ** (3 / 2) * _np.exp(-1j * k * r))
     selection = _util.source_selection_point(n0, x0, xs)
     return d, selection, _secondary_source_point(omega, c)
@@ -499,7 +498,7 @@ def _focused(omega, x0, n0, xs, ns, *, c=None):
     k = _util.wavenumber(omega, c)
     ds = x0 - xs
     r = _np.linalg.norm(ds, axis=1)
-    d = 1j * k * _inner1d(ds, n0) / r ** (3 / 2) * _np.exp(1j * k * r)
+    d = 1j * k * _util._inner1d(ds, n0) / r ** (3 / 2) * _np.exp(1j * k * r)
     selection = _util.source_selection_focused(ns, x0, xs)
     return d, selection, _secondary_source_point(omega, c)
 
@@ -569,7 +568,7 @@ def focused_25d(omega, x0, n0, xs, ns, *, xref=[0, 0, 0], c=None,
     r = _np.linalg.norm(ds, axis=1)
     d = (
         preeq_25d(omega, omalias, c) *
-        _np.sqrt(_np.linalg.norm(xref - x0)) * _inner1d(ds, n0) /
+        _np.sqrt(_np.linalg.norm(xref - x0)) * _util._inner1d(ds, n0) /
         r ** (3 / 2) * _np.exp(1j * k * r))
     selection = _util.source_selection_focused(ns, x0, xs)
     return d, selection, _secondary_source_point(omega, c)
