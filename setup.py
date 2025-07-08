@@ -13,7 +13,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     install_requires=[
-        'numpy!=1.11.0',  # https://github.com/sfstoolbox/sfs-python/issues/11
+        'numpy',
         'scipy',
     ],
     author="SFS Toolbox Developers",
@@ -31,8 +31,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3 :: Only",
         "Topic :: Scientific/Engineering",
     ],

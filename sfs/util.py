@@ -6,7 +6,6 @@
 
 import collections
 import numpy as np
-from numpy.core.umath_tests import inner1d
 from scipy.special import spherical_jn, spherical_yn
 from . import default
 
@@ -576,7 +575,7 @@ def source_selection_point(n0, x0, xs):
     x0 = asarray_of_rows(x0)
     xs = asarray_1d(xs)
     ds = x0 - xs
-    return inner1d(ds, n0) >= default.selection_tolerance
+    return _inner1d(ds, n0) >= default.selection_tolerance
 
 
 def source_selection_line(n0, x0, xs):
@@ -598,7 +597,7 @@ def source_selection_focused(ns, x0, xs):
     xs = asarray_1d(xs)
     ns = normalize_vector(ns)
     ds = xs - x0
-    return inner1d(ns, ds) >= default.selection_tolerance
+    return _inner1d(ns, ds) >= default.selection_tolerance
 
 
 def source_selection_all(N):
@@ -646,3 +645,8 @@ def max_order_spherical_harmonics(N):
 
     """
     return int(np.sqrt(N) - 1)
+
+
+def _inner1d(arr1, arr2):
+    # https://github.com/numpy/numpy/issues/10815#issuecomment-376847774
+    return (arr1 * arr2).sum(axis=1)

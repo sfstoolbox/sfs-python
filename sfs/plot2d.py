@@ -18,13 +18,17 @@ def _register_cmap_clip(name, original_cmap, alpha):
         cmap = LinearSegmentedColormap.from_list(name, cdata)
     cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
     cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
-    _plt.cm.register_cmap(cmap=cmap)
+    _plt.colormaps.register(cmap=cmap)
 
 
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
 # http://www.sandia.gov/~kmorel/documents/ColorMaps/
-_register_cmap_clip('coolwarm_clip', 'coolwarm', 0.7)
+# already registered in MPL 3.9.0
+try:
+    _register_cmap_clip('coolwarm_clip', 'coolwarm', 0.7)
+except ImportError:
+    pass
 
 
 def _register_cmap_transparent(name, color):
@@ -36,7 +40,7 @@ def _register_cmap_transparent(name, color):
              'blue': ((0, blue, blue), (1, blue, blue)),
              'alpha': ((0, 0, 0), (1, 1, 1))}
     cmap = LinearSegmentedColormap(name, cdict)
-    _plt.cm.register_cmap(cmap=cmap)
+    _plt.colormaps.register(cmap=cmap)
 
 
 _register_cmap_transparent('blacktransparent', 'black')
@@ -285,8 +289,8 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     elif plotting_plane == 'yz':
         x, y = grid[[1, 2]]
 
-    dx = 0.5 * x.ptp() / p.shape[0]
-    dy = 0.5 * y.ptp() / p.shape[1]
+    dx = 0.5 * _np.ptp(x) / p.shape[0]
+    dy = 0.5 * _np.ptp(y) / p.shape[1]
 
     if ax is None:
         ax = _plt.gca()
