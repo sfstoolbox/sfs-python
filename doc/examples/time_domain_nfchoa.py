@@ -33,7 +33,7 @@ sfs.plot2d.virtualsource([0, 0], ns=npw, type='plane')
 plt.savefig('impulse_pw_nfchoa_25d.png')
 
 # Point source
-max_order = 100
+max_order = 80
 xs = [1.5, 1.5, 0]  # position
 t = np.linalg.norm(xs) / sfs.default.c  # observation time
 delay, weight, sos, phaseshift, selection, secondary_source = \
