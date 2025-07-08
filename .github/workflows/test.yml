@@ -1,6 +1,6 @@
 name: Test
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -8,8 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        #os: [ubuntu-latest, macOS-latest, windows-latest]
-        #python-version: ['3.8', '3.9', '3.10']
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        python-version: ['3.8', '3.9', '3.10']
         os: [ubuntu-latest]
         python-version: ['3.13']
     steps:
