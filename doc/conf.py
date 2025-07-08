@@ -83,7 +83,7 @@ intersphinx_mapping = {
 }
 
 extlinks = {'sfs': ('https://sfs.readthedocs.io/en/3.2/%s',
-                    'https://sfs.rtfd.io/')}
+                    'https://sfs.rtfd.io/%s')}
 
 plot_include_source = True
 plot_html_show_source_link = False

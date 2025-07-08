@@ -664,7 +664,7 @@ def weights_midpoint(positions, *, closed):
     >>> x0, n0, a0 = sfs.array.circular(2**5, 1)
     >>> a = sfs.array.weights_midpoint(x0, closed=True)
     >>> max(abs(a0-a))
-    0.0003152601902411123
+    np.float64(0.0003152601902411123)
 
     """
     positions = _util.asarray_of_rows(positions)
@@ -672,7 +672,7 @@ def weights_midpoint(positions, *, closed):
         before, after = -1, 0  # cyclic
     else:
         before, after = 1, -2  # mirrored
-    positions = _np.row_stack((positions[before], positions, positions[after]))
+    positions = _np.vstack((positions[before], positions, positions[after]))
     distances = _np.linalg.norm(_np.diff(positions, axis=0), axis=1)
     return (distances[:-1] + distances[1:]) / 2
 
