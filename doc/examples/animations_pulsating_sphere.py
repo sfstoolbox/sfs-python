@@ -3,6 +3,8 @@ import sfs
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation
+import warnings
+warnings.simplefilter("ignore", np.exceptions.ComplexWarning)
 
 
 def particle_displacement(omega, center, radius, amplitude, grid, frames,
@@ -18,7 +20,7 @@ def particle_displacement(omega, center, radius, amplitude, grid, frames,
     scat = sfs.plot2d.particles(grid + displacement, **kwargs)
 
     def update_frame_displacement(i):
-        position = (grid + displacement * phasor**i).apply(np.real)
+        position = np.real((grid + displacement * phasor**i))
         position = np.column_stack([position[0].flatten(),
                                     position[1].flatten()])
         scat.set_offsets(position)
@@ -43,7 +45,7 @@ def particle_velocity(omega, center, radius, amplitude, grid, frames,
             **kwargs)
 
     def update_frame_velocity(i):
-        quiv.set_UVC(*(velocity[:2] * phasor**i).apply(np.real))
+        np.real(quiv.set_UVC(*(velocity[:2] * phasor**i)))
         return [quiv]
 
     return animation.FuncAnimation(

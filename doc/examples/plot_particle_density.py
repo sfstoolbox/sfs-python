@@ -14,7 +14,9 @@ omega = 2 * np.pi * f
 # normal vector of plane wave
 npw = sfs.util.direction_vector(np.radians(pw_angle))
 # random grid for velocity
-grid = [np.random.uniform(-3, 3, 40000), np.random.uniform(-3, 3, 40000), 0]
+grid = sfs.util.as_xyz_components([np.random.uniform(-3, 3, 40000),
+                                   np.random.uniform(-3, 3, 40000),
+                                   0])
 
 
 def plot_particle_displacement(title):
