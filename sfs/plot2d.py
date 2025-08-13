@@ -314,7 +314,7 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
 
 
 def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
-          **kwargs):
+          interpolation='nearest', **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
     Takes the same parameters as `sfs.plot2d.amplitude()`.
@@ -329,8 +329,9 @@ def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
     if xnorm is not None:
         p = _util.normalize(p, grid, xnorm)
     L = _util.db(p, power=power)
-    return amplitude(L, grid=grid, xnorm=None, cmap=cmap,
-                     vmax=vmax, vmin=vmin, **kwargs)
+    return amplitude(
+        L, grid=grid, xnorm=None, cmap=cmap, vmax=vmax, vmin=vmin,
+        interpolation=interpolation, **kwargs)
 
 
 def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
