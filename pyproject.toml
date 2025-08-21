@@ -10,8 +10,8 @@ description = "Sound Field Synthesis Toolbox"
 readme = "README.rst"
 keywords = ["audio", "SFS", "WFS", "Ambisonics"]
 authors = [{ name = "SFS Toolbox Developers", email = "sfstoolbox@gmail.com" }]
-dependencies = ["numpy", "scipy"]
-requires-python = ">= 3.6"
+dependencies = ["numpy >= 2", "scipy >= 1.16"]
+requires-python = ">= 3.11"
 classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",

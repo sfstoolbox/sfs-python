@@ -2,6 +2,9 @@ name: Test
 
 on: [push, pull_request]
 
+env:
+  UV_PYTHON_DOWNLOADS: never
+
 jobs:
   build:
 
@@ -10,13 +13,15 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
         python-version: ['3.11', '3.12']
-        
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
     - name: Prepare Ubuntu
       run: |
         sudo apt-get update
@@ -30,16 +35,14 @@ jobs:
       if: matrix.os == 'windows-latest'
     - name: Install dependencies
       run: |
-        python -V
-        python -m pip install --upgrade pip
-        python -m pip install .
-        python -m pip install -r tests/requirements.txt
-        python -m pip install -r doc/requirements.txt
+        uv sync --locked
+        uv pip install -r tests/requirements.txt
+        uv pip install -r doc/requirements.txt
         # This is needed in example scripts:
-        python -m pip install pillow
+        uv pip install pillow
     - name: Test
-      run: python -m pytest
+      run: uv run --locked -m pytest
     - name: Test examples
-      run: python doc/examples/run_all.py
+      run: uv run --locked --script doc/examples/run_all.py
     - name: Test documentation
-      run: python -m sphinx doc/ _build/ -b doctest
+      run: uv run --locked -m sphinx doc/ _build/ -b doctest

@@ -15,8 +15,8 @@ License:
     MIT -- see the file ``LICENSE`` for details.
 
 Quick start:
-    * Install Python 3, NumPy, SciPy and Matplotlib
-    * ``python3 -m pip install sfs --user``
+    * Install Python and (optionally) Matplotlib
+    * Install the ``sfs`` package for Python
     * Check out the examples in the documentation
 
 More information about the underlying theory can be found at

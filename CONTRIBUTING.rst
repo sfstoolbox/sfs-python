@@ -14,12 +14,17 @@ newest development version from Github_::
 
    git clone https://github.com/sfstoolbox/sfs-python.git
    cd sfs-python
-   python3 -m pip install --user -e .
+   uv sync
 
-... where ``-e`` stands for ``--editable``.
+This creates a virtual environment where the latest development version
+of the SFS Toolbox is installed.
+Note that you can activate this environment from any directory
+(e.g. one where you have some Python scripts using the ``sfs`` module),
+it doesn't have to be the directory where you cloned the Git repository.
 
-This way, your installation always stays up-to-date, even if you pull new
-changes from the Github repository.
+Wherever you activate that environment from,
+it will always stay up-to-date, even if you pull new
+changes from the Github repository or switch branches.
 
 .. _PyPI: https://pypi.org/project/sfs/
 .. _Github: https://github.com/sfstoolbox/sfs-python/
@@ -30,37 +35,31 @@ Building the Documentation
 
 If you make changes to the documentation, you can re-create the HTML pages
 using Sphinx_.
-You can install it and a few other necessary packages with::
+From the main ``sfs-python`` directory,
+you can install it and a few other necessary packages with::
 
-   python3 -m pip install -r doc/requirements.txt --user
+   uv pip install -r doc/requirements.txt
 
 To create the HTML pages, use::
 
-   python3 setup.py build_sphinx
+   uv run -m sphinx doc _build
 
-The generated files will be available in the directory ``build/sphinx/html/``.
-
-To create the EPUB file, use::
-
-   python3 setup.py build_sphinx -b epub
-
-The generated EPUB file will be available in the directory
-``build/sphinx/epub/``.
+The generated files will be available in the directory ``_build/``.
 
 To create the PDF file, use::
 
-   python3 setup.py build_sphinx -b latex
+   uv run -m sphinx doc _build -b latex
 
-Afterwards go to the folder ``build/sphinx/latex/`` and run LaTeX to create the
+Afterwards go to the folder ``_build/`` and run LaTeX to create the
 PDF file. If you don’t know how to create a PDF file from the LaTeX output, you
 should have a look at Latexmk_ (see also this `Latexmk tutorial`_).
 
 It is also possible to automatically check if all links are still valid::
 
-   python3 setup.py build_sphinx -b linkcheck
+   uv run -m sphinx doc _build -b linkcheck
 
 .. _Sphinx: http://sphinx-doc.org/
-.. _Latexmk: http://personal.psu.edu/jcc8/software/latexmk-jcc/
+.. _Latexmk: https://www.cantab.net/users/johncollins/latexmk/
 .. _Latexmk tutorial: https://mg.readthedocs.io/latexmk.html
 
 Running the Tests
@@ -69,11 +68,11 @@ Running the Tests
 You'll need pytest_ for that.
 It can be installed with::
 
-   python3 -m pip install -r tests/requirements.txt --user
+   uv pip install -r tests/requirements.txt
 
 To execute the tests, simply run::
 
-   python3 -m pytest
+   uv run -m pytest
 
 .. _pytest: https://pytest.org/
 
