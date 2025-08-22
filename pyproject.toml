@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sfs"
+license = "MIT"
+dynamic = ["version"]
+description = "Sound Field Synthesis Toolbox"
+readme = "README.rst"
+keywords = ["audio", "SFS", "WFS", "Ambisonics"]
+authors = [{ name = "SFS Toolbox Developers", email = "sfstoolbox@gmail.com" }]
+dependencies = ["numpy >= 2", "scipy >= 1.16"]
+requires-python = ">= 3.11"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+Documentation = "https://sfs-python.readthedocs.io/"
+Repository = "https://github.com/sfstoolbox/sfs-python"
+Issues = "https://github.com/sfstoolbox/sfs-python/issues"
+
+[tool.setuptools.packages.find]
+include = ["sfs*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "sfs.__version__" }

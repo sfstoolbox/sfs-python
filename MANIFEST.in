@@ -1,8 +1,0 @@
-include LICENSE
-include *.rst
-include doc/requirements.txt
-recursive-include doc *.rst *.py
-recursive-include tests *.py
-include doc/examples/*.ipynb
-include doc/examples/figures/*.png
-recursive-include data *
