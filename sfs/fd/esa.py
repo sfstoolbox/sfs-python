@@ -8,6 +8,49 @@ Further ESA for different geometries might be added here.
 Note that mode-matching (such as NFC-HOA, SDM) are equivalent
 to ESA in their specific geometries (spherical/circular, planar/linear).
 
+.. plot::
+    :context: reset
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sfs
+
+    plt.rcParams['figure.figsize'] = 6, 6
+
+    f = 343  # Hz
+    omega = 2 * np.pi * f  # rad / s
+    k = omega / sfs.default.c  # rad / m
+
+    npw = sfs.util.direction_vector(np.radians(-45))
+    xs = np.array([-0.828427, 0.828427, 0])
+
+    grid = sfs.util.xyz_grid([-1, 5], [-5, 1], 0, spacing=0.02)
+    dx, L = 0.05, 4  # m
+    N = int(L / dx)
+    array = sfs.array.edge(N, dx, center=[0, 0, 0],
+                           orientation=[0, -1, 0])
+
+    xref = np.array([2, -2, 0])
+    x_norm = np.linalg.norm(xs - xref)
+    norm_ls = (np.sqrt(8 * np.pi * k * x_norm) *
+               np.exp(+1j * np.pi / 4) *
+               np.exp(-1j * k * x_norm))
+    norm_pw = np.exp(+1j * 4*np.pi*np.sqrt(2))
+
+
+    def plot(d, selection, secondary_source, norm_ref):
+        # the series expansion is numerically tricky, hence
+        d = np.nan_to_num(d)
+        # especially handle the origin loudspeaker
+        d[N] = 0  # as it tends to nan/inf
+        p = sfs.fd.synthesize(d, selection, array, secondary_source, grid=grid)
+        sfs.plot2d.amplitude(p * norm_ref, grid)
+        sfs.plot2d.loudspeakers(array.x, array.n,
+                                selection * array.a, size=0.15)
+        plt.xlim(-0.5, 4.5)
+        plt.ylim(-4.5, 0.5)
+        plt.grid(True)
+
 """
 import numpy as _np
 from scipy.special import jn as _jn, hankel2 as _hankel2
@@ -59,6 +102,15 @@ def plane_2d_edge(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2, Nc=None,
 
     Derived from :cite:`Spors2016`
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.fd.esa.plane_2d_edge(
+            omega, array.x, npw, alpha=np.pi*3/2)
+        plot(d, selection, secondary_source, norm_pw)
+
     """
     x0 = _np.asarray(x0)
     n = _util.normalize_vector(n)
@@ -71,7 +123,7 @@ def plane_2d_edge(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2, Nc=None,
     phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
+        Nc = int(_np.ceil(2 * k * _np.max(r) * alpha / _np.pi))
 
     epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -130,6 +182,15 @@ def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2,
 
     Derived from :cite:`Spors2016`
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.fd.esa.plane_2d_edge_dipole_ssd(
+            omega, array.x, npw, alpha=np.pi*3/2)
+        plot(d, selection, secondary_source, norm_ref=1)
+
     """
     x0 = _np.asarray(x0)
     n = _util.normalize_vector(n)
@@ -142,7 +203,7 @@ def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2,
     phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
+        Nc = int(_np.ceil(2 * k * _np.max(r) * alpha / _np.pi))
 
     epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -153,7 +214,8 @@ def plane_2d_edge_dipole_ssd(omega, x0, n=[0, 1, 0], *, alpha=_np.pi*3/2,
         d = d + 1/epsilon[m] * _np.exp(1j*nu*_np.pi/2) * _np.cos(nu*phi_s) \
             * _np.cos(nu*phi) * _jn(nu, k*r)
 
-    return 4*_np.pi/alpha * d
+    selection = _util.source_selection_all(len(x0))
+    return 4*_np.pi/alpha * d, selection, _secondary_source_line(omega, c)
 
 
 def line_2d_edge(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None, c=None):
@@ -197,6 +259,15 @@ def line_2d_edge(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None, c=None):
 
     Derived from :cite:`Spors2016`
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.fd.esa.line_2d_edge(
+            omega, array.x, xs, alpha=np.pi*3/2)
+        plot(d, selection, secondary_source, norm_ls)
+
     """
     x0 = _np.asarray(x0)
     k = _util.wavenumber(omega, c)
@@ -211,7 +282,7 @@ def line_2d_edge(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None, c=None):
     phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
+        Nc = int(_np.ceil(2 * k * _np.max(r) * alpha / _np.pi))
 
     epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -272,6 +343,15 @@ def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None,
 
     Derived from :cite:`Spors2016`
 
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.fd.esa.line_2d_edge_dipole_ssd(
+            omega, array.x, xs, alpha=np.pi*3/2)
+        plot(d, selection, secondary_source, norm_ref=1)
+
     """
     x0 = _np.asarray(x0)
     k = _util.wavenumber(omega, c)
@@ -286,7 +366,7 @@ def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None,
     phi = _np.where(phi < 0, phi + 2 * _np.pi, phi)
 
     if Nc is None:
-        Nc = _np.ceil(2 * k * _np.max(r) * alpha / _np.pi)
+        Nc = int(_np.ceil(2 * k * _np.max(r) * alpha / _np.pi))
 
     epsilon = _np.ones(Nc)  # weights for series expansion
     epsilon[0] = 2
@@ -299,7 +379,8 @@ def line_2d_edge_dipole_ssd(omega, x0, xs, *, alpha=_np.pi*3/2, Nc=None,
         d[idx] = d[idx] + f[idx] * _jn(nu, k*r[idx]) * _hankel2(nu, k*r_s)
         d[~idx] = d[~idx] + f[~idx] * _jn(nu, k*r_s) * _hankel2(nu, k*r[~idx])
 
-    return -1j*_np.pi/alpha * d
+    selection = _util.source_selection_all(len(x0))
+    return -1j*_np.pi/alpha * d, selection, _secondary_source_line(omega, c)
 
 
 def point_25d_edge(omega, x0, xs, *, xref=[2, -2, 0], alpha=_np.pi*3/2,
@@ -345,6 +426,15 @@ def point_25d_edge(omega, x0, xs, *, xref=[2, -2, 0], alpha=_np.pi*3/2,
     the edge at the origin.
 
     Derived from :cite:`Spors2016`
+
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        d, selection, secondary_source = sfs.fd.esa.point_25d_edge(
+            omega, array.x, xs, xref=xref, alpha=np.pi*3/2)
+        plot(d, selection, secondary_source, norm_ref=1)
 
     """
     x0 = _np.asarray(x0)
