@@ -225,8 +225,8 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         xref_line = 0  # reference contour is a straight line
 
         lmb = 1 / 4  # m
-        f = sfs.default.c / lmb  # Hz
-        omega = 2 * np.pi * f  # rad/s
+        f_tmp = sfs.default.c / lmb  # Hz
+        omega_tmp = 2 * np.pi * f_tmp  # rad/s
 
         # calc reference contour xref(x0):
         x0_tmp = array2.x.T[np.newaxis, :]
@@ -248,7 +248,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         xref = np.squeeze(xref).T
 
         d, selection, secondary_source = sfs.fd.wfs.point_25d(
-            omega, array2.x, array2.n, xs, xref=xref)
+            omega_tmp, array2.x, array2.n, xs, xref=xref)
         normalize_gain = 4 * np.pi * np.linalg.norm(xs)
         p = sfs.fd.synthesize(d * normalize_gain,
                               selection,
@@ -283,8 +283,8 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         xref_dist = 4  # radius for reference contour circle with origin xs
 
         lmb = 1 / 4  # m
-        f = sfs.default.c / lmb  # Hz
-        omega = 2 * np.pi * f  # rad/s
+        f_tmp = sfs.default.c / lmb  # Hz
+        omega_tmp = 2 * np.pi * f_tmp  # rad/s
 
         # calc reference contour xref(x0):
         x0_tmp = array2.x.T[np.newaxis, :]
@@ -296,7 +296,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         xref = np.squeeze(xref).T
 
         d, selection, secondary_source = sfs.fd.wfs.point_25d(
-            omega, array2.x, array2.n, xs, xref=xref)
+            omega_tmp, array2.x, array2.n, xs, xref=xref)
         normalize_gain = 4 * np.pi * np.linalg.norm(xs)
         p = sfs.fd.synthesize(d * normalize_gain,
                               selection,
