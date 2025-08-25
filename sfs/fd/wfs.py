@@ -24,6 +24,7 @@
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
     array = sfs.array.circular(N=32, R=R)
+    array2 = sfs.array.circular(N=64, R=R)
 
     def plot(d, selection, secondary_source):
         p = sfs.fd.synthesize(d, selection, array, secondary_source, grid=grid)
@@ -220,39 +221,38 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     .. plot::
         :context: close-figs
 
-        array = sfs.array.circular(N=128, R=R)        
-        f = 343*4  # Hz
-        omega = 2 * np.pi * f  # rad/s
-
-        # example is hard coded for a point source on negative x-axis:
-        xs = -4, 0, 0
+        xs = -4, 0, 0  # point source on negative x-axis
         xref_line = 0  # reference contour is a straight line
 
-        # calc xref(x0):
-        x0_ = array.x.T[np.newaxis, :]
-        xs_ = np.array(xs)[np.newaxis, :, np.newaxis]
-        x0xs = x0_ - xs_
+        lmb = 1 / 4  # m
+        f = sfs.default.c / lmb  # Hz
+        omega = 2 * np.pi * f  # rad/s
+
+        # calc reference contour xref(x0):
+        x0_tmp = array2.x.T[np.newaxis, :]
+        xs_tmp = np.array(xs)[np.newaxis, :, np.newaxis]
+        x0xs = x0_tmp - xs_tmp
         x0xs_length = np.linalg.norm(x0xs, axis=1)
         x0xs_unit = x0xs / x0xs_length
-        n0_ = array.n.T[np.newaxis, :]
-        xref = np.zeros_like(x0_)
+        n0_ = array2.n.T[np.newaxis, :]
+        xref = np.zeros_like(x0_tmp)
         # cf. https://github.com/spatialaudio/wfs_chapter_hda/blob/master/python/wfs25d_circSSD.py#L91  # noqa
-        # hard coded for a point source on negative x-axis
-        for i in range(array.x.shape[0]):
+        # code is valid for a virtual point source on negative x-axis:
+        for i in range(array2.x.shape[0]):
             cosbeta = np.dot(-n0_[0, :, i], [-1, 0, 0])  # use outward SSD normal
             tmp = x0xs_unit[0, :, i]
             tmp *= -x0xs_length[0, i]
             tmp *= xref_line + R * cosbeta
-            tmp /= xs_[0, 0, 0] + R * cosbeta
-            xref[0, :, i] = x0_[0, :, i] + tmp
+            tmp /= xs_tmp[0, 0, 0] + R * cosbeta
+            xref[0, :, i] = x0_tmp[0, :, i] + tmp
         xref = np.squeeze(xref).T
 
         d, selection, secondary_source = sfs.fd.wfs.point_25d(
-            omega, array.x, array.n, xs, xref=xref)
+            omega, array2.x, array2.n, xs, xref=xref)
         normalize_gain = 4 * np.pi * np.linalg.norm(xs)
         p = sfs.fd.synthesize(d * normalize_gain,
                               selection,
-                              array,
+                              array2,
                               secondary_source,
                               grid=grid)
 
@@ -263,12 +263,12 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         sfs.plot2d.level(p, grid, vmax=6, vmin=-6,
                         cmap='seismic', ax=ax_lvl,
                         colorbar_kwargs={'label': 'dB'})
-        sfs.plot2d.loudspeakers(array.x, array.n,
-                                selection * array.a,
-                                size=0.15, ax=ax_amp)
-        sfs.plot2d.loudspeakers(array.x, array.n,
-                                selection * array.a,
-                                size=0.15, ax=ax_lvl)
+        sfs.plot2d.loudspeakers(array2.x, array2.n,
+                                selection * array2.a,
+                                size=0.125, ax=ax_amp)
+        sfs.plot2d.loudspeakers(array2.x, array2.n,
+                                selection * array2.a,
+                                size=0.125, ax=ax_lvl)
         # plot xref(x0) contour:
         ax_amp.plot(xref[:, 0][selection],
                     xref[:, 1][selection], 'C5o', ms=4)
@@ -279,28 +279,28 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
     .. plot::
         :context: close-figs
 
-        f = 343*4  # Hz
-        omega = 2 * np.pi * f  # rad/s
-
-        # example is hard coded for a point source on negative x-axis:
-        xs = -4, 0, 0
+        xs = -4, 0, 0  # point source on negative x-axis
         xref_dist = 4  # radius for reference contour circle with origin xs
 
-        # calc xref(x0):
-        x0_ = array.x.T[np.newaxis, :]
-        xs_ = np.array(xs)[np.newaxis, :, np.newaxis]
-        x0xs = x0_ - xs_
+        lmb = 1 / 4  # m
+        f = sfs.default.c / lmb  # Hz
+        omega = 2 * np.pi * f  # rad/s
+
+        # calc reference contour xref(x0):
+        x0_tmp = array2.x.T[np.newaxis, :]
+        xs_tmp = np.array(xs)[np.newaxis, :, np.newaxis]
+        x0xs = x0_tmp - xs_tmp
         x0xs_length = np.linalg.norm(x0xs, axis=1)
         x0xs_unit = x0xs / x0xs_length
-        xref = x0_ + (xref_dist - x0xs_length) * x0xs_unit
+        xref = x0_tmp + (xref_dist - x0xs_length) * x0xs_unit
         xref = np.squeeze(xref).T
 
         d, selection, secondary_source = sfs.fd.wfs.point_25d(
-            omega, array.x, array.n, xs, xref=xref)
+            omega, array2.x, array2.n, xs, xref=xref)
         normalize_gain = 4 * np.pi * np.linalg.norm(xs)
         p = sfs.fd.synthesize(d * normalize_gain,
                               selection,
-                              array,
+                              array2,
                               secondary_source,
                               grid=grid)
 
@@ -311,12 +311,12 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
         sfs.plot2d.level(p, grid, vmax=6, vmin=-6,
                         cmap='seismic', ax=ax_lvl,
                         colorbar_kwargs={'label': 'dB'})
-        sfs.plot2d.loudspeakers(array.x, array.n,
-                                selection * array.a,
-                                size=0.15, ax=ax_amp)
-        sfs.plot2d.loudspeakers(array.x, array.n,
-                                selection * array.a,
-                                size=0.15, ax=ax_lvl)
+        sfs.plot2d.loudspeakers(array2.x, array2.n,
+                                selection * array2.a,
+                                size=0.125, ax=ax_amp)
+        sfs.plot2d.loudspeakers(array2.x, array2.n,
+                                selection * array2.a,
+                                size=0.125, ax=ax_lvl)
         # plot xref(x0) contour:
         ax_amp.plot(xref[:, 0][selection],
                     xref[:, 1][selection], 'C5o', ms=4)
