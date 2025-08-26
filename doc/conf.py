@@ -109,8 +109,6 @@ exclude_patterns = ['_build', '**/.ipynb_checkpoints']
 
 default_role = 'any'
 
-pygments_style = 'sphinx'
-
 jinja_define = r"""
 {% set docname = env.doc2path(env.docname, base='doc') %}
 {% set latex_href = ''.join([
@@ -161,6 +159,7 @@ html_css_files = ['css/title.css']
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'collapse_navigation': False,
+    'navigation_with_keys': True,
 }
 
 html_title = project + ", version " + release
