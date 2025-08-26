@@ -22,6 +22,17 @@ Documentation = "https://sfs-python.readthedocs.io/"
 Repository = "https://github.com/sfstoolbox/sfs-python"
 Issues = "https://github.com/sfstoolbox/sfs-python/issues"
 
+[dependency-groups]
+dev = [
+    "pytest",
+    "sphinx>=8",
+    "sphinx-rtd-theme",
+    "nbsphinx",
+    "ipykernel",
+    "sphinxcontrib-bibtex>=2.1.4",
+    "matplotlib>=3",
+]
+
 [tool.setuptools.packages.find]
 include = ["sfs*"]
 
