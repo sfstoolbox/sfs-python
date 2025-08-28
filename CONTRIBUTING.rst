@@ -53,7 +53,7 @@ the ``sfs`` module, you can switch to a directory of your choice
 and enter this::
 
    uv init --bare
-   uv add --editable path/to/your/sfs/repo
+   uv add --editable --no-workspace path/to/your/sfs/repo
 
 You can install further packages with ``uv add`` and then run
 whatever you need with ``uv run``.
