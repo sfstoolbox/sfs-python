@@ -91,5 +91,7 @@ You can then run this script (assuming you installed ``matplotlib`` before) with
 
     uv run my_script.py
 
+In a similar way, you can run the :doc:`example-python-scripts`.
+
 If you want to install the latest development version of the SFS Toolbox, have a
 look at :doc:`contributing`.
