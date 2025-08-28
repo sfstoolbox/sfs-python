@@ -13,8 +13,14 @@ You can install ``uv`` with your favorite package manager,
 or by one of the other methods described at
 https://docs.astral.sh/uv/getting-started/installation/.
 
+If you don't like ``uv``, no problem!
+You can also use Python's official packaging tool pip_ or any other third-party tool,
+as long as it can install `the SFS package`_.
+
 .. _Python: https://www.python.org/
 .. _uv: https://docs.astral.sh/uv/
+.. _pip: https://packaging.python.org/en/latest/tutorials/installing-packages/
+.. _the SFS package: https://pypi.org/project/sfs/
 .. _NumPy: http://www.numpy.org/
 .. _SciPy: https://www.scipy.org/scipylib/
 .. _Matplotlib: https://matplotlib.org/
