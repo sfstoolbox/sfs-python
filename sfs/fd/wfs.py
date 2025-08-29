@@ -24,7 +24,6 @@
     grid = sfs.util.xyz_grid([-2, 2], [-2, 2], 0, spacing=0.02)
 
     array = sfs.array.circular(N=32, R=R)
-    array2 = sfs.array.circular(N=64, R=R)
 
     def plot(d, selection, secondary_source):
         p = sfs.fd.synthesize(d, selection, array, secondary_source, grid=grid)
