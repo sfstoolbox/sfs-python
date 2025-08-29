@@ -13,6 +13,7 @@ Examples
 .. nbgallery::
 
     examples/sound-field-synthesis
+    examples/wfs-referencing
     examples/modal-room-acoustics
     examples/mirror-image-source-model
     examples/animations-pulsating-sphere
