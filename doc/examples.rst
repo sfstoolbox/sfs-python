@@ -10,8 +10,7 @@ Examples
         :target: https://mybinder.org/v2/gh/sfstoolbox/sfs-python/master?
                  filepath=doc/examples
 
-.. toctree::
-    :maxdepth: 1
+.. nbgallery::
 
     examples/sound-field-synthesis
     examples/modal-room-acoustics

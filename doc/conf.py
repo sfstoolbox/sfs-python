@@ -24,6 +24,11 @@ nbsphinx_execute_arguments = [
     "--InlineBackend.rc={'figure.dpi': 96}",
 ]
 
+nbsphinx_thumbnails = {
+    'example-python-scripts': '_static/thumbnails/soundfigure_level.png',
+    'examples/animations-pulsating-sphere': '_static/thumbnails/pulsating_sphere.gif',
+}
+
 # Tell autodoc that the documentation is being generated
 sphinx.SFS_DOCS_ARE_BEING_BUILT = True
 
