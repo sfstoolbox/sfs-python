@@ -110,7 +110,7 @@ exclude_patterns = ['_build', '**/.ipynb_checkpoints']
 default_role = 'any'
 
 jinja_define = r"""
-{% set docname = env.doc2path(env.docname, base='doc') %}
+{% set docname = 'doc/' + env.doc2path(env.docname, base=False)|string %}
 {% set latex_href = ''.join([
     '\href{https://github.com/sfstoolbox/sfs-python/blob/',
     env.config.release,
