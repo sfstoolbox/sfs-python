@@ -205,7 +205,7 @@ def point_25d(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
 
     is implemented.
     The theoretical link of `point_25d()` and `point_25d_legacy()` was
-    introduced as *unified WFS framework* in :cite:`Firtha2017`.
+    introduced as *unified WFS framework* in :cite:`Firtha2017`, :cite:`Firtha2019`.
 
     Examples
     --------
@@ -292,7 +292,7 @@ def point_25d_legacy(omega, x0, n0, xs, xref=[0, 0, 0], c=None, omalias=None):
             \e{-\i\wc |\x_0-\x_\text{s}|}
 
     The theoretical link of `point_25d()` and `point_25d_legacy()` was
-    introduced as *unified WFS framework* in :cite:`Firtha2017`.
+    introduced as *unified WFS framework* in :cite:`Firtha2017`, :cite:`Firtha2019`.
     Also cf. Eq. (2.145)-(2.147) :cite:`Schultz2016`.
 
     Examples
