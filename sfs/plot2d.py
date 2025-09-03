@@ -8,27 +8,32 @@ from . import default as _default
 from . import util as _util
 
 
-def _register_cmap_clip(name, original_cmap, alpha):
+def _register_cmap_clip(name, original_name, col_alpha_u, col_apha_o):
     """Create a color map with "over" and "under" values."""
-    from matplotlib.colors import LinearSegmentedColormap
-    cdata = _plt.cm.datad[original_cmap]
-    if isinstance(cdata, dict):
-        cmap = LinearSegmentedColormap(name, cdata)
-    else:
-        cmap = LinearSegmentedColormap.from_list(name, cdata)
-    cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
-    cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
+    cmap = _plt.get_cmap(original_name)
+    cmap = cmap.with_extremes(
+        under=cmap.get_under() * col_alpha_u,
+        over=cmap.get_over() * col_apha_o)
+    cmap.name = name
     _plt.colormaps.register(cmap=cmap)
 
 
+_register_cmap_clip('cividis_clip', 'cividis',
+                    [1, 1, 1, 0.6],[1, 1, 1, 0.1])
+_register_cmap_clip('cividis_r_clip', 'cividis_r',
+                    [1, 1, 1, 0.1], [1, 1, 1, 0.6])
+_register_cmap_clip('viridis_clip', 'viridis',
+                    [1, 1, 1, 0.6], [1, 1, 1, 0.1])
+_register_cmap_clip('viridis_r_clip', 'viridis_r',
+                    [1, 1, 1, 0.1], [1, 1, 1, 0.6])
+
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
-# http://www.sandia.gov/~kmorel/documents/ColorMaps/
-# already registered in MPL 3.9.0
-try:
-    _register_cmap_clip('coolwarm_clip', 'coolwarm', 0.7)
-except ImportError:
-    pass
+# https://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
+_register_cmap_clip('coolwarm_clip', 'coolwarm',
+                    [1, 1, 1, 0.5], [1, 1, 1, 0.5])
+_register_cmap_clip('coolwarm_r_clip', 'coolwarm_r',
+                    [1, 1, 1, 0.5], [1, 1, 1, 0.5])
 
 
 def _register_cmap_transparent(name, color):
@@ -180,7 +185,7 @@ def _visible_secondarysources(x0, n0, grid):
     """Determine secondary sources which lie within *grid*."""
     x, y = _util.as_xyz_components(grid[:2])
     idx = _np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
-                   (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
+                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
     idx = _np.squeeze(idx)
 
     return x0[idx, :], n0[idx, :]
@@ -323,8 +328,8 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     return im
 
 
-def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
-          **kwargs):
+def level(p, grid, *, xnorm=None, power=False, cmap='viridis_clip',
+          vmax=3, vmin=-50, **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
     Takes the same parameters as `sfs.plot2d.amplitude()`.
@@ -378,7 +383,7 @@ def level_contour(p, grid, *, xnorm=None, power=False,
 def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
               edgecolors=None, marker='.', s=15, **kwargs):
     """Plot particle positions as scatter plot.
-    
+
     Parameters
     ----------
     x : triple or pair of array_like
