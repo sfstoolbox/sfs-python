@@ -23,8 +23,11 @@ Repository = "https://github.com/sfstoolbox/sfs-python"
 Issues = "https://github.com/sfstoolbox/sfs-python/issues"
 
 [dependency-groups]
-dev = [
+dev = [{ include-group = "test" }, { include-group = "doc" }]
+test = [
     "pytest",
+]
+doc = [
     "sphinx>=8",
     "sphinx-rtd-theme",
     "nbsphinx",

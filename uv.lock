@@ -1576,6 +1576,17 @@ dev = [
     { name = "sphinx-rtd-theme" },
     { name = "sphinxcontrib-bibtex" },
 ]
+doc = [
+    { name = "ipykernel" },
+    { name = "matplotlib" },
+    { name = "nbsphinx" },
+    { name = "sphinx" },
+    { name = "sphinx-rtd-theme" },
+    { name = "sphinxcontrib-bibtex" },
+]
+test = [
+    { name = "pytest" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -1593,6 +1604,15 @@ dev = [
     { name = "sphinx-rtd-theme" },
     { name = "sphinxcontrib-bibtex", specifier = ">=2.1.4" },
 ]
+doc = [
+    { name = "ipykernel" },
+    { name = "matplotlib", specifier = ">=3" },
+    { name = "nbsphinx" },
+    { name = "sphinx", specifier = ">=8" },
+    { name = "sphinx-rtd-theme" },
+    { name = "sphinxcontrib-bibtex", specifier = ">=2.1.4" },
+]
+test = [{ name = "pytest" }]
 
 [[package]]
 name = "six"
