@@ -9,22 +9,12 @@ Contributions are always welcome!
 Development Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Instead of pip-installing the latest release from PyPI_, you should get the
+Instead of installing the latest release from PyPI_, you should get the
 newest development version from Github_::
 
    git clone https://github.com/sfstoolbox/sfs-python.git
    cd sfs-python
    uv sync
-
-This creates a virtual environment where the latest development version
-of the SFS Toolbox is installed.
-Note that you can activate this environment from any directory
-(e.g. one where you have some Python scripts using the ``sfs`` module),
-it doesn't have to be the directory where you cloned the Git repository.
-
-Wherever you activate that environment from,
-it will always stay up-to-date, even if you pull new
-changes from the Github repository or switch branches.
 
 .. _PyPI: https://pypi.org/project/sfs/
 .. _Github: https://github.com/sfstoolbox/sfs-python/
@@ -34,47 +24,40 @@ Building the Documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you make changes to the documentation, you can re-create the HTML pages
-using Sphinx_.
-From the main ``sfs-python`` directory,
-you can install it and a few other necessary packages with::
+using Sphinx_.  From the main ``sfs-python`` directory, run::
 
-   uv pip install -r doc/requirements.txt
-
-To create the HTML pages, use::
-
-   uv run -m sphinx doc _build
+   uv run sphinx-build doc _build
 
 The generated files will be available in the directory ``_build/``.
 
-To create the PDF file, use::
-
-   uv run -m sphinx doc _build -b latex
-
-Afterwards go to the folder ``_build/`` and run LaTeX to create the
-PDF file. If you don’t know how to create a PDF file from the LaTeX output, you
-should have a look at Latexmk_ (see also this `Latexmk tutorial`_).
-
-It is also possible to automatically check if all links are still valid::
-
-   uv run -m sphinx doc _build -b linkcheck
-
 .. _Sphinx: http://sphinx-doc.org/
-.. _Latexmk: https://www.cantab.net/users/johncollins/latexmk/
-.. _Latexmk tutorial: https://mg.readthedocs.io/latexmk.html
+
 
 Running the Tests
 ^^^^^^^^^^^^^^^^^
 
-You'll need pytest_ for that.
-It can be installed with::
-
-   uv pip install -r tests/requirements.txt
-
+You'll need pytest_, which will be installed automatically.
 To execute the tests, simply run::
 
-   uv run -m pytest
+   uv run pytest
 
 .. _pytest: https://pytest.org/
+
+
+Editable Installation
+^^^^^^^^^^^^^^^^^^^^^
+
+If you want to work in a different directory on your own files,
+but using the latest development version (or a custom branch) of
+the ``sfs`` module, you can switch to a directory of your choice
+and enter this::
+
+   uv init --bare
+   uv add --editable --no-workspace path/to/your/sfs/repo
+
+You can install further packages with ``uv add`` and then run
+whatever you need with ``uv run``.
+
 
 Creating a New Release
 ^^^^^^^^^^^^^^^^^^^^^^
