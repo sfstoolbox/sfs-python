@@ -8,37 +8,48 @@ from . import default as _default
 from . import util as _util
 
 
-def _apply_alpha(rgba, alpha):
-    """Mix dark colors with white, bright colors with black."""
-    from colorsys import rgb_to_hls
-    r, g, b, a = rgba
-    _, l, _ = rgb_to_hls(r, g, b)
-    if l > 0.5:
-        return [alpha * c for c in [r, g, b]] + [a]
+def _make_extreme(rgba):
+    """Make bright colors darker, dark colors brighter, both less saturated."""
+    # The package `colorspacious` must be installed for this to work:
+    from colorspacious import cspace_convert
+    lightness_step = 25
+    chroma_factor = 0.7
+    j, c, h = cspace_convert(rgba[:3], 'sRGB1', 'JCh')
+    if j > 50:
+        j -= lightness_step
     else:
-        return [alpha * c + 1 - alpha for c in [r, g, b]] + [a]
+        j += lightness_step
+    c *= chroma_factor
+    rgba[:3] = _np.clip(cspace_convert([j, c, h], 'JCh', 'sRGB1'), 0, 1)
+    return rgba
 
 
-def _register_cmap_clip(name, original_name, alpha):
+def _register_cmap_clip(name, original_name):
     """Create a color map with "over" and "under" values."""
     cmap = _plt.get_cmap(original_name)
-    over = _apply_alpha(cmap.get_over(), alpha)
-    under = _apply_alpha(cmap.get_under(), alpha)
-    cmap = cmap.with_extremes(under=under, over=over)
+    cmap = cmap.with_extremes(
+        under=_make_extreme(cmap.get_under()),
+        over=_make_extreme(cmap.get_over()))
     cmap.name = name
     _plt.colormaps.register(cmap=cmap)
 
 
-_register_cmap_clip('cividis_clip', 'cividis', 0.8)
-_register_cmap_clip('cividis_r_clip', 'cividis_r', 0.8)
-_register_cmap_clip('viridis_clip', 'viridis', 0.8)
-_register_cmap_clip('viridis_r_clip', 'viridis_r', 0.8)
+_register_cmap_clip('cividis_clip', 'cividis')
+_register_cmap_clip('cividis_r_clip', 'cividis_r')
+_register_cmap_clip('inferno_clip', 'inferno')
+_register_cmap_clip('inferno_r_clip', 'inferno_r')
+_register_cmap_clip('magma_clip', 'magma')
+_register_cmap_clip('magma_r_clip', 'magma_r')
+_register_cmap_clip('plasma_clip', 'plasma')
+_register_cmap_clip('plasma_r_clip', 'plasma_r')
+_register_cmap_clip('viridis_clip', 'viridis')
+_register_cmap_clip('viridis_r_clip', 'viridis_r')
 
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
 # https://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
-_register_cmap_clip('coolwarm_clip', 'coolwarm', 0.65)
-_register_cmap_clip('coolwarm_r_clip', 'coolwarm_r', 0.65)
+_register_cmap_clip('coolwarm_clip', 'coolwarm')
+_register_cmap_clip('coolwarm_r_clip', 'coolwarm_r')
 
 
 def _register_cmap_transparent(name, color):
