@@ -206,7 +206,7 @@ def _visible_secondarysources(x0, n0, grid):
 
 def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
               vmin=-2.0, vmax=2.0, xlabel=None, ylabel=None,
-              colorbar=True, colorbar_kwargs={}, ax=None, **kwargs):
+              colorbar=True, colorbar_kwargs=None, ax=None, **kwargs):
     """Two-dimensional plot of sound field (real part).
 
     Parameters
@@ -330,6 +330,8 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     if colorbar:
+        if colorbar_kwargs is None:
+            colorbar_kwargs = dict(extend='both')
         add_colorbar(im, **colorbar_kwargs)
     return im
 
