@@ -319,6 +319,7 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     if colorbar:
+        colorbar_kwargs.setdefault('label', 'relative pressure')
         add_colorbar(im, **colorbar_kwargs)
     return im
 
@@ -339,6 +340,7 @@ def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
     if xnorm is not None:
         p = _util.normalize(p, grid, xnorm)
     L = _util.db(p, power=power)
+    kwargs.setdefault('colorbar_kwargs', {'label': 'level / dB'})
     return amplitude(L, grid=grid, xnorm=None, cmap=cmap,
                      vmax=vmax, vmin=vmin, **kwargs)
 
