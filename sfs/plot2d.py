@@ -45,6 +45,9 @@ _register_cmap_clip('plasma_r_clip', 'plasma_r')
 _register_cmap_clip('viridis_clip', 'viridis')
 _register_cmap_clip('viridis_r_clip', 'viridis_r')
 
+_register_cmap_clip('RdBu_clip', 'RdBu')
+_register_cmap_clip('RdBu_r_clip', 'RdBu_r')
+
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
 # https://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
