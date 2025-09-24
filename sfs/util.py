@@ -338,6 +338,12 @@ def normalize_vector(x):
     return x / np.linalg.norm(x)
 
 
+def normalize_rows(x):
+    """Normalize a list of vectors."""
+    x = asarray_of_rows(x)
+    return x / np.linalg.norm(x, axis=1, keepdims=True)
+
+
 def db(x, *, power=False):
     """Convert *x* to decibel.
 

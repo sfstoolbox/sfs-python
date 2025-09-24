@@ -36,13 +36,9 @@ jobs:
     - name: Install dependencies
       run: |
         uv sync --locked
-        uv pip install -r tests/requirements.txt
-        uv pip install -r doc/requirements.txt
-        # This is needed in example scripts:
-        uv pip install pillow
     - name: Test
       run: uv run --locked -m pytest
     - name: Test examples
-      run: uv run --locked --script doc/examples/run_all.py
+      run: uv run --locked --with pillow --script doc/examples/run_all.py
     - name: Test documentation
       run: uv run --locked -m sphinx doc/ _build/ -b doctest

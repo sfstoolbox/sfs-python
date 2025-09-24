@@ -157,8 +157,11 @@ def secondary_sources(x0, n0, *, size=0.05, grid=None):
 
 
 def loudspeakers(x0, n0, a0=0.5, *, size=0.08, show_numbers=False, grid=None,
-                 ax=None):
+                 ax=None, zorder=2):
     """Draw loudspeaker symbols at given locations and angles.
+
+    The default ``zorder`` is changed to 2, which is the same as line plots
+    (e.g. `level_contour()`).
 
     Parameters
     ----------
@@ -213,7 +216,7 @@ def loudspeakers(x0, n0, a0=0.5, *, size=0.08, show_numbers=False, grid=None,
 
     # add collection of patches to current axis
     p = _mpl.collections.PatchCollection(
-        patches, edgecolor='0', facecolor=_np.tile(1 - a0, 3))
+        patches, edgecolor='0', facecolor=_np.tile(1 - a0, 3), zorder=zorder)
     if ax is None:
         ax = _plt.gca()
     ax.add_collection(p)
@@ -233,6 +236,48 @@ def _visible_secondarysources(x0, n0, grid):
     idx = _np.squeeze(idx)
 
     return x0[idx, :], n0[idx, :]
+
+
+def _plotting_plane(p, grid):
+    if p.ndim == 3:
+        if p.shape[2] == 1:
+            p = p[:, :, 0]  # first axis: y; second axis: x
+            plotting_plane = 'xy'
+        elif p.shape[1] == 1:
+            p = p[:, 0, :].T  # first axis: z; second axis: y
+            plotting_plane = 'yz'
+        elif p.shape[0] == 1:
+            p = p[0, :, :].T  # first axis: z; second axis: x
+            plotting_plane = 'xz'
+        else:
+            raise ValueError("If p is 3D, one dimension must have length 1")
+    elif len(grid) == 3:
+        if grid[2].ndim == 0:
+            plotting_plane = 'xy'
+        elif grid[1].ndim == 0:
+            plotting_plane = 'xz'
+        elif grid[0].ndim == 0:
+            plotting_plane = 'yz'
+        else:
+            raise ValueError(
+                "If p is 2D and grid is 3D, one grid component must be scalar")
+    else:
+        # 2-dimensional case
+        plotting_plane = 'xy'
+
+    if plotting_plane == 'xy':
+        x, y = grid[[0, 1]]
+    elif plotting_plane == 'xz':
+        x, y = grid[[0, 2]]
+    elif plotting_plane == 'yz':
+        x, y = grid[[1, 2]]
+
+    dx = 0.5 * _np.ptp(x) / p.shape[0]
+    dy = 0.5 * _np.ptp(y) / p.shape[1]
+
+    extent = x.min() - dx, x.max() + dx, y.min() - dy, y.max() + dy
+
+    return p, extent, plotting_plane
 
 
 def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
@@ -308,41 +353,7 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     if xnorm is not None:
         p = _util.normalize(p, grid, xnorm)
 
-    if p.ndim == 3:
-        if p.shape[2] == 1:
-            p = p[:, :, 0]  # first axis: y; second axis: x
-            plotting_plane = 'xy'
-        elif p.shape[1] == 1:
-            p = p[:, 0, :].T  # first axis: z; second axis: y
-            plotting_plane = 'yz'
-        elif p.shape[0] == 1:
-            p = p[0, :, :].T  # first axis: z; second axis: x
-            plotting_plane = 'xz'
-        else:
-            raise ValueError("If p is 3D, one dimension must have length 1")
-    elif len(grid) == 3:
-        if grid[2].ndim == 0:
-            plotting_plane = 'xy'
-        elif grid[1].ndim == 0:
-            plotting_plane = 'xz'
-        elif grid[0].ndim == 0:
-            plotting_plane = 'yz'
-        else:
-            raise ValueError(
-                "If p is 2D and grid is 3D, one grid component must be scalar")
-    else:
-        # 2-dimensional case
-        plotting_plane = 'xy'
-
-    if plotting_plane == 'xy':
-        x, y = grid[[0, 1]]
-    elif plotting_plane == 'xz':
-        x, y = grid[[0, 2]]
-    elif plotting_plane == 'yz':
-        x, y = grid[[1, 2]]
-
-    dx = 0.5 * _np.ptp(x) / p.shape[0]
-    dy = 0.5 * _np.ptp(y) / p.shape[1]
+    p, extent, plotting_plane = _plotting_plane(p, grid)
 
     if ax is None:
         ax = _plt.gca()
@@ -352,8 +363,7 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
         p = _np.clip(p, -1e15, 1e15)  # clip to float64 range
 
     im = ax.imshow(_np.real(p), cmap=cmap, origin='lower',
-                   extent=[x.min()-dx, x.max()+dx, y.min()-dy, y.max()+dy],
-                   vmax=vmax, vmin=vmin, **kwargs)
+                   extent=extent, vmax=vmax, vmin=vmin, **kwargs)
     if xlabel is None:
         xlabel = plotting_plane[0] + ' / m'
     if ylabel is None:
@@ -368,7 +378,7 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
 
 
 def level(p, grid, *, xnorm=None, power=False, cmap='viridis_clip',
-          vmax=3, vmin=-50, **kwargs):
+          vmax=3, vmin=-50, colorbar_kwargs=None, **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
     Takes the same parameters as `sfs.plot2d.amplitude()`.
@@ -383,8 +393,43 @@ def level(p, grid, *, xnorm=None, power=False, cmap='viridis_clip',
     if xnorm is not None:
         p = _util.normalize(p, grid, xnorm)
     L = _util.db(p, power=power)
+    if colorbar_kwargs is None:
+        colorbar_kwargs = dict(extend='both', label='level / dB')
     return amplitude(L, grid=grid, xnorm=None, cmap=cmap,
-                     vmax=vmax, vmin=vmin, **kwargs)
+                     vmax=vmax, vmin=vmin,
+                     colorbar_kwargs=colorbar_kwargs, **kwargs)
+
+
+def level_contour(p, grid, *, xnorm=None, power=False,
+                  xlabel=None, ylabel=None, ax=None, **kwargs):
+    """Two-dimensional contour plot of level (dB) of sound field.
+
+    Parameters
+    ----------
+    p, grid, xnorm, power, xlabel, ylabel, ax
+        Same as in `level()`.
+    **kwargs
+        All further parameters are forwarded to
+        :func:`matplotlib.pyplot.contour`.
+
+    """
+    p = _np.asarray(p)
+    grid = _util.as_xyz_components(grid)
+    # normalize before converting to dB!
+    if xnorm is not None:
+        p = _util.normalize(p, grid, xnorm)
+    p, extent, plotting_plane = _plotting_plane(p, grid)
+    L = _util.db(p, power=power)
+    if ax is None:
+        ax = _plt.gca()
+    contour = ax.contour(L, extent=extent, **kwargs)
+    if xlabel is None:
+        xlabel = plotting_plane[0] + ' / m'
+    if ylabel is None:
+        ylabel = plotting_plane[1] + ' / m'
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    return contour
 
 
 def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
