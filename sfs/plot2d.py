@@ -8,27 +8,79 @@ from . import default as _default
 from . import util as _util
 
 
-def _register_cmap_clip(name, original_cmap, alpha):
-    """Create a color map with "over" and "under" values."""
-    from matplotlib.colors import LinearSegmentedColormap
-    cdata = _plt.cm.datad[original_cmap]
-    if isinstance(cdata, dict):
-        cmap = LinearSegmentedColormap(name, cdata)
+def _make_extreme(rgba):
+    """Make bright colors darker, dark colors brighter, both less saturated."""
+    # The package `colorspacious` must be installed for this to work:
+    from colorspacious import cspace_convert
+    lightness_step = 25
+    chroma_factor = 0.7
+    j, c, h = cspace_convert(rgba[:3], 'sRGB1', 'JCh')
+    if j > 50:
+        j -= lightness_step
     else:
-        cmap = LinearSegmentedColormap.from_list(name, cdata)
-    cmap.set_over([alpha * c + 1 - alpha for c in cmap(1.0)[:3]])
-    cmap.set_under([alpha * c + 1 - alpha for c in cmap(0.0)[:3]])
+        j += lightness_step
+    c *= chroma_factor
+    rgba[:3] = _np.clip(cspace_convert([j, c, h], 'JCh', 'sRGB1'), 0, 1)
+    return rgba
+
+
+def _register_cmap_with_extremes(name, original_name, **kwargs):
+    """Create a color map with "under" and "over" values."""
+    cmap = _plt.get_cmap(original_name)
+    cmap = cmap.with_extremes(**kwargs)
+    cmap.name = name
     _plt.colormaps.register(cmap=cmap)
 
 
+# The following under/over values have been calculated with _make_extreme().
+# They are hard-coded to avoid a dependency on the library "colorspacious".
+_register_cmap_with_extremes('cividis_clip', 'cividis',
+    under=[0.3581123750444155, 0.4308239004832521, 0.5431626919728758, 1.0],
+    over=[0.748794386079359, 0.6952014568472878, 0.27380570592765713, 1.0])
+_register_cmap_with_extremes('cividis_r_clip', 'cividis_r',
+    under=[0.748794386079359, 0.6952014568472878, 0.27380570592765713, 1.0],
+    over=[0.3581123750444155, 0.4308239004832521, 0.5431626919728758, 1.0])
+_register_cmap_with_extremes('inferno_clip', 'inferno',
+    under=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0],
+    over=[0.7759331577663429, 0.7815136432099379, 0.5546145677840046, 1.0])
+_register_cmap_with_extremes('inferno_r_clip', 'inferno_r',
+    under=[0.7759331577663429, 0.7815136432099379, 0.5546145677840046, 1.0],
+    over=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0])
+_register_cmap_with_extremes('magma_clip', 'magma',
+    under=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0],
+    over=[0.7755917106347097, 0.7765145738617047, 0.621366899182334, 1.0])
+_register_cmap_with_extremes('magma_r_clip', 'magma_r',
+    under=[0.7755917106347097, 0.7765145738617047, 0.621366899182334, 1.0],
+    over=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0])
+_register_cmap_with_extremes('plasma_clip', 'plasma',
+    under=[0.3425913695445096, 0.42529714344969144, 0.66039452922638, 1.0],
+    over=[0.723897190872765, 0.7507494961114689, 0.2574503078804632, 1.0])
+_register_cmap_with_extremes('plasma_r_clip', 'plasma_r',
+    under=[0.723897190872765, 0.7507494961114689, 0.2574503078804632, 1.0],
+    over=[0.3425913695445096, 0.42529714344969144, 0.66039452922638, 1.0])
+_register_cmap_with_extremes('viridis_clip', 'viridis',
+    under=[0.536623905475994, 0.3775029064902613, 0.5655492658877974, 1.0],
+    over=[0.7453792828268919, 0.6916769483054797, 0.24219807423955453, 1.0])
+_register_cmap_with_extremes('viridis_r_clip', 'viridis_r',
+    under=[0.7453792828268919, 0.6916769483054797, 0.24219807423955453, 1.0],
+    over=[0.536623905475994, 0.3775029064902613, 0.5655492658877974, 1.0])
+
+_register_cmap_with_extremes('RdBu_clip', 'RdBu',
+    under=[0.6931181505544421, 0.3643024937396605, 0.40355267940576434, 1.0],
+    over=[0.3844199587527661, 0.4705632423745359, 0.597949800233206, 1.0])
+_register_cmap_with_extremes('RdBu_r_clip', 'RdBu_r',
+    under=[0.3844199587527661, 0.4705632423745359, 0.597949800233206, 1.0],
+    over=[0.6931181505544421, 0.3643024937396605, 0.40355267940576434, 1.0])
+
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
-# http://www.sandia.gov/~kmorel/documents/ColorMaps/
-# already registered in MPL 3.9.0
-try:
-    _register_cmap_clip('coolwarm_clip', 'coolwarm', 0.7)
-except ImportError:
-    pass
+# https://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
+_register_cmap_with_extremes('coolwarm_clip', 'coolwarm',
+    under=[0.510515040101537, 0.5812838578665308, 0.8594377816482693, 1.0],
+    over=[0.9464304571740522, 0.43619922642510556, 0.4340300540797168, 1.0])
+_register_cmap_with_extremes('coolwarm_r_clip', 'coolwarm_r',
+    under=[0.9464304571740522, 0.43619922642510556, 0.4340300540797168, 1.0],
+    over=[0.510515040101537, 0.5812838578665308, 0.8594377816482693, 1.0])
 
 
 def _register_cmap_transparent(name, color):
@@ -180,7 +232,7 @@ def _visible_secondarysources(x0, n0, grid):
     """Determine secondary sources which lie within *grid*."""
     x, y = _util.as_xyz_components(grid[:2])
     idx = _np.where((x0[:, 0] > x.min()) & (x0[:, 0] < x.max()) &
-                   (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
+                    (x0[:, 1] > y.min()) & (x0[:, 1] < x.max()))
     idx = _np.squeeze(idx)
 
     return x0[idx, :], n0[idx, :]
@@ -325,8 +377,8 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     return im
 
 
-def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
-          colorbar_kwargs=None, **kwargs):
+def level(p, grid, *, xnorm=None, power=False, cmap='viridis_clip',
+          vmax=3, vmin=-50, colorbar_kwargs=None, **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
     Takes the same parameters as `sfs.plot2d.amplitude()`.
@@ -383,7 +435,7 @@ def level_contour(p, grid, *, xnorm=None, power=False,
 def particles(x, *, trim=None, ax=None, xlabel='x (m)', ylabel='y (m)',
               edgecolors=None, marker='.', s=15, **kwargs):
     """Plot particle positions as scatter plot.
-    
+
     Parameters
     ----------
     x : triple or pair of array_like
