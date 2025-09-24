@@ -230,7 +230,7 @@ def _plotting_plane(p, grid):
 
 def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
               vmin=-2.0, vmax=2.0, xlabel=None, ylabel=None,
-              colorbar=True, colorbar_kwargs={}, ax=None, **kwargs):
+              colorbar=True, colorbar_kwargs=None, ax=None, **kwargs):
     """Two-dimensional plot of sound field (real part).
 
     Parameters
@@ -319,12 +319,14 @@ def amplitude(p, grid, *, xnorm=None, cmap='coolwarm_clip',
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     if colorbar:
+        if colorbar_kwargs is None:
+            colorbar_kwargs = dict(extend='both')
         add_colorbar(im, **colorbar_kwargs)
     return im
 
 
 def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
-          **kwargs):
+          colorbar_kwargs=None, **kwargs):
     """Two-dimensional plot of level (dB) of sound field.
 
     Takes the same parameters as `sfs.plot2d.amplitude()`.
@@ -339,8 +341,11 @@ def level(p, grid, *, xnorm=None, power=False, cmap=None, vmax=3, vmin=-50,
     if xnorm is not None:
         p = _util.normalize(p, grid, xnorm)
     L = _util.db(p, power=power)
+    if colorbar_kwargs is None:
+        colorbar_kwargs = dict(extend='both', label='level / dB')
     return amplitude(L, grid=grid, xnorm=None, cmap=cmap,
-                     vmax=vmax, vmin=vmin, **kwargs)
+                     vmax=vmax, vmin=vmin,
+                     colorbar_kwargs=colorbar_kwargs, **kwargs)
 
 
 def level_contour(p, grid, *, xnorm=None, power=False,
