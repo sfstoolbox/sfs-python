@@ -24,35 +24,63 @@ def _make_extreme(rgba):
     return rgba
 
 
-def _register_cmap_clip(name, original_name):
-    """Create a color map with "over" and "under" values."""
+def _register_cmap_with_extremes(name, original_name, **kwargs):
+    """Create a color map with "under" and "over" values."""
     cmap = _plt.get_cmap(original_name)
-    cmap = cmap.with_extremes(
-        under=_make_extreme(cmap.get_under()),
-        over=_make_extreme(cmap.get_over()))
+    cmap = cmap.with_extremes(**kwargs)
     cmap.name = name
     _plt.colormaps.register(cmap=cmap)
 
 
-_register_cmap_clip('cividis_clip', 'cividis')
-_register_cmap_clip('cividis_r_clip', 'cividis_r')
-_register_cmap_clip('inferno_clip', 'inferno')
-_register_cmap_clip('inferno_r_clip', 'inferno_r')
-_register_cmap_clip('magma_clip', 'magma')
-_register_cmap_clip('magma_r_clip', 'magma_r')
-_register_cmap_clip('plasma_clip', 'plasma')
-_register_cmap_clip('plasma_r_clip', 'plasma_r')
-_register_cmap_clip('viridis_clip', 'viridis')
-_register_cmap_clip('viridis_r_clip', 'viridis_r')
+# The following under/over values have been calculated with _make_extreme().
+# They are hard-coded to avoid a dependency on the library "colorspacious".
+_register_cmap_with_extremes('cividis_clip', 'cividis',
+    under=[0.3581123750444155, 0.4308239004832521, 0.5431626919728758, 1.0],
+    over=[0.748794386079359, 0.6952014568472878, 0.27380570592765713, 1.0])
+_register_cmap_with_extremes('cividis_r_clip', 'cividis_r',
+    under=[0.748794386079359, 0.6952014568472878, 0.27380570592765713, 1.0],
+    over=[0.3581123750444155, 0.4308239004832521, 0.5431626919728758, 1.0])
+_register_cmap_with_extremes('inferno_clip', 'inferno',
+    under=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0],
+    over=[0.7759331577663429, 0.7815136432099379, 0.5546145677840046, 1.0])
+_register_cmap_with_extremes('inferno_r_clip', 'inferno_r',
+    under=[0.7759331577663429, 0.7815136432099379, 0.5546145677840046, 1.0],
+    over=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0])
+_register_cmap_with_extremes('magma_clip', 'magma',
+    under=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0],
+    over=[0.7755917106347097, 0.7765145738617047, 0.621366899182334, 1.0])
+_register_cmap_with_extremes('magma_r_clip', 'magma_r',
+    under=[0.7755917106347097, 0.7765145738617047, 0.621366899182334, 1.0],
+    over=[0.3223737972210511, 0.3196564508033573, 0.3474201893768059, 1.0])
+_register_cmap_with_extremes('plasma_clip', 'plasma',
+    under=[0.3425913695445096, 0.42529714344969144, 0.66039452922638, 1.0],
+    over=[0.723897190872765, 0.7507494961114689, 0.2574503078804632, 1.0])
+_register_cmap_with_extremes('plasma_r_clip', 'plasma_r',
+    under=[0.723897190872765, 0.7507494961114689, 0.2574503078804632, 1.0],
+    over=[0.3425913695445096, 0.42529714344969144, 0.66039452922638, 1.0])
+_register_cmap_with_extremes('viridis_clip', 'viridis',
+    under=[0.536623905475994, 0.3775029064902613, 0.5655492658877974, 1.0],
+    over=[0.7453792828268919, 0.6916769483054797, 0.24219807423955453, 1.0])
+_register_cmap_with_extremes('viridis_r_clip', 'viridis_r',
+    under=[0.7453792828268919, 0.6916769483054797, 0.24219807423955453, 1.0],
+    over=[0.536623905475994, 0.3775029064902613, 0.5655492658877974, 1.0])
 
-_register_cmap_clip('RdBu_clip', 'RdBu')
-_register_cmap_clip('RdBu_r_clip', 'RdBu_r')
+_register_cmap_with_extremes('RdBu_clip', 'RdBu',
+    under=[0.6931181505544421, 0.3643024937396605, 0.40355267940576434, 1.0],
+    over=[0.3844199587527661, 0.4705632423745359, 0.597949800233206, 1.0])
+_register_cmap_with_extremes('RdBu_r_clip', 'RdBu_r',
+    under=[0.3844199587527661, 0.4705632423745359, 0.597949800233206, 1.0],
+    over=[0.6931181505544421, 0.3643024937396605, 0.40355267940576434, 1.0])
 
 # The 'coolwarm' colormap is based on the paper
 # "Diverging Color Maps for Scientific Visualization" by Kenneth Moreland
 # https://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
-_register_cmap_clip('coolwarm_clip', 'coolwarm')
-_register_cmap_clip('coolwarm_r_clip', 'coolwarm_r')
+_register_cmap_with_extremes('coolwarm_clip', 'coolwarm',
+    under=[0.510515040101537, 0.5812838578665308, 0.8594377816482693, 1.0],
+    over=[0.9464304571740522, 0.43619922642510556, 0.4340300540797168, 1.0])
+_register_cmap_with_extremes('coolwarm_r_clip', 'coolwarm_r',
+    under=[0.9464304571740522, 0.43619922642510556, 0.4340300540797168, 1.0],
+    over=[0.510515040101537, 0.5812838578665308, 0.8594377816482693, 1.0])
 
 
 def _register_cmap_transparent(name, color):
