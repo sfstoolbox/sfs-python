@@ -41,4 +41,4 @@ jobs:
     - name: Test examples
       run: uv run --locked --with pillow --script doc/examples/run_all.py
     - name: Test documentation
-      run: uv run --locked -m sphinx doc/ _build/ -b doctest
+      run: uv run --locked -m sphinx doc/ _build/ -b doctest -W
