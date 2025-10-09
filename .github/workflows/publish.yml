@@ -15,8 +15,6 @@ jobs:
     - name: Install "build"
       run: |
         python -m pip install build
-    - name: Build binary wheels and a source tarball
-      run: ./make_dist.sh
     - name: Store the distribution packages
       uses: actions/upload-artifact@v4
       with:
@@ -30,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/sounddevice
+      url: https://pypi.org/p/sfs
     permissions:
       id-token: write
     steps:
