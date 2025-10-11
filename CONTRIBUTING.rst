@@ -62,39 +62,20 @@ whatever you need with ``uv run``.
 Creating a New Release
 ^^^^^^^^^^^^^^^^^^^^^^
 
-It is proposed to perform these steps for creating a new release:
+These steps for creating a new release are proposed to be taken only after
+ensuring that CI (unit tests, sphinx for RTD_, build of wheel and source distribution)
+raised no errors.
 
 #. Bump version number in ``sfs/__init__.py``
 #. Update ``NEWS.rst``
 #. Commit those changes as "Release x.y.z"
 #. Create an (annotated) tag with ``git tag -a x.y.z``
 #. Push the commit and the tag to Github
-#. Github workflow publish.yml will handle the build and upload to PyPi
+#. The workflow ``.github/workflows/publish.yml`` will handle the build and the
+   upload to PyPI
 #. `Add release notes`_ containing a link to PyPI and the bullet points
-   from ``NEWS.rst``
-#. Check that the new release was built correctly on RTD_
-   and select the new release as the default version
-
-Alternatively, an extra branch and PR can be utilised as follows:
-
-#. Create a branch from the current master branch state. In this new branch:
-#. Bump version number in ``sfs/__init__.py``
-#. Update ``NEWS.rst``
-#. Commit those changes as "Release x.y.z", push this commit and make a PR.
-   This will trigger workflows to check that everything is fine, the PR is a
-   nice additional documentation of this release process.
-#. Create an (annotated) tag with ``git tag -a x.y.z`` and push it
-#. Due to this tag push Github workflow publish.yml will handle the build
-   and upload to PyPi
-#. Merge the PR by ``git merge branch_name --ff-only``. This is needed for
-   preserving the release and tag commits as they need to appear exactly this
-   way in the master branch history.
-#. Delete the branch
-#. `Add release notes`_ containing a link to PyPI and the bullet points
-   from ``NEWS.rst``
-#. Check that the new release was built correctly on RTD_
-   and select the new release as the default version
-
+   from the updated ``NEWS.rst``
+#. Select the new release as the default on RTD_
 
 .. _add release notes: https://github.com/sfstoolbox/sfs-python/tags
 .. _RTD: https://readthedocs.org/projects/sfs-python/builds/
