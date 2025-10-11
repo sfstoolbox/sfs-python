@@ -62,22 +62,20 @@ whatever you need with ``uv run``.
 Creating a New Release
 ^^^^^^^^^^^^^^^^^^^^^^
 
-New releases are made using the following steps:
+These steps for creating a new release are proposed to be taken only after
+ensuring that CI (unit tests, sphinx for RTD_, build of wheel and source distribution)
+raised no errors.
 
 #. Bump version number in ``sfs/__init__.py``
 #. Update ``NEWS.rst``
 #. Commit those changes as "Release x.y.z"
 #. Create an (annotated) tag with ``git tag -a x.y.z``
-#. Clear the ``dist/`` directory
-#. Create a source distribution with ``python3 setup.py sdist``
-#. Create a wheel distribution with ``python3 setup.py bdist_wheel``
-#. Check that both files have the correct content
-#. Upload them to PyPI_ with twine_: ``python3 -m twine upload dist/*``
-#. Push the commit and the tag to Github and `add release notes`_ containing a
-   link to PyPI and the bullet points from ``NEWS.rst``
-#. Check that the new release was built correctly on RTD_
-   and select the new release as default version
+#. Push the commit and the tag to Github
+#. The workflow ``.github/workflows/publish.yml`` will handle the build and the
+   upload to PyPI
+#. `Add release notes`_ containing a link to PyPI and the bullet points
+   from the updated ``NEWS.rst``
+#. Select the new release as the default on RTD_
 
-.. _twine: https://twine.readthedocs.io/
 .. _add release notes: https://github.com/sfstoolbox/sfs-python/tags
 .. _RTD: https://readthedocs.org/projects/sfs-python/builds/
