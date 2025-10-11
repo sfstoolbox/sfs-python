@@ -4,3 +4,7 @@ build/
 dist/
 .eggs/
 sfs.egg-info/
+/doc/sfs.*.rst
+/doc/examples/*.gif
+/doc/examples/*.png
+.ipynb_checkpoints/
