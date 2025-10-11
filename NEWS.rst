@@ -2,6 +2,17 @@ Version History
 ===============
 
 
+Version 0.6.3 (2025-10-11):
+ * Drop support for numpy 1.x
+ * Register the colormaps ``cividis``, ``inferno``, ``magma``, ``plasma``,
+   ``viridis``, ``RdBu``, ``coolwarm`` and their reversed versions as ``*_clip``,
+   e.g. ``viridis_r_clip``, with a dedicated max/min value color clipping
+ * Use ``viridis_clip`` colormap as default for `sfs.plot2d.level()`
+ * Use ``coolwarm_clip`` colormap as default for `sfs.plot2d.amplitude()`
+ * Level contour plot via `sfs.plot2d.level_contour()`
+ * Add Jupyter notebook for
+   `2.5D WFS referencing scheme <examples/wfs-referencing.ipynb>`__ examples
+
 Version 0.6.2 (2021-06-05):
  * build doc fix, use sphinx4, mathjax2, html_css_files
 

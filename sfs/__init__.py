@@ -16,7 +16,7 @@ https://sfs-python.readthedocs.io/
     util
 
 """
-__version__ = "0.6.2"
+__version__ = "0.6.3"
 
 
 class default:
