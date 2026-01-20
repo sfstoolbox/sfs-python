@@ -225,6 +225,67 @@ def point_dipole(omega, x0, n0, grid, *, c=None):
         _np.power(r, 2) * _np.exp(-1j * k * r)
 
 
+def point_line_piston(omega, x0, u0, grid, L, *, c=None):
+    r"""Point source with dipole characteristics.
+
+    Parameters
+    ----------
+    omega : float
+        Frequency of source.
+    x0 : (3,) array_like
+        Position of source.
+    u0 : (3,) array_like
+        Unit vector pointing along the line piston
+    grid : triple of array_like
+        The grid that is used for the sound field calculations.
+        See `sfs.util.xyz_grid()`.
+    L : float
+        Length of line piston.
+    c : float, optional
+        Speed of sound.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sound pressure at positions given by *grid*.
+
+    Notes
+    -----
+    .. math::
+        G(\x-\x_0,\w) = \frac{1}{4\pi} 
+            \frac{\sin(\wc \frac{L}{2} \cos(\Theta))}{\wc \frac{L}{2} \cos(\Theta)}
+            \frac{\e{-\i\wc|\x-\x_0|}}{|\x-\x_0|}
+    with
+
+    .. math::
+        \cos(\Theta) =
+            \frac{\langle \mathbf{x} - \mathbf{x}_0 | \mathbf{u}_0 \rangle}
+                {|\mathbf{x} - \mathbf{x}_0|}
+    Examples
+    --------
+    .. plot::
+        :context: close-figs
+
+        u0 = 1, 0, 0
+        L = 2.0
+        p = sfs.fd.source.point_line_piston(omega, x0, u0, grid, L)
+        sfs.plot2d.amplitude(p * normalization_point, grid)
+        plt.title("Line Piston at {} m".format(x0))
+
+    """
+    k = _util.wavenumber(omega, c)
+    x0 = _util.asarray_1d(x0)
+    u0 = _util.asarray_1d(u0)
+    grid = _util.as_xyz_components(grid)
+
+    offset = grid - x0
+    r = _np.linalg.norm(offset)
+    cosphi = _np.inner(offset, u0) / r
+
+    return 1 / (4 * _np.pi) * _np.exp(-1j * k * r) / r * \
+        _special.sinc(k * cosphi * L / ( 2 * _np.pi ) )
+
+
 def point_modal(omega, x0, grid, L, *, N=None, deltan=0, c=None):
     """Point source in a rectangular room using a modal room model.
 
